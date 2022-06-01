@@ -23,10 +23,20 @@ constructor(
     val state: State<EventState> = _state
 
     private val _isRefreshing = MutableStateFlow(false)
-    val isRefreshing : StateFlow<Boolean> = _isRefreshing
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing
 
     init {
         getEventsCreatedByUser()
+    }
+
+    fun onEvent(event: EventEvent) {
+        when (event) {
+            is EventEvent.DismissDialog -> {
+                _state.value = _state.value.copy(
+                    error = ""
+                )
+            }
+        }
     }
 
     fun getEventsCreatedByUser() {

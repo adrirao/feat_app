@@ -8,14 +8,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.unlam.feat.presentation.component.FeatAlertDialog
 import com.unlam.feat.presentation.component.FeatCard
 import com.unlam.feat.presentation.component.FeatCircularProgress
+import com.unlam.feat.presentation.view.home.HomeEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun Event(
     state: EventState,
+    onEvent: (EventEvent) -> Unit,
     isRefreshing: Boolean,
     refreshData: () -> Unit
 ) {
@@ -54,5 +57,14 @@ fun Event(
     }
     if (state.isLoading) {
         FeatCircularProgress()
+    }
+    if (state.error.isNotBlank()) {
+        FeatAlertDialog(
+            title = "Error Eventos",
+            descriptionContent = "No se pudo cargar los eventos.",
+            onDismiss = {
+                onEvent(EventEvent.DismissDialog)
+            }
+        )
     }
 }

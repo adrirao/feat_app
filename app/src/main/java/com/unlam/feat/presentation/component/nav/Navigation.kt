@@ -13,10 +13,8 @@ import androidx.navigation.compose.composable
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.unlam.feat.common.Screen
-import com.unlam.feat.presentation.component.FeatMap
 import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
-import com.unlam.feat.presentation.view.events.add_event.AddEventEvent
 import com.unlam.feat.presentation.view.events.add_event.AddEventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddNewEventScreen
 import com.unlam.feat.presentation.view.home.Home
@@ -83,6 +81,7 @@ private fun NavGraphBuilder.events(
 
         Event(
             state = state,
+            onEvent=eventViewModel::onEvent,
             isRefreshing = isRefreshing.value,
             refreshData = eventViewModel::getEventsCreatedByUser
         )
