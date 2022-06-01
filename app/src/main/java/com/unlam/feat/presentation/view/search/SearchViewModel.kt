@@ -4,13 +4,17 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.Marker
 import com.unlam.feat.common.Result
 import com.unlam.feat.presentation.view.events.EventState
 import com.unlam.feat.repository.FeatRepositoryImp
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
+@HiltViewModel
 class SearchViewModel
 @Inject
 constructor(
@@ -18,6 +22,8 @@ constructor(
 ) : ViewModel() {
     private val _state = mutableStateOf(SearchState())
     val state: State<SearchState> = _state
+
+    val marker = mutableStateOf(com.unlam.feat.presentation.component.map.Marker())
 
     init {
         getEventsToday()

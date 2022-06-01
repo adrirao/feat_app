@@ -1,16 +1,13 @@
 package com.unlam.feat.presentation.view.events.add_event
 
 import android.content.Context
-import android.location.Address
 import android.location.Geocoder
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.GpsFixed
 import androidx.compose.runtime.Composable
@@ -24,11 +21,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.unlam.feat.R
-import com.unlam.feat.common.Screen
 import com.unlam.feat.model.Periodicity
 import com.unlam.feat.presentation.component.*
+import com.unlam.feat.presentation.component.map.FeatMap
 import com.unlam.feat.presentation.ui.theme.card
-import com.unlam.feat.presentation.view.register.RegisterEvent
 
 
 @Composable

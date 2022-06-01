@@ -1,10 +1,13 @@
 package com.unlam.feat.presentation.component.nav
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -13,6 +16,9 @@ import androidx.navigation.compose.composable
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.unlam.feat.common.Screen
+import com.unlam.feat.presentation.component.map.FeatMap
+import com.unlam.feat.presentation.component.map.FeatMapWhitMaker
+import com.unlam.feat.presentation.component.map.Marker
 import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddEventViewModel
@@ -22,8 +28,8 @@ import com.unlam.feat.presentation.view.home.HomeViewModel
 import com.unlam.feat.presentation.view.login.LoginScreen
 import com.unlam.feat.presentation.view.register.Register
 import com.unlam.feat.presentation.view.search.Search
+import com.unlam.feat.presentation.view.search.SearchViewModel
 import com.unlam.feat.presentation.view.splash.SplashScreen
-import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 
 @Composable
 fun Navigation(navController: NavHostController) {
@@ -109,8 +115,15 @@ private fun NavGraphBuilder.home(
 
 private fun NavGraphBuilder.search(navController: NavHostController) {
     composable(Screen.Search.route) {
-        Box() {
-            Text(text = "Hola mundo")
+        val searchViewModel : SearchViewModel = hiltViewModel()
+        var marker  = searchViewModel.marker.value
+        
+        FeatMapWhitMaker(onClick = {
+        })
+        
+        if(marker.position != null){
+            Log.e("RAO","click")
+
         }
     }
 }
