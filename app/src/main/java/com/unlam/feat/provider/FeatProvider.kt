@@ -19,7 +19,7 @@ interface FeatProvider {
     suspend fun getEventsConfirmed(@Path("uid") uid: Int)
 
     @GET("/events/getAllByUser/{uid}")
-    suspend fun getEventsByUser(@Path("uid") uid: Int)
+    suspend fun getEventsByUser(@Path("uid") uid: Int): Response<List<Event>>
 
     @GET("/events/getEventById/{id}")
     suspend fun getEventById(@Path("id") id: Int)

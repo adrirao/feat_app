@@ -1,6 +1,16 @@
 <resources>
+    <string name="input_name_event">Nombre del evento</string>
     <string name="app_name">feat</string>
+    <string name="welcome_to_feat">¡Te damos la bienvenida a feat!</string>
+    <string name="how_do_you_want_to_continue">¿Como queres continuar?</string>
     <string name="password_visible_content_description">Hide password</string>
     <string name="password_hidden_content_description">Show password</string>
-    <string name="input_name_event">Nombre del evento</string>
+    <string name="feat_logo">Feat Logo</string>
+    <string name="email_or_numberphone">Direccion de correo electronico o telefono</string>
+    <string name="password">Contraseña</string>
+    <string name="forgot_password">Olvidaste la contraseña?</string>
+    <string name="login">Iniciar Sesion</string>
+    <string name="no_account">No tenes cuenta?</string>
+    <string name="register">Registrate</string>
+    <string name="logo">LOGO</string>
 </resources>

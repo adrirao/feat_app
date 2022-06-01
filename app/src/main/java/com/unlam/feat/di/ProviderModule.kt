@@ -1,5 +1,8 @@
 package com.unlam.feat.di
 
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.unlam.feat.common.Constants
 import com.unlam.feat.provider.FeatProvider
 import dagger.Module
 import dagger.Provides
@@ -17,7 +20,7 @@ import javax.inject.Singleton
 class ProviderModule {
     @Provides
     @Named("BaseUrl")
-    fun provideBaseUrl() = "http://192.168.0.191:3010/".toHttpUrl()
+    fun provideBaseUrl() = Constants.FEAT_URL_BASE.toHttpUrl()
 
     @Singleton
     @Provides
@@ -32,4 +35,8 @@ class ProviderModule {
     @Singleton
     fun providerFeatProvider(retrofit: Retrofit): FeatProvider =
         retrofit.create(FeatProvider::class.java)
+
+    @Provides
+    @Singleton
+    fun provideFirebaseInstance() = Firebase.auth
 }

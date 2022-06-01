@@ -7,6 +7,7 @@ import com.unlam.feat.provider.FeatProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,14 +37,16 @@ constructor(
             }
     }
 
-}
+    override fun getEventsByUser(uId: Int): Flow<Result<List<Event>>>  = flow {
+        try {
+            emit(Result.Loading())
+            delay(600)
+            val events = featProvider.getEventsByUser(uId).body() ?: listOf()
+            emit(Result.Success(data = events))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
 
-//flow {
-//    try {
-//        emit()
-//        val events = featProvider.postEvent()
-//        emit(Result.Success(events))
-//    } catch (e: java.lang.Exception) {
-//        emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
-//    }
-//}
+
+}

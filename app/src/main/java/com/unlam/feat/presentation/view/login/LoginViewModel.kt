@@ -4,16 +4,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.unlam.feat.common.Result
-import com.unlam.feat.repository.FeatRepositoryImp
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.unlam.feat.common.Constants
+import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,31 +16,107 @@ import javax.inject.Inject
 class LoginViewModel
 @Inject
 constructor(
-    private val featRepository: FeatRepositoryImp
+    private val firebaseAuthRepository: FirebaseAuthRepositoryImp
 ) : ViewModel() {
     private val _state = mutableStateOf(LoginState())
     val state: State<LoginState> = _state
 
-    private val _isRefreshing = MutableStateFlow(false)
-    val isRefreshing : StateFlow<Boolean> = _isRefreshing
 
-    init {
-        getEventsCreatedByUser()
+    fun onEvent(event: LoginEvent) {
+        when (event) {
+            is LoginEvent.EnteredEmailOrPhone -> {
+                _state.value = _state.value.copy(
+                    emailOrPhoneText = event.value
+                )
+            }
+            is LoginEvent.EnteredPassword -> {
+                _state.value = _state.value.copy(
+                    passwordText = event.value
+                )
+            }
+            is LoginEvent.TogglePasswordVisibility -> {
+                _state.value = _state.value.copy(
+                    isPasswordVisible = !_state.value.isPasswordVisible
+                )
+            }
+            is LoginEvent.Login -> {
+                validateEmailOrPhone(_state.value.emailOrPhoneText)
+                validatePassword(_state.value.passwordText)
+                authenticateUser()
+            }
+        }
     }
 
-    fun getEventsCreatedByUser() {
-        featRepository.getEventsCreatedByUser(1).onEach { result ->
-            when (result) {
-                is Result.Error -> {
-                    _state.value = LoginState(error = result.message ?: "Error Inesperado")
-                }
-                is Result.Loading -> {
-                    _state.value = LoginState(isLoading = true)
-                }
-                is Result.Success -> {
-                    _state.value = LoginState(events = result.data ?: emptyList())
+    private fun validatePassword(password: String) {
+        val trimmedPassword = password.trim()
+        if (trimmedPassword.isBlank()) {
+            _state.value = _state.value.copy(
+                passwordError = LoginState.PasswordError.FieldEmpty
+            )
+        }
+
+        if (password.length < Constants.MIN_PASSWORD_LENGTH) {
+            _state.value = _state.value.copy(
+                passwordError = LoginState.PasswordError.InputTooShort
+            )
+            return
+        }
+
+        val capitalLettersInPassword = password.any { it.isUpperCase() }
+        val numberInPassword = password.any { it.isDigit() }
+        if (!capitalLettersInPassword || !numberInPassword) {
+            _state.value = _state.value.copy(
+                passwordError = LoginState.PasswordError.InvalidPassword
+            )
+            return
+        }
+        _state.value = _state.value.copy(passwordError = null)
+    }
+
+    private fun validateEmailOrPhone(email: String) {
+        val trimmedEmail = email.trim()
+        if (trimmedEmail.isBlank()) {
+            _state.value = _state.value.copy(
+                emailError = LoginState.EmailError.FieldEmpty
+            )
+            return
+        }
+        _state.value = _state.value.copy(
+            emailError = null
+        )
+    }
+
+    private fun authenticateUser() {
+        var email = if (_state.value.emailError == null) _state.value.emailOrPhoneText else return
+        var password = if (_state.value.passwordError == null) _state.value.passwordText else return
+        viewModelScope.launch {
+            firebaseAuthRepository.authenticate(email, password) { isLoged, error ->
+                if (isLoged) {
+                    _state.value = _state.value.copy(
+                        isAuthenticate = true
+                    )
+                } else {
+                    when (error) {
+                        is FirebaseAuthInvalidUserException -> {
+                            _state.value = _state.value.copy(
+                                authenticateError = LoginState.AuthenticateError.UserNotExist
+                            )
+                        }
+                        is FirebaseAuthInvalidCredentialsException -> {
+                            _state.value = _state.value.copy(
+                                authenticateError = LoginState.AuthenticateError.InvalidCredentials
+                            )
+                        }
+                        else -> {
+                            _state.value = _state.value.copy(
+                                authenticateError = LoginState.AuthenticateError.VerifyEmail
+                            )
+                        }
+                    }
                 }
             }
-        }.launchIn(viewModelScope)
+        }
     }
+
+
 }
