@@ -34,37 +34,8 @@ fun Register(
     navController: NavController,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.value
 
-    if (state.registrationMessage != null) {
-        var title: String
-        var description: String
-        var isRegistered: Boolean = false
-        when (state.registrationMessage) {
-            RegisterState.RegisterMessage.UserCreated -> {
-                title = "Regristro con exito!"
-                description =
-                    "Por favor verificar tu correo electronico e ingresar a la confirmacion para darse de alta."
-                isRegistered = true
-            }
-            RegisterState.RegisterMessage.AlreadyExistUser -> {
-                title = "Registro con error!"
-                description = "El usuario ya se encuentra creado."
-            }
-        }
-        FeatAlertDialog(
-            title = title,
-            descriptionContent = description,
-            onDismiss = {
-                viewModel.onEvent(RegisterEvent.DismissDialog)
-                if(isRegistered){
-                    navController.popBackStack()
-                    navController.navigate(Screen.Login.route)
-                }
-            }
-        )
-    }
-
+    setMessages(viewModel, navController)
     Content(
         viewModel,
         navigateToLogin = {
@@ -167,6 +138,83 @@ private fun Content(viewModel: RegisterViewModel, navigateToLogin: () -> Unit) {
                 .clickable {
                     navigateToLogin()
                 }
+        )
+    }
+}
+
+@Composable
+fun setMessages(viewModel: RegisterViewModel, navController: NavController) {
+    val state = viewModel.state.value
+    if (state.registrationMessage != null) {
+        var title: String
+        var description: String
+        var isRegistered: Boolean = false
+        when (state.registrationMessage) {
+            RegisterState.RegisterMessage.UserCreated -> {
+                title = "Regristro con exito!"
+                description =
+                    "Por favor verificar tu correo electronico e ingresar a la confirmacion para darse de alta."
+                isRegistered = true
+            }
+            RegisterState.RegisterMessage.AlreadyExistUser -> {
+                title = "Registro con error!"
+                description = "El usuario ya se encuentra creado."
+            }
+        }
+        FeatAlertDialog(
+            title = title,
+            descriptionContent = description,
+            onDismiss = {
+                viewModel.onEvent(RegisterEvent.DismissDialog)
+                if (isRegistered) {
+                    navController.popBackStack()
+                    navController.navigate(Screen.Login.route)
+                }
+            }
+        )
+    }
+
+    if (state.passwordError != null) {
+        var title: String = "Error Registro"
+        var description: String
+        when (state.passwordError) {
+            RegisterState.PasswordError.InvalidPassword -> {
+                description =
+                    "Contraseña invalida."
+            }
+            RegisterState.PasswordError.InputTooShort -> {
+                description = "Contaseña demasiado corta."
+            }
+            RegisterState.PasswordError.FieldEmpty -> {
+                description = "Campos de contraseña incompletos."
+            }
+        }
+        FeatAlertDialog(
+            title = title,
+            descriptionContent = description,
+            onDismiss = {
+                viewModel.onEvent(RegisterEvent.DismissDialog)
+            }
+        )
+    }
+    if (state.emailError != null) {
+        var title: String = "Error Email"
+        var description: String
+        when (state.emailError) {
+            RegisterState.EmailError.FieldEmpty -> {
+                description =
+                    "Email vacio."
+            }
+            RegisterState.EmailError.InvalidEmail -> {
+                description = "Email invalido."
+            }
+        }
+        FeatAlertDialog(
+            title = title,
+            descriptionContent = description,
+            onDismiss = {
+                viewModel.onEvent(RegisterEvent.DismissDialog)
+            }
         )
     }
 }

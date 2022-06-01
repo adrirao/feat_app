@@ -57,14 +57,16 @@ constructor(
                 )
             }
             is RegisterEvent.Register -> {
-                validateUsername(state.value.usernameText)
+//                validateUsername(state.value.usernameText)
                 validateEmail(state.value.emailText)
                 validatePassword(state.value.passwordText)
                 registerUser()
             }
             is RegisterEvent.DismissDialog -> {
                 _state.value = _state.value.copy(
-                    registrationMessage = null
+                    registrationMessage = null,
+                    passwordError = null,
+                    emailError = null
                 )
             }
         }
