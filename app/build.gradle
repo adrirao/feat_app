@@ -96,4 +96,7 @@ dependencies {
     // Accompaniest Swipe Refresh
     implementation "com.google.accompanist:accompanist-swiperefresh:0.18.0"
 
+    //Gmap
+    implementation "com.google.maps.android:maps-compose:1.0.0"
+    implementation "com.google.android.gms:play-services-maps:18.0.2"
 }
