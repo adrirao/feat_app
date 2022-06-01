@@ -13,10 +13,14 @@ import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddNewEventScreen
+import com.unlam.feat.presentation.view.login.Login
+import com.unlam.feat.presentation.view.splash.SplashScreen
 
 @Composable
 fun Navigation(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.Home.route) {
+    NavHost(navController = navController, startDestination = Screen.Splash.route) {
+
+        splash(navController)
 
         login(navController)
         register(navController)
@@ -33,9 +37,15 @@ fun Navigation(navController: NavHostController) {
 
 }
 
+private fun NavGraphBuilder.splash(navController: NavHostController) {
+    composable(Screen.Splash.route) {
+        SplashScreen(navController)
+    }
+}
+
 private fun NavGraphBuilder.login(navController: NavHostController) {
     composable(Screen.Login.route) {
-
+        Login()
     }
 }
 
