@@ -24,9 +24,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.unlam.feat.R
+import com.unlam.feat.common.Screen
 import com.unlam.feat.model.Periodicity
 import com.unlam.feat.presentation.component.*
 import com.unlam.feat.presentation.ui.theme.card
+import com.unlam.feat.presentation.view.register.RegisterEvent
 
 
 @Composable
@@ -34,6 +36,7 @@ fun AddNewEventScreen(
     navigateToEvents: () -> Unit,
     state: AddEventState,
     onValueChange: (AddEventEvent) -> Unit,
+    navigateToHome: () -> Unit,
     createEvent: () -> Unit
 ) {
     var openMap by remember {
@@ -81,17 +84,21 @@ fun AddNewEventScreen(
                 )
 
 
-                val periodicityList = mutableListOf<Periodicity>()
+                val periodicityList = remember { mutableListOf<Periodicity>() }
                 periodicityList.add(Periodicity(0, " "))
                 periodicityList.add(Periodicity(1, "Unica Vez"))
                 periodicityList.add(Periodicity(2, "Semanal"))
                 periodicityList.add(Periodicity(3, "Quincenal"))
                 periodicityList.add(Periodicity(4, "Mensual"))
 
-                val periodicityListString = mutableListOf<String>()
+                val periodicityListString = remember {
+                    mutableListOf<String>()
+                }
 
                 periodicityList.forEach {
-                    periodicityListString.add(it.description)
+                    if(!periodicityListString.contains(it.description)){
+                        periodicityListString.add(it.description)
+                    }
                 }
 
                 FeatDropDown(
@@ -101,8 +108,9 @@ fun AddNewEventScreen(
                         state.periodicityList.forEach {
                             if (it.description == value) onValueChange(
                                 AddEventEvent.EnteredPeriodicity(
-                                    value
+                                    it.id.toString()
                                 )
+
                             )
                         }
                     }
@@ -182,6 +190,15 @@ fun AddNewEventScreen(
 
 
     if (state.isCreatedMessage?.isNotEmpty() == true) {
-        Text(state.isCreatedMessage)
+        val title = "Evento creado con exito"
+        val description = "Tu evento ha sido creado con exito!!"
+        FeatAlertDialog(
+            title = title,
+            descriptionContent = description,
+            onDismiss = {
+                onValueChange(AddEventEvent.DismissDialog)
+                navigateToHome()
+            }
+        )
     }
 }

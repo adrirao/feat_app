@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -26,9 +28,9 @@ import com.unlam.feat.R
 fun FeatMap(
     setLocation: (LatLng) -> Unit
 ) {
-    val markerPosition = LatLng(1.35, 103.87)
+    val markerPosition = LatLng(-34.671137, -58.5664745)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(markerPosition, 18f)
+        position = CameraPosition.fromLatLngZoom(markerPosition, 16f)
     }
 
         GoogleMap(
@@ -47,17 +49,11 @@ fun FeatMap(
                 },
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    modifier = Modifier.size(30.dp),
+                    painter = painterResource(id = R.drawable.logotipo),
                     contentDescription = "marker",
                 )
             }
-
-            Text(
-                text = "Is camera moving: ${cameraPositionState.isMoving}" +
-                        "\n Latitude and Longitude: ${cameraPositionState.position.target.latitude} " +
-                        "and ${cameraPositionState.position.target.longitude}",
-                textAlign = TextAlign.Center
-            )
         }
 
 

@@ -25,10 +25,10 @@ interface FeatProvider {
     @GET("/events/getEventById/{id}")
     suspend fun getEventById(@Path("id") id: Int)
 
-    @GET("/periodicity/")
-    suspend fun getPeriodicity(): Response<List<Periodicity>>
-
     @Headers("Content-type: application/json")
     @POST("/events/create")
     suspend fun postEvent(@Body requestEvent : RequestEvent): Response<String>
+
+    @GET("/periodicities/")
+    suspend fun getPeriodicity(): Response<List<Periodicity>>
 }

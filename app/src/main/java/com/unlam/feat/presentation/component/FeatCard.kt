@@ -67,7 +67,7 @@ fun FeatCard(
     ) {
         Row {
             when (sport) {
-                Constants.Sports.SOCCER ->  Image(
+                Constants.Sports.SOCCER, Constants.Sports.SOCCER_6 ->  Image(
                     painter = painterResource(id = R.drawable.soccer),
                     contentDescription = sportDescription,
                     contentScale = ContentScale.Crop,

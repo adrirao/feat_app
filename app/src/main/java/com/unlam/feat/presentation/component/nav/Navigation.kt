@@ -139,34 +139,12 @@ private fun NavGraphBuilder.addEvent(navController: NavHostController) {
                 navController.popBackStack()
                 navController.navigate(Screen.Events.route)
             },
+            navigateToHome = {
+                navController.popBackStack()
+                navController.navigate(Screen.Home.route)
+            },
             onValueChange = {
-
-                when(it){
-                    is AddEventEvent.EnteredName -> {
-                       addEventViewModel.onEvent(it)
-                    }
-                    is AddEventEvent.EnteredDay -> {
-                        addEventViewModel.onEvent(it)
-                    }
-                    is AddEventEvent.EnteredStartTime -> {
-                        addEventViewModel.onEvent(it)
-                    }
-                    is AddEventEvent.EnteredEndTime -> {
-                        addEventViewModel.onEvent(it)
-                    }
-                    is AddEventEvent.EnteredDescription -> {
-                        addEventViewModel.onEvent(it)
-                    }
-                    is AddEventEvent.EnteredPeriodicity -> {
-                        addEventViewModel.onEvent(it)
-                    }
-                    is AddEventEvent.EnteredAddress -> {
-                        addEventViewModel.onEvent(it)
-                    }
-                    is AddEventEvent.EnteredLatLong -> {
-                        addEventViewModel.onEvent(it)
-                    }
-                }
+                addEventViewModel.onEvent(it)
             }
         )
     }

@@ -107,7 +107,6 @@ fun FeatDropDown(
             enabled = false,
             onValueChange = {
                 selectedText = it
-                selectedText(it)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -134,6 +133,7 @@ fun FeatDropDown(
             options.forEach { label ->
                 DropdownMenuItem(onClick = {
                     selectedText = label
+                    selectedText(label)
                     expanded = false
                 }) {
                     Text(text = label)

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlam.feat.common.Result
+import com.unlam.feat.model.request.RequestEvent
 import com.unlam.feat.presentation.view.events.EventState
 import com.unlam.feat.repository.FeatRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -70,12 +71,31 @@ constructor(
                     longitude = event.long
                 )
             }
+            is AddEventEvent.DismissDialog -> {
+                _state.value = _state.value.copy(
+                    isCreatedMessage = null
+                )
+            }
         }
     }
 
     fun createEvent() {
 
-        featRepository.postEvent().onEach { result ->
+        val request = RequestEvent(
+            name = _state.value.name,
+            date = _state.value.date.toString(),
+            startTime = _state.value.startTime.toString(),
+            endTime = _state.value.endTime.toString(),
+            description = _state.value.description,
+            latitude = _state.value.latitude,
+            longitude = _state.value.longitude,
+            sport = "2",
+            state = _state.value.state,
+            periodicity = _state.value.periodicity,
+            organizer = _state.value.organizer,
+        )
+
+        featRepository.postEvent(request).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value = AddEventState(error = result.message ?: "Error Inesperado")

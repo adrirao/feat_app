@@ -9,6 +9,7 @@ object Constants {
     object Sports {
         const val TENNIS = "Tennis"
         const val SOCCER = "Futbol 5"
+        const val SOCCER_6 = "Futbol 6"
         const val BASKETBALL = "Basketball"
         const val PADDLE = "Paddle"
     }
