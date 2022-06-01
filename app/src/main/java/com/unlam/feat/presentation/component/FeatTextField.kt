@@ -44,7 +44,8 @@ fun FeatTextField(
     isPasswordVisible: Boolean = false,
     onPasswordToggleClick: (Boolean) -> Unit = {},
     onValueChange: (String) -> Unit,
-    enabled:Boolean = true
+    enabled:Boolean = true,
+    trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     Column(
         modifier = modifier
@@ -113,7 +114,7 @@ fun FeatTextField(
                     }
                 }
                 icon
-            } else null,
+            } else trailingIcon,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White, RoundedCornerShape(10.dp)),

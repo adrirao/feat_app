@@ -72,7 +72,7 @@ fun AddNewEventScreen(
                 periodicityList.add(Periodicity(1, "Unica Vez"))
                 periodicityList.add(Periodicity(2, "Semanal"))
                 periodicityList.add(Periodicity(3, "Quincenal"))
-                periodicityList.add(Periodicity(4, "Mensua"))
+                periodicityList.add(Periodicity(4, "Mensual"))
 
                 val periodicityListString = mutableListOf<String>()
 
@@ -81,15 +81,15 @@ fun AddNewEventScreen(
                 }
 
                 FeatDropDown(
+                    label = "Periodicidad",
                     options = periodicityListString,
-                    label = "Perioricidad",
-                    onValueChange = { periodicityText ->
-
+                    selectedText = { value ->
                         state.periodicityList.forEach {
-
-                            if (it.description == periodicityText) {
-                                onValueChange(AddEventEvent.EnteredPeriodicity(it.id.toString()))
-                            }
+                            if (it.description == value) onValueChange(
+                                AddEventEvent.EnteredPeriodicity(
+                                    value
+                                )
+                            )
                         }
                     }
                 )
@@ -111,7 +111,10 @@ fun AddNewEventScreen(
                                     address.first().longitude.toString()
                                 )
                             )
-                            Log.e("MapsActivity",   address.first().latitude.toString() + address.first().longitude.toString())
+                            Log.e(
+                                "MapsActivity",
+                                address.first().latitude.toString() + address.first().longitude.toString()
+                            )
                         }
 
                     }
