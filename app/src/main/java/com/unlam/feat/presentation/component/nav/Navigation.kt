@@ -1,6 +1,7 @@
 package com.unlam.feat.presentation.component.nav
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -9,6 +10,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
@@ -16,7 +19,9 @@ import com.unlam.feat.presentation.view.events.add_event.AddNewEventScreen
 import com.unlam.feat.presentation.view.home.Home
 import com.unlam.feat.presentation.view.home.HomeViewModel
 import com.unlam.feat.presentation.view.login.LoginScreen
+import com.unlam.feat.presentation.view.register.Register
 import com.unlam.feat.presentation.view.splash.SplashScreen
+import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 
 @Composable
 fun Navigation(navController: NavHostController) {
@@ -52,10 +57,8 @@ private fun NavGraphBuilder.login(navController: NavHostController) {
 }
 
 private fun NavGraphBuilder.register(navController: NavHostController) {
-    composable(Screen.Profile.route) {
-        Box() {
-            Text(text = "Hola mundo")
-        }
+    composable(Screen.Register.route) {
+        Register(navController)
     }
 }
 
@@ -109,8 +112,13 @@ private fun NavGraphBuilder.search(navController: NavHostController) {
 
 private fun NavGraphBuilder.invite(navController: NavHostController) {
     composable(Screen.Invite.route) {
-        Box() {
-            Text(text = "Hola mundo")
+
+        Button(onClick = {
+            Firebase.auth.signOut()
+            navController.popBackStack()
+            navController.navigate(Screen.Login.route)
+        }) {
+
         }
     }
 }
