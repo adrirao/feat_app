@@ -99,6 +99,7 @@ private fun NavGraphBuilder.home(
 
         Home(
             state = state,
+            onEvent = homeViewModel::onEvent,
             isRefreshing = isRefreshing.value,
             refreshData = homeViewModel::getEventsByUser
         )

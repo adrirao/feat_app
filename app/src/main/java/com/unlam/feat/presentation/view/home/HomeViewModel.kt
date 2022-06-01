@@ -34,6 +34,16 @@ constructor(
         getEventsByUser()
     }
 
+    fun onEvent(event: HomeEvent){
+        when(event){
+            is HomeEvent.DismissDialog -> {
+                _state.value = _state.value.copy(
+                    error = ""
+                )
+            }
+        }
+    }
+
     fun getEventsByUser() {
         featRepository.getEventsCreatedByUser(1).onEach { result ->
             when (result) {
