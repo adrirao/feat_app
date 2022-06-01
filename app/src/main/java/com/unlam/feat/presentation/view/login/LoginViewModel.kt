@@ -44,6 +44,14 @@ constructor(
                 validatePassword(_state.value.passwordText)
                 authenticateUser()
             }
+            is LoginEvent.DismissDialog -> {
+                _state.value = _state.value.copy(
+                    emailError = null,
+                    passwordError = null,
+                    authenticateError = null
+                )
+            }
+
         }
     }
 

@@ -24,10 +24,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.unlam.feat.R
 import com.unlam.feat.common.Screen
-import com.unlam.feat.presentation.component.FeatButton
-import com.unlam.feat.presentation.component.FeatButtonRounded
-import com.unlam.feat.presentation.component.FeatText
-import com.unlam.feat.presentation.component.FeatTextField
+import com.unlam.feat.presentation.component.*
+import com.unlam.feat.presentation.view.register.RegisterEvent
+import com.unlam.feat.presentation.view.register.RegisterState
 
 @Preview(showSystemUi = true)
 @Composable
@@ -36,6 +35,8 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
+
+    setMessages(viewModel,navController)
 
     if (state.isAuthenticate) {
         LaunchedEffect(true) {
@@ -154,5 +155,80 @@ private fun Content(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun setMessages(viewModel: LoginViewModel,navController: NavController){
+    val state = viewModel.state.value
+
+
+
+    if (state.passwordError != null) {
+        var title: String = "Error Login"
+        var description: String
+        when (state.passwordError) {
+            LoginState.PasswordError.InvalidPassword -> {
+                description =
+                    "Contraseña invalida."
+            }
+            LoginState.PasswordError.InputTooShort -> {
+                description = "Contaseña demasiado corta."
+            }
+            LoginState.PasswordError.FieldEmpty -> {
+                description = "Campos de contraseña incompletos."
+            }
+        }
+        FeatAlertDialog(
+            title = title,
+            descriptionContent = description,
+            onDismiss = {
+                viewModel.onEvent(LoginEvent.DismissDialog)
+            }
+        )
+    }
+
+    if (state.emailError != null) {
+        var title: String = "Error Email"
+        var description: String
+        when (state.emailError) {
+            LoginState.EmailError.FieldEmpty -> {
+                description =
+                    "Email vacio."
+            }
+            LoginState.EmailError.InvalidEmail -> {
+                description = "Email invalido."
+            }
+        }
+        FeatAlertDialog(
+            title = title,
+            descriptionContent = description,
+            onDismiss = {
+                viewModel.onEvent(LoginEvent.DismissDialog)
+            }
+        )
+    }
+
+    if(state.authenticateError != null){
+        var title: String = "Error Autenticacion"
+        var description: String
+        when(state.authenticateError){
+            is LoginState.AuthenticateError.InvalidCredentials -> {
+                description = "Creadenciales invalidas."
+            }
+            is LoginState.AuthenticateError.UserNotExist -> {
+                description = "El usuario no existe."
+            }
+            is LoginState.AuthenticateError.VerifyEmail -> {
+                description = "Pendiente de verificacion, por favor revisar tu email."
+            }
+        }
+        FeatAlertDialog(
+            title = title,
+            descriptionContent = description,
+            onDismiss = {
+                viewModel.onEvent(LoginEvent.DismissDialog)
+            }
+        )
     }
 }
