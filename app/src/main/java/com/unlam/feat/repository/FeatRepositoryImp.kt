@@ -60,6 +60,16 @@ constructor(
         }
     }
 
+    override fun getEventsToday(): Flow<Result<List<Event>>> = flow{
+        try {
+            emit(Result.Loading())
+            delay(600)
+            val events = featProvider.getEventsToday().body() ?: listOf()
+            emit(Result.Success(data = events))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
 
 
 }

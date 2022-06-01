@@ -7,6 +7,9 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface FeatProvider {
+    @GET("/events/")
+    suspend fun getEventsToday(): Response<List<Event>>
+
     @GET("/events/getAllCreatedByUser/{uid}")
     suspend fun getEventsCreatedByUser(@Path("uid") uid: Int): Response<List<Event>>
 

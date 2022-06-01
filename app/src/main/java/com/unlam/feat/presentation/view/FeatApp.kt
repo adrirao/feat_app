@@ -100,7 +100,7 @@ fun FeatApp(
                     }
                     Screen.Search.route -> {
                         floatingButtonNavigation = FloatingButtonNavigation(
-                            route = Screen.AddEvent.route,
+                            route = Screen.SearchList.route,
                             icon = Icons.Outlined.Search,
                             description = "Search"
                         )

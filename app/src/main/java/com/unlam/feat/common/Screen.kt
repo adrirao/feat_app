@@ -10,6 +10,7 @@ sealed class Screen(
     object Profile : Screen("profile_screen")
     object Events : Screen("events_screen")
     object Home : Screen("home_screen")
+    object SearchList : Screen("search_list_screen")
     object Search : Screen("search_screen")
     object Invite : Screen("invite_screen")
 

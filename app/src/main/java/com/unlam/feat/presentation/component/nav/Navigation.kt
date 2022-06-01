@@ -21,6 +21,7 @@ import com.unlam.feat.presentation.view.home.Home
 import com.unlam.feat.presentation.view.home.HomeViewModel
 import com.unlam.feat.presentation.view.login.LoginScreen
 import com.unlam.feat.presentation.view.register.Register
+import com.unlam.feat.presentation.view.search.Search
 import com.unlam.feat.presentation.view.splash.SplashScreen
 import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 
@@ -40,6 +41,7 @@ fun Navigation(navController: NavHostController) {
         invite(navController)
 
         addEvent(navController)
+        searchList(navController)
 
     }
 
@@ -81,7 +83,7 @@ private fun NavGraphBuilder.events(
 
         Event(
             state = state,
-            onEvent=eventViewModel::onEvent,
+            onEvent = eventViewModel::onEvent,
             isRefreshing = isRefreshing.value,
             refreshData = eventViewModel::getEventsCreatedByUser
         )
@@ -146,6 +148,23 @@ private fun NavGraphBuilder.addEvent(navController: NavHostController) {
             onValueChange = {
                 addEventViewModel.onEvent(it)
             }
+        )
+    }
+}
+
+private fun NavGraphBuilder.searchList(
+    navController: NavHostController,
+) {
+    composable(Screen.SearchList.route) {
+        val eventViewModel: EventViewModel = hiltViewModel()
+        val state = eventViewModel.state.value
+        val isRefreshing = eventViewModel.isRefreshing.collectAsState()
+
+        Search(
+            state = state,
+            onEvent = eventViewModel::onEvent,
+            isRefreshing = isRefreshing.value,
+            refreshData = eventViewModel::getEventsCreatedByUser
         )
     }
 }
