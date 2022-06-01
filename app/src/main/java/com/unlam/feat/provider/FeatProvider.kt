@@ -1,6 +1,7 @@
 package com.unlam.feat.provider
 
 import com.unlam.feat.model.Event
+import com.unlam.feat.model.Periodicity
 import com.unlam.feat.model.request.RequestEvent
 import retrofit2.Response
 import retrofit2.http.*
@@ -16,13 +17,16 @@ interface FeatProvider {
     suspend fun getEventsApplied(@Path("uid") uid: Int)
 
     @GET("/events/getAllConfirmed/{uid}")
-    suspend fun getEventsConfirmed(@Path("uid") uid: Int)
+    suspend fun getEventsConfirmed(@Path("uid") uid: Int): Response<List<Event>>
 
     @GET("/events/getAllByUser/{uid}")
-    suspend fun getEventsByUser(@Path("uid") uid: Int): Response<List<Event>>
+    suspend fun getEventsByUser(@Path("uid") uid: Int)
 
     @GET("/events/getEventById/{id}")
     suspend fun getEventById(@Path("id") id: Int)
+
+    @GET("/periodicity/")
+    suspend fun getPeriodicity(): Response<List<Periodicity>>
 
     @Headers("Content-type: application/json")
     @POST("/events/create")

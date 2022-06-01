@@ -2,6 +2,7 @@ package com.unlam.feat.repository
 
 import com.unlam.feat.common.Result
 import com.unlam.feat.model.Event
+import com.unlam.feat.model.Periodicity
 import com.unlam.feat.model.request.RequestEvent
 import com.unlam.feat.provider.FeatProvider
 import kotlinx.coroutines.delay
@@ -41,12 +42,24 @@ constructor(
         try {
             emit(Result.Loading())
             delay(600)
-            val events = featProvider.getEventsByUser(uId).body() ?: listOf()
+            val events = featProvider.getEventsConfirmed(uId).body() ?: listOf()
             emit(Result.Success(data = events))
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+
+    override fun getPeriodicity(): Flow<Result<List<Periodicity>>>  = flow {
+        try {
+            emit(Result.Loading())
+            delay(600)
+            val periodicity = featProvider.getPeriodicity().body() ?: listOf()
+            emit(Result.Success(data = periodicity))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
 
 
 }

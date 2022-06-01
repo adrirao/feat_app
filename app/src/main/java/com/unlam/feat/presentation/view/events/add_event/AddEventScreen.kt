@@ -1,37 +1,31 @@
 package com.unlam.feat.presentation.view.events.add_event
 
+import android.content.Context
+import android.location.Address
+import android.location.Geocoder
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.unlam.feat.R
-import com.unlam.feat.model.Event
-import com.unlam.feat.presentation.component.FeatButton
-import com.unlam.feat.presentation.component.FeatHeader
-import com.unlam.feat.presentation.component.FeatTextField
-import com.unlam.feat.presentation.ui.theme.Shapes
-import com.unlam.feat.presentation.ui.theme.SpaceMedium
+import com.unlam.feat.model.Periodicity
+import com.unlam.feat.presentation.component.*
 import com.unlam.feat.presentation.ui.theme.card
-import com.unlam.feat.presentation.ui.theme.text
-import kotlin.reflect.KFunction0
+
 
 @Composable
 fun AddNewEventScreen(
     navigateToEvents: () -> Unit,
     state: AddEventState,
     onValueChange: (AddEventEvent) -> Unit,
-    createEvent:  () -> Unit
+    createEvent: () -> Unit
 ) {
     Column {
         FeatHeader("Creacion Evento")
@@ -40,37 +34,92 @@ fun AddNewEventScreen(
                 .padding(10.dp)
                 .background(MaterialTheme.colors.card)
         ) {
+
+            val context: Context = LocalContext.current
+
             Column(
             ) {
                 FeatTextField(
-                    text =   "",
+                    text = state.name,
                     textLabel = stringResource(R.string.input_name_event),
                     onValueChange = { onValueChange(AddEventEvent.EnteredName(it)) }
                 )
-                FeatTextField(
-                    text = "",
-                    textLabel = "Dia",
-                    onValueChange = { onValueChange(AddEventEvent.EnteredName(it)) }
+
+                FeatDatePicker(
+                    date = state.date,
+                    label = "Día",
+                    onValueChange = { onValueChange(AddEventEvent.EnteredDay(it)) },
+                    titlePicker = "Seleccione una fecha"
                 )
-                FeatTextField(
-                    text = "",
-                    textLabel = "Horario",
-                    onValueChange = { onValueChange(AddEventEvent.EnteredName(it)) }
+
+                FeatTimePicker(
+                    time = state.startTime,
+                    label = "Horario de inicio",
+                    onValueChange = { onValueChange(AddEventEvent.EnteredStartTime(it)) },
+                    titlePicker = "Seleccione una hora de inicio"
                 )
-                FeatTextField(
-                    text = "",
-                    textLabel = "Perioricidad",
-                    onValueChange = { onValueChange(AddEventEvent.EnteredName(it)) }
+
+                FeatTimePicker(
+                    time = state.endTime,
+                    label = "Horario de finalizacion",
+                    onValueChange = { onValueChange(AddEventEvent.EnteredEndTime(it)) },
+                    titlePicker = "Seleccione una hora de fin"
                 )
+
+
+                val periodicityList = mutableListOf<Periodicity>()
+                periodicityList.add(Periodicity(0, " "))
+                periodicityList.add(Periodicity(1, "Unica Vez"))
+                periodicityList.add(Periodicity(2, "Semanal"))
+                periodicityList.add(Periodicity(3, "Quincenal"))
+                periodicityList.add(Periodicity(4, "Mensua"))
+
+                val periodicityListString = mutableListOf<String>()
+
+                periodicityList.forEach {
+                    periodicityListString.add(it.description)
+                }
+
+                FeatDropDown(
+                    options = periodicityListString,
+                    label = "Perioricidad",
+                    onValueChange = { periodicityText ->
+
+                        state.periodicityList.forEach {
+
+                            if (it.description == periodicityText) {
+                                onValueChange(AddEventEvent.EnteredPeriodicity(it.id.toString()))
+                            }
+                        }
+                    }
+                )
+
+
                 FeatTextField(
-                    text = "",
+                    text = state.address,
                     textLabel = "Lugar",
-                    onValueChange = { onValueChange(AddEventEvent.EnteredName(it)) }
+                    onValueChange = {
+
+                        AddEventEvent.EnteredAddress(it)
+
+                        val address: List<Address> = getAddress(it, context)
+
+                        if (address != null && address.isNotEmpty()) {
+                            onValueChange(
+                                AddEventEvent.EnteredLatLong(
+                                    address.first().latitude.toString(),
+                                    address.first().longitude.toString()
+                                )
+                            )
+                            Log.e("MapsActivity",   address.first().latitude.toString() + address.first().longitude.toString())
+                        }
+
+                    }
                 )
                 FeatTextField(
-                    text = "",
+                    text = state.description,
                     textLabel = "Descripcion",
-                    onValueChange = { onValueChange(AddEventEvent.EnteredName(it)) }
+                    onValueChange = { onValueChange(AddEventEvent.EnteredDescription(it)) }
                 )
                 Row(
 
@@ -98,7 +147,13 @@ fun AddNewEventScreen(
 
         }
     }
-    if(state.isCreatedMessage?.isNotEmpty() == true){
+    if (state.isCreatedMessage?.isNotEmpty() == true) {
         Text(state.isCreatedMessage)
     }
+}
+
+
+private fun getAddress(addressText: String, context: Context): List<Address> {
+    val geocoder = Geocoder(context)
+    return geocoder.getFromLocationName(addressText, 1)
 }
