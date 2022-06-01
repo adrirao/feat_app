@@ -38,13 +38,13 @@ fun FeatTextField(
     ),
     singleLine: Boolean = true,
     maxLines: Int = 1,
+    enabled:Boolean = true,
     leadingIcon: ImageVector? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
     isPasswordToggleDisplayed: Boolean = keyboardType == KeyboardType.Password,
     isPasswordVisible: Boolean = false,
     onPasswordToggleClick: (Boolean) -> Unit = {},
-    onValueChange: (String) -> Unit,
-    enabled:Boolean = true,
+    onValueChange: (String) -> Unit = {},
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     Column(

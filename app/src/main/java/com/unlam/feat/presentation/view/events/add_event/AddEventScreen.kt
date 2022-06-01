@@ -5,12 +5,21 @@ import android.location.Address
 import android.location.Geocoder
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.GpsFixed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -27,6 +36,10 @@ fun AddNewEventScreen(
     onValueChange: (AddEventEvent) -> Unit,
     createEvent: () -> Unit
 ) {
+    var openMap by remember {
+        mutableStateOf(false)
+    }
+
     Column {
         FeatHeader("Creacion Evento")
         Box(
@@ -36,6 +49,7 @@ fun AddNewEventScreen(
         ) {
 
             val context: Context = LocalContext.current
+
 
             Column(
             ) {
@@ -98,25 +112,16 @@ fun AddNewEventScreen(
                 FeatTextField(
                     text = state.address,
                     textLabel = "Lugar",
-                    onValueChange = {
-
-                        AddEventEvent.EnteredAddress(it)
-
-                        val address: List<Address> = getAddress(it, context)
-
-                        if (address != null && address.isNotEmpty()) {
-                            onValueChange(
-                                AddEventEvent.EnteredLatLong(
-                                    address.first().latitude.toString(),
-                                    address.first().longitude.toString()
-                                )
-                            )
-                            Log.e(
-                                "MapsActivity",
-                                address.first().latitude.toString() + address.first().longitude.toString()
-                            )
-                        }
-
+                    enabled = false,
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.GpsFixed,
+                            contentDescription = "Ubicacion",
+                            modifier = Modifier.clickable {
+                                openMap = true
+                            },
+                            tint = Color.Black
+                        )
                     }
                 )
                 FeatTextField(
@@ -150,13 +155,33 @@ fun AddNewEventScreen(
 
         }
     }
+
+    if (openMap) {
+        FeatMap(
+            setLocation = {
+                onValueChange(
+                    AddEventEvent.EnteredLatLong(
+                        lat = it.latitude.toString(),
+                        long = it.longitude.toString()
+                    )
+                )
+
+                openMap = false
+            }
+        )
+    }
+
+    if (state.latitude.isNotEmpty() && state.longitude.isNotEmpty()) {
+        val address = Geocoder(LocalContext.current).getFromLocation(
+            state.latitude.toDouble(),
+            state.longitude.toDouble(),
+            1
+        )
+        onValueChange(AddEventEvent.EnteredAddress(address[0].getAddressLine(0)))
+    }
+
+
     if (state.isCreatedMessage?.isNotEmpty() == true) {
         Text(state.isCreatedMessage)
     }
-}
-
-
-private fun getAddress(addressText: String, context: Context): List<Address> {
-    val geocoder = Geocoder(context)
-    return geocoder.getFromLocationName(addressText, 1)
 }

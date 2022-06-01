@@ -23,15 +23,14 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.unlam.feat.R
 
 @Composable
-fun MapScreen() {
+fun FeatMap(
+    setLocation: (LatLng) -> Unit
+) {
     val markerPosition = LatLng(1.35, 103.87)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(markerPosition, 18f)
     }
 
-    var showMap by remember { mutableStateOf(true) }
-
-    if (showMap) {
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState
@@ -44,7 +43,7 @@ fun MapScreen() {
         ) {
             IconButton(
                 onClick = {
-                    showMap = false
+                    setLocation(cameraPositionState.position.target)
                 },
             ) {
                 Image(
@@ -60,8 +59,6 @@ fun MapScreen() {
                 textAlign = TextAlign.Center
             )
         }
-    } else {
-        Text(text = "posicion ${cameraPositionState.position.target.latitude}  ${cameraPositionState.position.target.longitude}")
-    }
+
 
 }
