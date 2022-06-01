@@ -1,10 +1,9 @@
 package com.unlam.feat.provider
 
 import com.unlam.feat.model.Event
+import com.unlam.feat.model.request.RequestEvent
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface FeatProvider {
     @GET("/events/getAllCreatedByUser/{uid}")
@@ -25,6 +24,7 @@ interface FeatProvider {
     @GET("/events/getEventById/{id}")
     suspend fun getEventById(@Path("id") id: Int)
 
+    @Headers("Content-type: application/json")
     @POST("/events/create")
-    suspend fun postEvent()
+    suspend fun postEvent(@Body requestEvent : RequestEvent): Response<String>
 }

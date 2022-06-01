@@ -17,7 +17,7 @@ import javax.inject.Singleton
 class ProviderModule {
     @Provides
     @Named("BaseUrl")
-    fun provideBaseUrl() = "http://192.168.1.43:3010/".toHttpUrl()
+    fun provideBaseUrl() = "http://192.168.0.191:3010/".toHttpUrl()
 
     @Singleton
     @Provides

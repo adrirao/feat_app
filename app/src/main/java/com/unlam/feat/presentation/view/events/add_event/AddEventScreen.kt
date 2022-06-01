@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.unlam.feat.R
+import com.unlam.feat.model.Event
 import com.unlam.feat.presentation.component.FeatButton
 import com.unlam.feat.presentation.component.FeatHeader
 import com.unlam.feat.presentation.component.FeatTextField
@@ -23,10 +24,14 @@ import com.unlam.feat.presentation.ui.theme.Shapes
 import com.unlam.feat.presentation.ui.theme.SpaceMedium
 import com.unlam.feat.presentation.ui.theme.card
 import com.unlam.feat.presentation.ui.theme.text
+import kotlin.reflect.KFunction0
 
 @Composable
 fun AddNewEventScreen(
-    navigateToEvents: () -> Unit
+    navigateToEvents: () -> Unit,
+    state: AddEventState,
+    onValueChange: (AddEventEvent) -> Unit,
+    createEvent:  () -> Unit
 ) {
     Column {
         FeatHeader("Creacion Evento")
@@ -38,34 +43,34 @@ fun AddNewEventScreen(
             Column(
             ) {
                 FeatTextField(
-                    text = "",
+                    text =   "",
                     textLabel = stringResource(R.string.input_name_event),
-                    onValueChange = {}
+                    onValueChange = { onValueChange(AddEventEvent.EnteredName(it)) }
                 )
                 FeatTextField(
                     text = "",
                     textLabel = "Dia",
-                    onValueChange = {}
+                    onValueChange = { onValueChange(AddEventEvent.EnteredName(it)) }
                 )
                 FeatTextField(
                     text = "",
                     textLabel = "Horario",
-                    onValueChange = {}
+                    onValueChange = { onValueChange(AddEventEvent.EnteredName(it)) }
                 )
                 FeatTextField(
                     text = "",
                     textLabel = "Perioricidad",
-                    onValueChange = {}
+                    onValueChange = { onValueChange(AddEventEvent.EnteredName(it)) }
                 )
                 FeatTextField(
                     text = "",
                     textLabel = "Lugar",
-                    onValueChange = {}
+                    onValueChange = { onValueChange(AddEventEvent.EnteredName(it)) }
                 )
                 FeatTextField(
                     text = "",
                     textLabel = "Descripcion",
-                    onValueChange = {}
+                    onValueChange = { onValueChange(AddEventEvent.EnteredName(it)) }
                 )
                 Row(
 
@@ -83,11 +88,17 @@ fun AddNewEventScreen(
                     )
                     FeatButton(
                         textButton = "Crear",
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.primary)
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.primary),
+                        onClick = {
+                            createEvent()
+                        }
                     )
                 }
             }
 
         }
+    }
+    if(state.isCreatedMessage?.isNotEmpty() == true){
+        Text(state.isCreatedMessage)
     }
 }

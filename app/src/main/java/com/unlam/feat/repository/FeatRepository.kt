@@ -6,5 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface FeatRepository {
     fun getEventsCreatedByUser(uId : Int): Flow<Result<List<Event>>>
+    fun postEvent(): Flow<Result<String>>
 }
 

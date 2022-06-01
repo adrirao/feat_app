@@ -12,6 +12,8 @@ import androidx.navigation.compose.composable
 import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
+import com.unlam.feat.presentation.view.events.add_event.AddEventEvent
+import com.unlam.feat.presentation.view.events.add_event.AddEventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddNewEventScreen
 
 @Composable
@@ -99,10 +101,23 @@ private fun NavGraphBuilder.invite(navController: NavHostController) {
 
 private fun NavGraphBuilder.addEvent(navController: NavHostController) {
     composable(Screen.AddEvent.route) {
+
+        val addEventViewModel: AddEventViewModel = hiltViewModel()
+        val state = addEventViewModel.state.value
+
         AddNewEventScreen(
+            state = state,
+            createEvent = addEventViewModel::createEvent,
             navigateToEvents = {
                 navController.popBackStack()
                 navController.navigate(Screen.Events.route)
+            },
+            onValueChange = {
+                when(it){
+                    is AddEventEvent.EnteredName -> {
+//                        state.event.name = it
+                    }
+                }
             }
         )
     }

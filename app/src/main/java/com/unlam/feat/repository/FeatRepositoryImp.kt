@@ -2,11 +2,11 @@ package com.unlam.feat.repository
 
 import com.unlam.feat.common.Result
 import com.unlam.feat.model.Event
+import com.unlam.feat.model.request.RequestEvent
 import com.unlam.feat.provider.FeatProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,6 +26,24 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
-
+    override fun postEvent(): Flow<Result<String>> = flow{
+            try {
+                emit(Result.Loading())
+                val response = featProvider.postEvent(RequestEvent()).code()
+                if(response in 200..299) emit(Result.Success(data = "Creado con exito")) else emit(Result.Error("Algo malo ocurrio."))
+            }catch (e :Exception){
+                emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+            }
+    }
 
 }
+
+//flow {
+//    try {
+//        emit()
+//        val events = featProvider.postEvent()
+//        emit(Result.Success(events))
+//    } catch (e: java.lang.Exception) {
+//        emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+//    }
+//}
