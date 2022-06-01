@@ -96,7 +96,7 @@ fun AddNewEventScreen(
                 }
 
                 periodicityList.forEach {
-                    if(!periodicityListString.contains(it.description)){
+                    if (!periodicityListString.contains(it.description)) {
                         periodicityListString.add(it.description)
                     }
                 }
@@ -192,6 +192,18 @@ fun AddNewEventScreen(
     if (state.isCreatedMessage?.isNotEmpty() == true) {
         val title = "Evento creado con exito"
         val description = "Tu evento ha sido creado con exito!!"
+        FeatAlertDialog(
+            title = title,
+            descriptionContent = description,
+            onDismiss = {
+                onValueChange(AddEventEvent.DismissDialog)
+                navigateToHome()
+            }
+        )
+    } else if (state.error.isNotBlank()) {
+        val title = "Error al crear evento"
+        val description =
+            "Se produjo un error al crear el evento. Por favor verifique los datos ingresados."
         FeatAlertDialog(
             title = title,
             descriptionContent = description,
