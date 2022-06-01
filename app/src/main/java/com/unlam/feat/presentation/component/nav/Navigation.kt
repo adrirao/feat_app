@@ -13,7 +13,9 @@ import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddNewEventScreen
-import com.unlam.feat.presentation.view.login.Login
+import com.unlam.feat.presentation.view.home.Home
+import com.unlam.feat.presentation.view.home.HomeViewModel
+import com.unlam.feat.presentation.view.login.LoginScreen
 import com.unlam.feat.presentation.view.splash.SplashScreen
 
 @Composable
@@ -45,7 +47,7 @@ private fun NavGraphBuilder.splash(navController: NavHostController) {
 
 private fun NavGraphBuilder.login(navController: NavHostController) {
     composable(Screen.Login.route) {
-        Login()
+        LoginScreen(navController)
     }
 }
 
@@ -85,9 +87,15 @@ private fun NavGraphBuilder.home(
     navController: NavHostController,
 ) {
     composable(Screen.Home.route) {
-        Box() {
-            Text(text = "Hola mundo")
-        }
+        val homeViewModel: HomeViewModel = hiltViewModel()
+        val state = homeViewModel.state.value
+        val isRefreshing = homeViewModel.isRefreshing.collectAsState()
+
+        Home(
+            state = state,
+            isRefreshing = isRefreshing.value,
+            refreshData = homeViewModel::getEventsByUser
+        )
     }
 }
 

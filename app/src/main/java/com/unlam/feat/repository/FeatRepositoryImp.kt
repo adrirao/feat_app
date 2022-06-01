@@ -27,5 +27,16 @@ constructor(
         }
     }
 
+    override fun getEventsByUser(uId: Int): Flow<Result<List<Event>>>  = flow {
+        try {
+            emit(Result.Loading())
+            delay(600)
+            val events = featProvider.getEventsByUser(uId).body() ?: listOf()
+            emit(Result.Success(data = events))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
 
 }
