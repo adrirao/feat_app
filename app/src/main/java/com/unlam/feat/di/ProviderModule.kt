@@ -1,5 +1,7 @@
 package com.unlam.feat.di
 
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.unlam.feat.provider.FeatProvider
 import dagger.Module
 import dagger.Provides
@@ -32,4 +34,8 @@ class ProviderModule {
     @Singleton
     fun providerFeatProvider(retrofit: Retrofit): FeatProvider =
         retrofit.create(FeatProvider::class.java)
+
+    @Provides
+    @Singleton
+    fun provideFirebaseInstance() = Firebase.auth
 }
