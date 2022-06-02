@@ -1,16 +1,65 @@
 package com.unlam.feat.repository
 
 import com.unlam.feat.common.Result
-import com.unlam.feat.model.Event
-import com.unlam.feat.model.Periodicity
-import com.unlam.feat.model.request.RequestEvent
+import com.unlam.feat.model.*
+import com.unlam.feat.model.request.*
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
+import retrofit2.http.Path
 
 interface FeatRepository {
-    fun getEventsCreatedByUser(uId: Int): Flow<Result<List<Event>>>
-    fun postEvent(req:RequestEvent): Flow<Result<String>>
-    fun getEventsByUser(uId: Int): Flow<Result<List<Event>>>
-    fun getPeriodicities(): Flow<Result<List<Periodicity>>>
-    fun getEventsToday() : Flow<Result<List<Event>>>
+    //<editor-fold desc="Events">
+    fun getEventsToday(uId: Int): Flow<Result<List<Event>>> // @GET("/events/")
+    fun getEventsSuggestedForUser(uId: Int): Flow<Result<List<Event>>> // @GET("/events/getAllEventSuggestedForUser/{uid}")
+    fun getEventsCreatedByUser(uId: Int): Flow<Result<List<Event>>> // @GET("/events/getAllCreatedByUser/{uid}")
+    fun getEventsByOrganizer(organizer: Int): Flow<Result<List<Event>>> // @GET("/events/getAllByOrganizer/{organizer}")
+    fun getEventsApplied(uId: Int): Flow<Result<List<Event>>> // @GET("/events/getAllApplied/{uid}")
+    fun getEventsConfirmed(uId: Int): Flow<Result<List<Event>>> // @GET("/events/getAllConfirmed/{uid}")
+    fun getEventsByUser(uId: Int): Flow<Result<List<Event>>> // @GET("/events/getAllByUser/{uid}")
+    fun getEventById(id: Int): Flow<Result<Event>> // @GET("/events/getEventById/{id}")
+    fun postEvent(req: RequestEvent): Flow<Result<String>> // @POST("/events/create")
+
+    //</editor-fold">
+    //<editor-fold desc="Availabilities">
+    fun getAvailabilities(): Flow<Result<List<Availability>>> // @GET("/availabilities/")
+    fun getAvailability(id: Int): Flow<Result<Availability>> // @GET("/availabilities/{id}")
+    fun createAvailability(req: RequestAvailability): Flow<Result<String>> // @POST("/availabilities/create")
+
+    //</editor-fold desc="Availabilities">
+    //<editor-fold desc="Levels">
+    fun getLevels(): Flow<Result<List<Level>>> // @GET("/levels/")
+    fun getLevel(id: Int): Flow<Result<Level>> // @GET("/levels/{id}")
+    fun createLevel(req: RequestLevel): Flow<Result<String>> // @POST("/levels/create")
+
+    //</editor-fold desc="Levels">
+    //<editor-fold desc="Periodicities">
+    fun getPeriodicities(): Flow<Result<List<Periodicity>>> // @GET("/periodicities/")
+    fun getPeriodicity(id: Int): Flow<Result<Periodicity>> // @GET("/periodicities/{id}")
+    fun createPeriodicity(req: RequestPeriodicity): Flow<Result<String>> // @GET("/periodicities/create")
+
+    //</editor-fold desc="Periodicities">
+    //<editor-fold desc="Players">
+    fun getPlayers(): Flow<Result<List<Player>>> // @GET("/players/")
+    fun getPlayer(id: Int): Flow<Result<Player>> // @GET("/players/{id}")
+    fun getAllByPerson(personId: Int): Flow<Result<Player>> // @GET("/players/getAllByPerson/{personId}")
+    fun getAllPlayersSuggestedForEvent(eventId: Int): Flow<Result<Player>> // @GET("/players/getAllPlayersSuggestedForEvent/{eventId}")
+    fun createPlayer(req: RequestPlayer): Flow<Result<String>> // @POST("/players/create")
+
+    //</editor-fold desc="Players">
+    //<editor-fold desc="Positions">
+    fun getPositions(): Flow<Result<List<Position>>> // @GET("/positions/")
+    fun getPosition(id: Int): Flow<Result<Position>> // @GET("/positions/{id}")
+    fun createPosition(req: RequestPosition): Flow<Result<String>> // @GET("/positions/create")
+
+    //</editor-fold desc="Positions">
+    //<editor-fold desc="Sports">
+    fun getSports(): Flow<Result<List<Sport>>> // @GET("/sports/")
+    fun getSport(id: Int): Flow<Result<Sport>> // @GET("/positions/{id}")
+
+    //</editor-fold desc="Sports">
+    //<editor-fold desc="Users">
+    fun getUsers(): Flow<Result<List<User>>> // @GET("/users/")
+    fun getUser(id: Int): Flow<Result<User>> // @GET("/users/{id}")
+    //</editor-fold desc="Users">
 }
 

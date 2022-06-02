@@ -6,7 +6,6 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface FeatProvider {
-
     //<editor-fold desc="Events">
     @GET("/events/")
     suspend fun getEventsToday(): Response<List<Event>>
@@ -18,25 +17,24 @@ interface FeatProvider {
     suspend fun getEventsCreatedByUser(@Path("uid") uid: Int): Response<List<Event>>
 
     @GET("/events/getAllByOrganizer/{organizer}")
-    suspend fun getEventsByOrganizer(@Path("organizer") organizer: Int)
+    suspend fun getEventsByOrganizer(@Path("organizer") organizer: Int): Response<List<Event>>
 
     @GET("/events/getAllApplied/{uid}")
-    suspend fun getEventsApplied(@Path("uid") uid: Int)
+    suspend fun getEventsApplied(@Path("uid") uid: Int): Response<List<Event>>
 
     @GET("/events/getAllConfirmed/{uid}")
     suspend fun getEventsConfirmed(@Path("uid") uid: Int): Response<List<Event>>
 
     @GET("/events/getAllByUser/{uid}")
-    suspend fun getEventsByUser(@Path("uid") uid: Int)
+    suspend fun getEventsByUser(@Path("uid") uid: Int): Response<List<Event>>
 
     @GET("/events/getEventById/{id}")
-    suspend fun getEventById(@Path("id") id: Int)
+    suspend fun getEventById(@Path("id") id: Int): Response<Event>
 
     @Headers("Content-type: application/json")
     @POST("/events/create")
     suspend fun postEvent(@Body requestEvent: RequestEvent): Response<String>
     //</editor-fold>
-
     //<editor-fold desc="Availabilities">
     @GET("/availabilities/")
     suspend fun getAvailabilities(): Response<List<Availability>>
@@ -53,7 +51,6 @@ interface FeatProvider {
         @Body req: RequestAvailability
     ): Response<String>
     //</editor-fold>
-
     //<editor-fold desc="Levels">
     @GET("/levels/")
     suspend fun getLevels(): Response<List<Level>>
@@ -64,7 +61,6 @@ interface FeatProvider {
     @POST("/levels/create")
     suspend fun createLevel(@Body req: RequestLevel): Response<String>
     //</editor-fold>
-
     //<editor-fold desc="Periodicities">
     @GET("/periodicities/")
     suspend fun getPeriodicities(): Response<List<Periodicity>>
@@ -75,7 +71,6 @@ interface FeatProvider {
     @GET("/periodicities/create")
     suspend fun createPeriodicity(@Body req: RequestPeriodicity): Response<String>
     //</editor-fold>
-
     //<editor-fold desc="Players">
     @GET("/players/")
     suspend fun getPlayers(): Response<List<Player>>
@@ -92,7 +87,6 @@ interface FeatProvider {
     @POST("/players/create")
     suspend fun createPlayer(@Body req: RequestPlayer): Response<String>
     //</editor-fold>
-
     //<editor-fold desc="Positions">
     @GET("/positions/")
     suspend fun getPositions(): Response<List<Position>>
@@ -103,7 +97,6 @@ interface FeatProvider {
     @GET("/positions/create")
     suspend fun createPosition(@Body req: RequestPosition): Response<String>
     //</editor-fold>
-
     //<editor-fold desc="Sports">
     @GET("/sports/")
     suspend fun getSports(): Response<List<Sport>>
@@ -111,7 +104,6 @@ interface FeatProvider {
     @GET("/positions/{id}")
     suspend fun getSport(@Path("id") id: Int): Response<Sport>
     //</editor-fold>
-
     //<editor-fold desc="Users">
     @GET("/users/")
     suspend fun getUsers(): Response<List<User>>
@@ -122,5 +114,4 @@ interface FeatProvider {
 //    @PUT("/users/{id}")
 //    suspend fun putUser(@Path("id") id: Int): Response<User>
     //</editor-fold>
-
 }
