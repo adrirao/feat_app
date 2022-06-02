@@ -40,7 +40,7 @@ constructor(
     }
 
     fun getEventsToday() {
-        featRpository.getEventsToday().onEach { result ->
+        featRpository.getEventsToday(1).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value = SearchState(error = result.message ?: "Error Inesperado")

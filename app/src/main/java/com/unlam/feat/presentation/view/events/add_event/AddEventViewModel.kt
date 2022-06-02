@@ -111,7 +111,7 @@ constructor(
     }
 
     fun getPeriodicity() {
-        featRepository.getPeriodicity().onEach { result ->
+        featRepository.getPeriodicity(1).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value = AddEventState(error = result.message ?: "Error Inesperado")
@@ -120,7 +120,7 @@ constructor(
                     _state.value = AddEventState(isLoading = true)
                 }
                 is Result.Success -> {
-                    _state.value = AddEventState(periodicityList = result.data ?: emptyList())
+//                    _state.value = AddEventState(periodicityList = result.data)
                 }
             }
         }.launchIn(viewModelScope)
