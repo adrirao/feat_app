@@ -10,7 +10,7 @@ interface FeatRepository {
     fun getEventsCreatedByUser(uId: Int): Flow<Result<List<Event>>>
     fun postEvent(req:RequestEvent): Flow<Result<String>>
     fun getEventsByUser(uId: Int): Flow<Result<List<Event>>>
-    fun getPeriodicity(): Flow<Result<List<Periodicity>>>
+    fun getPeriodicities(): Flow<Result<List<Periodicity>>>
     fun getEventsToday() : Flow<Result<List<Event>>>
 }
 
