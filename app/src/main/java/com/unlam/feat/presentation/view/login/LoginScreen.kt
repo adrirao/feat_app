@@ -165,18 +165,18 @@ fun setMessages(viewModel: LoginViewModel,navController: NavController){
 
 
     if (state.passwordError != null) {
-        var title: String = "Error Login"
+        var title: String = stringResource(R.string.error_login)
         var description: String
         when (state.passwordError) {
             LoginState.PasswordError.InvalidPassword -> {
                 description =
-                    "Contraseña invalida."
+                    stringResource(R.string.error_invalid_password)
             }
             LoginState.PasswordError.InputTooShort -> {
-                description = "Contaseña demasiado corta."
+                description = stringResource(R.string.error_input_to_shoort)
             }
             LoginState.PasswordError.FieldEmpty -> {
-                description = "Campos de contraseña incompletos."
+                description = stringResource(R.string.error_field_empty)
             }
         }
         FeatAlertDialog(
@@ -189,15 +189,15 @@ fun setMessages(viewModel: LoginViewModel,navController: NavController){
     }
 
     if (state.emailError != null) {
-        var title: String = "Error Email"
+        var title: String = stringResource(R.string.error_email)
         var description: String
         when (state.emailError) {
             LoginState.EmailError.FieldEmpty -> {
                 description =
-                    "Email vacio."
+                    stringResource(R.string.error_field_empty)
             }
             LoginState.EmailError.InvalidEmail -> {
-                description = "Email invalido."
+                description = stringResource(R.string.error_invalid_email)
             }
         }
         FeatAlertDialog(
@@ -210,17 +210,17 @@ fun setMessages(viewModel: LoginViewModel,navController: NavController){
     }
 
     if(state.authenticateError != null){
-        var title: String = "Error Autenticacion"
+        var title: String = stringResource(R.string.error_auth)
         var description: String
         when(state.authenticateError){
             is LoginState.AuthenticateError.InvalidCredentials -> {
-                description = "Creadenciales invalidas."
+                description = stringResource(R.string.error_invalid_credential)
             }
             is LoginState.AuthenticateError.UserNotExist -> {
-                description = "El usuario no existe."
+                description = stringResource(R.string.error_user_not_exist)
             }
             is LoginState.AuthenticateError.VerifyEmail -> {
-                description = "Pendiente de verificacion, por favor revisar tu email."
+                description = stringResource(R.string.error_verify_email)
             }
         }
         FeatAlertDialog(

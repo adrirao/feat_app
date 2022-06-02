@@ -10,11 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.unlam.feat.R
 import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.FeatButton
 import com.unlam.feat.presentation.component.FeatSportCard
@@ -56,7 +58,7 @@ fun SportsContent(
             ) {
                 FeatText(
                     modifier = Modifier.padding(bottom = 10.dp),
-                    text = "Selecciona tus deportes",
+                    text = stringResource(R.string.text_select_sport),
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 20.sp
                 )
@@ -72,7 +74,7 @@ fun SportsContent(
             ) {
                 FeatSportCard(
                     onClickCard = {navigateToAddEvent()},
-                    sport = "soccer",
+                    sport = stringResource(R.string.text_soccer),
                     modifier = Modifier
                         .height(100.dp)
                         .fillMaxWidth()
@@ -80,7 +82,7 @@ fun SportsContent(
                 )
                 FeatSportCard(
                     onClickCard = {navigateToAddEvent()},
-                    sport = "basketball",
+                    sport = stringResource(R.string.text_basketball),
                     modifier = Modifier
                         .height(100.dp)
                         .fillMaxWidth()
@@ -88,7 +90,7 @@ fun SportsContent(
                 )
                 FeatSportCard(
                     onClickCard = {navigateToAddEvent()},
-                    sport = "tennis",
+                    sport = stringResource(R.string.text_tennis),
                     modifier = Modifier
                         .height(100.dp)
                         .fillMaxWidth()
@@ -96,7 +98,7 @@ fun SportsContent(
                 )
                 FeatSportCard(
                     onClickCard = {navigateToAddEvent()},
-                    sport = "padel",
+                    sport = stringResource(R.string.text_paddle),
                     modifier = Modifier
                         .height(100.dp)
                         .fillMaxWidth()
@@ -104,7 +106,7 @@ fun SportsContent(
                 )
                 FeatSportCard(
                     onClickCard = {navigateToAddEvent()},
-                    sport = "recreationalEvent",
+                    sport = stringResource(R.string.text_recreational_event),
                     modifier = Modifier
                         .height(100.dp)
                         .fillMaxWidth()
@@ -122,7 +124,7 @@ fun SportsContent(
                     modifier = Modifier
                         .padding(10.dp)
                         .height(60.dp),
-                    textButton = "Finalizar",
+                    textButton = stringResource(R.string.text_finish),
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
                     colorText = MaterialTheme.colors.primary,
                     textAlign = TextAlign.Center,

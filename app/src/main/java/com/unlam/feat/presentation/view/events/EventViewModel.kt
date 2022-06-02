@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.unlam.feat.R
 import com.unlam.feat.common.Result
 import com.unlam.feat.repository.FeatRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +18,7 @@ import javax.inject.Inject
 class EventViewModel
 @Inject
 constructor(
+    private val resourcesProvider: com.unlam.feat.di.ResourcesProvider,
     private val featRepository: FeatRepositoryImp
 ) : ViewModel() {
     private val _state = mutableStateOf(EventState())
@@ -43,7 +45,8 @@ constructor(
         featRepository.getEventsCreatedByUser(1).onEach { result ->
             when (result) {
                 is Result.Error -> {
-                    _state.value = EventState(error = result.message ?: "Error Inesperado")
+                    _state.value =
+                        EventState(error = result.message ?: resourcesProvider.getString(R.string.error_unknown))
                 }
                 is Result.Loading -> {
                     _state.value = EventState(isLoading = true)

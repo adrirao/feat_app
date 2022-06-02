@@ -60,23 +60,23 @@ fun AddNewEventScreen(
 
                 FeatDatePicker(
                     date = state.date,
-                    label = "Día",
+                    label = stringResource(R.string.text_day),
                     onValueChange = { onValueChange(AddEventEvent.EnteredDay(it)) },
-                    titlePicker = "Seleccione una fecha"
+                    titlePicker = stringResource(R.string.text_select_date)
                 )
 
                 FeatTimePicker(
                     time = state.startTime,
-                    label = "Horario de inicio",
+                    label = stringResource(R.string.text_start_time),
                     onValueChange = { onValueChange(AddEventEvent.EnteredStartTime(it)) },
-                    titlePicker = "Seleccione una hora de inicio"
+                    titlePicker = stringResource(R.string.text_select_start_time)
                 )
 
                 FeatTimePicker(
                     time = state.endTime,
-                    label = "Horario de finalizacion",
+                    label = stringResource(R.string.text_ending_time),
                     onValueChange = { onValueChange(AddEventEvent.EnteredEndTime(it)) },
-                    titlePicker = "Seleccione una hora de fin"
+                    titlePicker = stringResource(R.string.text_select_ending_time)
                 )
 
 
@@ -98,7 +98,7 @@ fun AddNewEventScreen(
                 }
 
                 FeatDropDown(
-                    label = "Periodicidad",
+                    label = stringResource(R.string.text_priodicity),
                     options = periodicityListString,
                     selectedText = { value ->
                         state.periodicityList.forEach {
@@ -115,12 +115,12 @@ fun AddNewEventScreen(
 
                 FeatTextField(
                     text = state.address,
-                    textLabel = "Lugar",
+                    textLabel = stringResource(R.string.text_location),
                     enabled = false,
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Outlined.GpsFixed,
-                            contentDescription = "Ubicacion",
+                            contentDescription = stringResource(R.string.text_location),
                             modifier = Modifier.clickable {
                                 openMap = true
                             },
@@ -130,14 +130,13 @@ fun AddNewEventScreen(
                 )
                 FeatTextField(
                     text = state.description,
-                    textLabel = "Descripcion",
-                    onValueChange = { onValueChange(AddEventEvent.EnteredDescription(it)) }
-                )
+                    textLabel = stringResource(R.string.text_description),
+                    onValueChange = { onValueChange(AddEventEvent.EnteredDescription(it)) })
                 Row(
 
                 ) {
                     FeatButton(
-                        textButton = "Cancelar",
+                        textButton = stringResource(R.string.text_cancel),
                         modifier = Modifier
                             .fillMaxWidth(0.5f)
                             .padding(10.dp)
@@ -148,7 +147,7 @@ fun AddNewEventScreen(
                         }
                     )
                     FeatButton(
-                        textButton = "Crear",
+                        textButton = stringResource(R.string.text_create),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colors.primary),
                         onClick = {
                             createEvent()
@@ -186,8 +185,8 @@ fun AddNewEventScreen(
 
 
     if (state.isCreatedMessage?.isNotEmpty() == true) {
-        val title = "Evento creado con exito"
-        val description = "Tu evento ha sido creado con exito!!"
+        val title = stringResource(R.string.text_event_created)
+        val description = stringResource(R.string.text_description_event_created)
         FeatAlertDialog(
             title = title,
             descriptionContent = description,
@@ -197,9 +196,9 @@ fun AddNewEventScreen(
             }
         )
     } else if (state.error.isNotBlank()) {
-        val title = "Error al crear evento"
+        val title = stringResource(R.string.error_created_event)
         val description =
-            "Se produjo un error al crear el evento. Por favor verifique los datos ingresados."
+            stringResource(R.string.error_description_event_created)
         FeatAlertDialog(
             title = title,
             descriptionContent = description,

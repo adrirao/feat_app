@@ -4,7 +4,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.unlam.feat.R
 import com.unlam.feat.common.Result
+import com.unlam.feat.di.ResourcesProvider
 import com.unlam.feat.model.request.RequestEvent
 import com.unlam.feat.presentation.view.events.EventState
 import com.unlam.feat.repository.FeatRepositoryImp
@@ -17,6 +19,7 @@ import javax.inject.Inject
 class AddEventViewModel
 @Inject
 constructor(
+    private val resourcesProvider: ResourcesProvider,
     private val featRepository: FeatRepositoryImp
 ) : ViewModel() {
 
@@ -98,7 +101,11 @@ constructor(
         featRepository.postEvent(request).onEach { result ->
             when (result) {
                 is Result.Error -> {
-                    _state.value = AddEventState(error = result.message ?: "Error Inesperado")
+                    _state.value = AddEventState(
+                        error = result.message ?: resourcesProvider.getString(
+                            R.string.error_unknown
+                        )
+                    )
                 }
                 is Result.Loading -> {
                     _state.value = AddEventState(isLoading = true)
@@ -114,7 +121,11 @@ constructor(
         featRepository.getPeriodicity(1).onEach { result ->
             when (result) {
                 is Result.Error -> {
-                    _state.value = AddEventState(error = result.message ?: "Error Inesperado")
+                    _state.value = AddEventState(
+                        error = result.message ?: resourcesProvider.getString(
+                            R.string.error_unknown
+                        )
+                    )
                 }
                 is Result.Loading -> {
                     _state.value = AddEventState(isLoading = true)
