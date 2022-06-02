@@ -1,6 +1,5 @@
 package com.unlam.feat.presentation.view.events.add_event
 
-import android.content.Context
 import android.location.Geocoder
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -46,12 +45,7 @@ fun AddNewEventScreen(
                 .padding(10.dp)
                 .background(MaterialTheme.colors.card)
         ) {
-
-            val context: Context = LocalContext.current
-
-
-            Column(
-            ) {
+            Column {
                 FeatTextField(
                     text = state.name,
                     textLabel = stringResource(R.string.input_name_event),
@@ -79,27 +73,14 @@ fun AddNewEventScreen(
                     titlePicker = stringResource(R.string.text_select_ending_time)
                 )
 
-
-                val periodicityList = remember { mutableListOf<Periodicity>() }
-                periodicityList.add(Periodicity(0, " "))
-                periodicityList.add(Periodicity(1, "Unica Vez"))
-                periodicityList.add(Periodicity(2, "Semanal"))
-                periodicityList.add(Periodicity(3, "Quincenal"))
-                periodicityList.add(Periodicity(4, "Mensual"))
-
-                val periodicityListString = remember {
-                    mutableListOf<String>()
-                }
-
-                periodicityList.forEach {
-                    if (!periodicityListString.contains(it.description)) {
-                        periodicityListString.add(it.description)
-                    }
+                val periodicityList = mutableListOf<String>()
+                state.periodicityList.map {
+                    periodicityList.add(it.description)
                 }
 
                 FeatDropDown(
                     label = stringResource(R.string.text_priodicity),
-                    options = periodicityListString,
+                    options = periodicityList,
                     selectedText = { value ->
                         state.periodicityList.forEach {
                             if (it.description == value) onValueChange(
@@ -132,9 +113,7 @@ fun AddNewEventScreen(
                     text = state.description,
                     textLabel = stringResource(R.string.text_description),
                     onValueChange = { onValueChange(AddEventEvent.EnteredDescription(it)) })
-                Row(
-
-                ) {
+                Row {
                     FeatButton(
                         textButton = stringResource(R.string.text_cancel),
                         modifier = Modifier

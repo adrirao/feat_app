@@ -197,7 +197,7 @@ constructor(
     override fun getPeriodicities(): Flow<Result<List<Periodicity>>> = flow {
         try {
             emit(Result.Loading())
-            val periodicity = featProvider.getPeriodicities().body() ?: listOf()
+            val periodicity = featProvider.getPeriodicities().body() ?: emptyList()
             emit(Result.Success(data = periodicity))
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))

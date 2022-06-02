@@ -14,7 +14,6 @@ import com.unlam.feat.presentation.component.FeatAlertDialog
 import com.unlam.feat.presentation.component.FeatCard
 import com.unlam.feat.presentation.component.FeatCircularProgress
 import com.unlam.feat.presentation.component.FeatHeader
-import com.unlam.feat.presentation.view.home.HomeEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.unlam.feat.R
 import com.unlam.feat.common.Result
 import com.unlam.feat.di.ResourcesProvider
+import com.unlam.feat.model.Periodicity
 import com.unlam.feat.model.request.RequestEvent
 import com.unlam.feat.presentation.view.events.EventState
 import com.unlam.feat.repository.FeatRepositoryImp
@@ -27,7 +28,7 @@ constructor(
     val state: State<AddEventState> = _state
 
     init {
-        getPeriodicity()
+        getPeriodicities()
     }
 
 
@@ -117,8 +118,8 @@ constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun getPeriodicity() {
-        featRepository.getPeriodicity(1).onEach { result ->
+    fun getPeriodicities() {
+        featRepository.getPeriodicities().onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value = AddEventState(
@@ -131,7 +132,7 @@ constructor(
                     _state.value = AddEventState(isLoading = true)
                 }
                 is Result.Success -> {
-//                    _state.value = AddEventState(periodicityList = result.data)
+                    _state.value = AddEventState(periodicityList = result.data ?: emptyList())
                 }
             }
         }.launchIn(viewModelScope)
