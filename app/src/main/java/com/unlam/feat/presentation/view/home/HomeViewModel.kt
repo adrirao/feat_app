@@ -5,7 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlam.feat.common.Result
+import com.unlam.feat.repository.FeatRepository
 import com.unlam.feat.repository.FeatRepositoryImp
+import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +19,8 @@ import javax.inject.Inject
 class HomeViewModel
 @Inject
 constructor(
-    private val featRepository: FeatRepositoryImp
+    private val featRepository: FeatRepositoryImp,
+    private val firebaseAuthRepository: FirebaseAuthRepositoryImp,
 ) : ViewModel() {
 
     private val _state = mutableStateOf(HomeState())
@@ -30,8 +33,8 @@ constructor(
         getEventsByUser()
     }
 
-    fun onEvent(event: HomeEvent){
-        when(event){
+    fun onEvent(event: HomeEvent) {
+        when (event) {
             is HomeEvent.DismissDialog -> {
                 _state.value = _state.value.copy(
                     error = ""
@@ -41,7 +44,8 @@ constructor(
     }
 
     fun getEventsByUser() {
-        featRepository.getEventsCreatedByUser(1).onEach { result ->
+        val uId = firebaseAuthRepository.getUserId()
+        featRepository.getEventsCreatedByUser(uId).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value = HomeState(error = result.message ?: "Error Inesperado")

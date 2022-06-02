@@ -4,12 +4,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.maps.model.Marker
 import com.unlam.feat.common.Result
-import com.unlam.feat.presentation.view.events.EventState
 import com.unlam.feat.repository.FeatRepositoryImp
+import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -18,7 +16,8 @@ import javax.inject.Inject
 class SearchViewModel
 @Inject
 constructor(
-    private val featRpository: FeatRepositoryImp
+    private val featRepository: FeatRepositoryImp,
+    private val firebaseAuthRepository: FirebaseAuthRepositoryImp
 ) : ViewModel() {
     private val _state = mutableStateOf(SearchState())
     val state: State<SearchState> = _state
@@ -40,7 +39,8 @@ constructor(
     }
 
     fun getEventsToday() {
-        featRpository.getEventsToday(1).onEach { result ->
+        val uId = firebaseAuthRepository.getUserId()
+        featRepository.getEventsToday(uId).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value = SearchState(error = result.message ?: "Error Inesperado")

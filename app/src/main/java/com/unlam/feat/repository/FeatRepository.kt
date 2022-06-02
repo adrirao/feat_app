@@ -9,13 +9,13 @@ import retrofit2.http.Path
 
 interface FeatRepository {
     //<editor-fold desc="Events">
-    fun getEventsToday(uId: Int): Flow<Result<List<Event>>> // @GET("/events/")
-    fun getEventsSuggestedForUser(uId: Int): Flow<Result<List<Event>>> // @GET("/events/getAllEventSuggestedForUser/{uid}")
-    fun getEventsCreatedByUser(uId: Int): Flow<Result<List<Event>>> // @GET("/events/getAllCreatedByUser/{uid}")
+    fun getEventsToday(uId: String): Flow<Result<List<Event>>> // @GET("/events/")
+    fun getEventsSuggestedForUser(uId: String): Flow<Result<List<Event>>> // @GET("/events/getAllEventSuggestedForUser/{uid}")
+    fun getEventsCreatedByUser(uId: String): Flow<Result<List<Event>>> // @GET("/events/getAllCreatedByUser/{uid}")
     fun getEventsByOrganizer(organizer: Int): Flow<Result<List<Event>>> // @GET("/events/getAllByOrganizer/{organizer}")
-    fun getEventsApplied(uId: Int): Flow<Result<List<Event>>> // @GET("/events/getAllApplied/{uid}")
-    fun getEventsConfirmed(uId: Int): Flow<Result<List<Event>>> // @GET("/events/getAllConfirmed/{uid}")
-    fun getEventsByUser(uId: Int): Flow<Result<List<Event>>> // @GET("/events/getAllByUser/{uid}")
+    fun getEventsApplied(uId: String): Flow<Result<List<Event>>> // @GET("/events/getAllApplied/{uid}")
+    fun getEventsConfirmed(uId: String): Flow<Result<List<Event>>> // @GET("/events/getAllConfirmed/{uid}")
+    fun getEventsByUser(uId: String): Flow<Result<List<Event>>> // @GET("/events/getAllByUser/{uid}")
     fun getEventById(id: Int): Flow<Result<Event>> // @GET("/events/getEventById/{id}")
     fun postEvent(req: RequestEvent): Flow<Result<String>> // @POST("/events/create")
 

@@ -11,22 +11,22 @@ interface FeatProvider {
     suspend fun getEventsToday(): Response<List<Event>>
 
     @GET("/events/getAllEventSuggestedForUser/{uid}")
-    suspend fun getEventsSuggestedForUser(@Path("uid") uid: Int): Response<List<Event>>
+    suspend fun getEventsSuggestedForUser(@Path("uid") uid: String): Response<List<Event>>
 
     @GET("/events/getAllCreatedByUser/{uid}")
-    suspend fun getEventsCreatedByUser(@Path("uid") uid: Int): Response<List<Event>>
+    suspend fun getEventsCreatedByUser(@Path("uid") uid: String): Response<List<Event>>
 
     @GET("/events/getAllByOrganizer/{organizer}")
     suspend fun getEventsByOrganizer(@Path("organizer") organizer: Int): Response<List<Event>>
 
     @GET("/events/getAllApplied/{uid}")
-    suspend fun getEventsApplied(@Path("uid") uid: Int): Response<List<Event>>
+    suspend fun getEventsApplied(@Path("uid") uid: String): Response<List<Event>>
 
     @GET("/events/getAllConfirmed/{uid}")
-    suspend fun getEventsConfirmed(@Path("uid") uid: Int): Response<List<Event>>
+    suspend fun getEventsConfirmed(@Path("uid") uid: String): Response<List<Event>>
 
     @GET("/events/getAllByUser/{uid}")
-    suspend fun getEventsByUser(@Path("uid") uid: Int): Response<List<Event>>
+    suspend fun getEventsByUser(@Path("uid") uid: String): Response<List<Event>>
 
     @GET("/events/getEventById/{id}")
     suspend fun getEventById(@Path("id") id: Int): Response<Event>

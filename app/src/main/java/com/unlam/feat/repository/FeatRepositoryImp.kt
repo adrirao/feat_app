@@ -18,7 +18,7 @@ constructor(
 ) : FeatRepository {
     //<editor-fold desc="Events">
 
-    override fun getEventsToday(uId: Int): Flow<Result<List<Event>>> = flow {
+    override fun getEventsToday(uId: String): Flow<Result<List<Event>>> = flow {
         try {
             emit(Result.Loading())
             val response = featProvider.getEventsToday().body() ?: listOf()
@@ -28,7 +28,7 @@ constructor(
         }
     }
 
-    override fun getEventsSuggestedForUser(uId: Int): Flow<Result<List<Event>>> = flow {
+    override fun getEventsSuggestedForUser(uId: String): Flow<Result<List<Event>>> = flow {
         try {
             emit(Result.Loading())
             val response = featProvider.getEventsSuggestedForUser(uId).body() ?: listOf()
@@ -38,7 +38,7 @@ constructor(
         }
     }
 
-    override fun getEventsCreatedByUser(uId: Int): Flow<Result<List<Event>>> = flow {
+    override fun getEventsCreatedByUser(uId: String): Flow<Result<List<Event>>> = flow {
         try {
             emit(Result.Loading())
             val response = featProvider.getEventsCreatedByUser(uId).body() ?: listOf()
@@ -58,7 +58,7 @@ constructor(
         }
     }
 
-    override fun getEventsApplied(uId: Int): Flow<Result<List<Event>>> = flow {
+    override fun getEventsApplied(uId: String): Flow<Result<List<Event>>> = flow {
         try {
             emit(Result.Loading())
             val response = featProvider.getEventsApplied(uId).body() ?: listOf()
@@ -68,7 +68,7 @@ constructor(
         }
     }
 
-    override fun getEventsConfirmed(uId: Int): Flow<Result<List<Event>>> = flow {
+    override fun getEventsConfirmed(uId: String): Flow<Result<List<Event>>> = flow {
         try {
             emit(Result.Loading())
             val response = featProvider.getEventsConfirmed(uId).body() ?: listOf()
@@ -78,7 +78,7 @@ constructor(
         }
     }
 
-    override fun getEventsByUser(uId: Int): Flow<Result<List<Event>>> = flow {
+    override fun getEventsByUser(uId: String): Flow<Result<List<Event>>> = flow {
         try {
             emit(Result.Loading())
             val response = featProvider.getEventsConfirmed(uId).body() ?: listOf()

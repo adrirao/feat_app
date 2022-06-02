@@ -8,6 +8,7 @@ import com.unlam.feat.R
 import com.unlam.feat.common.Result
 import com.unlam.feat.di.ResourcesProvider
 import com.unlam.feat.repository.FeatRepositoryImp
+import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,8 @@ class EventViewModel
 @Inject
 constructor(
     private val resourcesProvider: ResourcesProvider,
-    private val featRepository: FeatRepositoryImp
+    private val featRepository: FeatRepositoryImp,
+    private val firebaseAuthRepository: FirebaseAuthRepositoryImp
 ) : ViewModel() {
     private val _state = mutableStateOf(EventState())
     val state: State<EventState> = _state
@@ -43,11 +45,15 @@ constructor(
     }
 
     fun getEventsCreatedByUser() {
-        featRepository.getEventsCreatedByUser(1).onEach { result ->
+        val uId = firebaseAuthRepository.getUserId()
+        featRepository.getEventsCreatedByUser(uId).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value =
-                        EventState(error = result.message ?: resourcesProvider.getString(R.string.error_unknown))
+                        EventState(
+                            error = result.message
+                                ?: resourcesProvider.getString(R.string.error_unknown)
+                        )
                 }
                 is Result.Loading -> {
                     _state.value = EventState(isLoading = true)
