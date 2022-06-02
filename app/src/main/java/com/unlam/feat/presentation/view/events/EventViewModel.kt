@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlam.feat.R
 import com.unlam.feat.common.Result
+import com.unlam.feat.di.ResourcesProvider
 import com.unlam.feat.repository.FeatRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +19,7 @@ import javax.inject.Inject
 class EventViewModel
 @Inject
 constructor(
-    private val resourcesProvider: com.unlam.feat.di.ResourcesProvider,
+    private val resourcesProvider: ResourcesProvider,
     private val featRepository: FeatRepositoryImp
 ) : ViewModel() {
     private val _state = mutableStateOf(EventState())

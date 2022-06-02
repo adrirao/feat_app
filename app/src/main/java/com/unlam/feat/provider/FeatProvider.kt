@@ -111,7 +111,8 @@ interface FeatProvider {
     @GET("/users/{id}")
     suspend fun getUser(@Path("id") id: Int): Response<User>
 
-//    @PUT("/users/{id}")
-//    suspend fun putUser(@Path("id") id: Int): Response<User>
+    @Headers("Content-type: application/json")
+    @POST("/users/create")
+    suspend fun createUser(@Body requestEvent: RequestUser): Response<String>
     //</editor-fold>
 }

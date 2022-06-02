@@ -1,6 +1,7 @@
 package com.unlam.feat.presentation.view.register
 
 data class RegisterState(
+    val featRegister : Boolean = false,
     val usernameText: String = "",
     val usernameError: UsernameError? = null,
     val emailText: String = "rao.adrii@gmail.com",
@@ -12,7 +13,8 @@ data class RegisterState(
     val isPasswordVisible: Boolean = false,
     val isConfirmPasswordVisible: Boolean = false,
     val isSuccessRegistration: Boolean = false,
-    val registrationMessage: RegisterMessage? = null
+    val registrationMessage: RegisterMessage? = null,
+    val error: String = ""
 ) {
     sealed class UsernameError {
         object FieldEmpty : UsernameError()

@@ -92,7 +92,11 @@ constructor(
         try {
             emit(Result.Loading())
             val response = featProvider.getEventById(id).body()
-            if (response != null) emit(Result.Success(data = response)) else emit(Result.Error(message = "Unknown Error"))
+            if (response != null) emit(Result.Success(data = response)) else emit(
+                Result.Error(
+                    message = "Unknown Error"
+                )
+            )
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
@@ -127,7 +131,11 @@ constructor(
         try {
             emit(Result.Loading())
             val response = featProvider.getAvailability(id).body()
-            if (response != null) emit(Result.Success(data = response)) else emit(Result.Error(message = "Unknown Error"))
+            if (response != null) emit(Result.Success(data = response)) else emit(
+                Result.Error(
+                    message = "Unknown Error"
+                )
+            )
 
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
@@ -162,7 +170,11 @@ constructor(
         try {
             emit(Result.Loading())
             val response = featProvider.getLevel(id).body()
-            if (response != null) emit(Result.Success(data = response)) else emit(Result.Error(message = "Unknown Error"))
+            if (response != null) emit(Result.Success(data = response)) else emit(
+                Result.Error(
+                    message = "Unknown Error"
+                )
+            )
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
@@ -196,7 +208,11 @@ constructor(
         try {
             emit(Result.Loading())
             val response = featProvider.getPeriodicity(id).body()
-            if (response != null) emit(Result.Success(data = response)) else emit(Result.Error(message = "Unknown Error"))
+            if (response != null) emit(Result.Success(data = response)) else emit(
+                Result.Error(
+                    message = "Unknown Error"
+                )
+            )
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
@@ -230,7 +246,11 @@ constructor(
         try {
             emit(Result.Loading())
             val response = featProvider.getPlayer(id).body()
-            if (response != null) emit(Result.Success(data = response)) else emit(Result.Error(message = "Unknown Error"))
+            if (response != null) emit(Result.Success(data = response)) else emit(
+                Result.Error(
+                    message = "Unknown Error"
+                )
+            )
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
@@ -285,7 +305,11 @@ constructor(
         try {
             emit(Result.Loading())
             val response = featProvider.getPosition(id).body()
-            if (response != null) emit(Result.Success(data = response)) else emit(Result.Error(message = "Unknown Error"))
+            if (response != null) emit(Result.Success(data = response)) else emit(
+                Result.Error(
+                    message = "Unknown Error"
+                )
+            )
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
@@ -319,7 +343,11 @@ constructor(
         try {
             emit(Result.Loading())
             val response = featProvider.getSport(id).body()
-            if (response != null) emit(Result.Success(data = response)) else emit(Result.Error(message = "Unknown Error"))
+            if (response != null) emit(Result.Success(data = response)) else emit(
+                Result.Error(
+                    message = "Unknown Error"
+                )
+            )
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
@@ -341,7 +369,24 @@ constructor(
         try {
             emit(Result.Loading())
             val response = featProvider.getUser(id).body()
-            if (response != null) emit(Result.Success(data = response)) else emit(Result.Error(message = "Unknown Error"))
+            if (response != null) emit(Result.Success(data = response)) else emit(
+                Result.Error(
+                    message = "Unknown Error"
+                )
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+
+    override fun createUser(req: RequestUser): Flow<Result<String>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.createUser(req).code()
+            if (response in 200..299) emit(Result.Success(data = "Creado con exito")) else emit(
+                Result.Error("Algo malo ocurrio.")
+            )
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }

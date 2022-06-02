@@ -1,20 +1,30 @@
 package com.unlam.feat.presentation.view.register
 
+import android.util.Log
 import android.util.Patterns
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.ktx.auth
 import com.unlam.feat.common.Constants
+import com.unlam.feat.common.Result
+import com.unlam.feat.model.request.RequestUser
+import com.unlam.feat.repository.FeatRepository
+import com.unlam.feat.repository.FeatRepositoryImp
 import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel
 @Inject
 constructor(
-    private val firebaseAuthRepository: FirebaseAuthRepositoryImp
+    private val firebaseAuthRepository: FirebaseAuthRepositoryImp,
+    private val featRepository: FeatRepositoryImp
 ) : ViewModel() {
     private val _state = mutableStateOf(RegisterState())
     val state: State<RegisterState> = _state
@@ -75,13 +85,27 @@ constructor(
     private fun registerUser() {
         val email = if (_state.value.emailError == null) _state.value.emailText else return
         val password = if (_state.value.passwordError == null) _state.value.passwordText else return
+        val uid = firebaseAuthRepository.getUserId()
 
         firebaseAuthRepository.register(email, password) { isSuccessRegistration, error ->
             if (isSuccessRegistration) {
-                _state.value = _state.value.copy(
-                    isSuccessRegistration = true,
-                    registrationMessage = RegisterState.RegisterMessage.UserCreated
-                )
+                val request = RequestUser(uid = uid, email = email, "2")
+                featRepository.createUser(request).onEach { result ->
+                    when (result) {
+                        is Result.Success -> {
+                            _state.value = _state.value.copy(
+                                isSuccessRegistration = true,
+                                registrationMessage = RegisterState.RegisterMessage.UserCreated
+                            )
+                        }
+                        is Result.Error -> {
+                            Log.e("Rao", result.message.toString())
+//                            _state.value = _state.value.copy(
+//                                error = result.message!!
+//                            )
+                        }
+                    }
+                }.launchIn(viewModelScope)
             } else if (error is FirebaseAuthUserCollisionException) {
                 _state.value = _state.value.copy(
                     registrationMessage = RegisterState.RegisterMessage.AlreadyExistUser
