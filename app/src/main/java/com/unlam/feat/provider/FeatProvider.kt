@@ -79,7 +79,7 @@ interface FeatProvider {
     suspend fun getPlayer(@Path("id") id: Int): Response<Player>
 
     @GET("/players/getAllByPerson/{personId}")
-    suspend fun getAllByPerson(@Path("personId") personId: Int): Response<Player>
+    suspend fun getAllByPerson(@Path("personId") personId: Int): Response<List<Player>>
 
     @GET("/players/getAllPlayersSuggestedForEvent/{eventId}")
     suspend fun getAllPlayersSuggestedForEvent(@Path("eventId") eventId: Int): Response<List<Player>>

@@ -41,8 +41,8 @@ interface FeatRepository {
     //<editor-fold desc="Players">
     fun getPlayers(): Flow<Result<List<Player>>> // @GET("/players/")
     fun getPlayer(id: Int): Flow<Result<Player>> // @GET("/players/{id}")
-    fun getAllByPerson(personId: Int): Flow<Result<Player>> // @GET("/players/getAllByPerson/{personId}")
-    fun getAllPlayersSuggestedForEvent(eventId: Int): Flow<Result<Player>> // @GET("/players/getAllPlayersSuggestedForEvent/{eventId}")
+    fun getAllByPerson(personId: Int): Flow<Result<List<Player>>> // @GET("/players/getAllByPerson/{personId}")
+    fun getAllPlayersSuggestedForEvent(eventId: Int): Flow<Result<List<Player>>> // @GET("/players/getAllPlayersSuggestedForEvent/{eventId}")
     fun createPlayer(req: RequestPlayer): Flow<Result<String>> // @POST("/players/create")
 
     //</editor-fold desc="Players">
