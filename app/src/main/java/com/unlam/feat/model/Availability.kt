@@ -8,6 +8,6 @@ data class Availability(
     val startTime: String,
     @SerializedName("end_time")
     val endTime: String,
-    val person: Int,
-    val day: Int
+    val person: Person,
+    val day: Day
 )

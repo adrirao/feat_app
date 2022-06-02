@@ -11,10 +11,11 @@ data class Event(
     @SerializedName("end_time")
     val endTime: String,
     val description: String,
-    val latitude:String,
-    val longitude:String,
+    val latitude: String,
+    val longitude: String,
+    val created: String,
     val sport: Sport,
     val state: State,
     val periodicity: Periodicity,
-    val player: Player
-    )
+    val organizer: Person
+)

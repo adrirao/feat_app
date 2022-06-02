@@ -17,12 +17,27 @@ class FeatRepositoryImp
 constructor(
     private val featProvider: FeatProvider
 ) : FeatRepository {
-    override fun getEventsToday(uId: Int): Flow<Result<List<Event>>> {
-        TODO("Not yet implemented")
+
+    override fun getEventsToday(uId: Int): Flow<Result<List<Event>>> = flow {
+        try {
+            emit(Result.Loading())
+            delay(600)
+            val events = featProvider.getEventsToday().body() ?: listOf()
+            emit(Result.Success(data = events))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
     }
 
-    override fun getEventsSuggestedForUser(uId: Int): Flow<Result<List<Event>>> {
-        TODO("Not yet implemented")
+    override fun getEventsSuggestedForUser(uId: Int): Flow<Result<List<Event>>> =flow {
+        try {
+            emit(Result.Loading())
+            delay(600)
+            val events = featProvider.getEventsSuggestedForUser(uId).body() ?: listOf()
+            emit(Result.Success(data = events))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
     }
 
     override  fun getEventsCreatedByUser(uId: Int): Flow<Result<List<Event>>> = flow {
@@ -36,16 +51,37 @@ constructor(
         }
     }
 
-    override fun getEventsByOrganizer(organizer: Int): Flow<Result<List<Event>>> {
-        TODO("Not yet implemented")
+    override fun getEventsByOrganizer(organizer: Int): Flow<Result<List<Event>>> = flow {
+        try {
+            emit(Result.Loading())
+            delay(600)
+            val events = featProvider.getEventsByOrganizer(organizer).body() ?: listOf()
+            emit(Result.Success(data = events))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
     }
 
-    override fun getEventsApplied(uId: Int): Flow<Result<List<Event>>> {
-        TODO("Not yet implemented")
+    override fun getEventsApplied(uId: Int): Flow<Result<List<Event>>> = flow {
+        try {
+            emit(Result.Loading())
+            delay(600)
+            val events = featProvider.getEventsApplied(uId).body() ?: listOf()
+            emit(Result.Success(data = events))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
     }
 
-    override fun getEventsConfirmed(uId: Int): Flow<Result<List<Event>>> {
-        TODO("Not yet implemented")
+    override fun getEventsConfirmed(uId: Int): Flow<Result<List<Event>>> = flow {
+        try {
+            emit(Result.Loading())
+            delay(600)
+            val events = featProvider.getEventsConfirmed(uId).body() ?: listOf()
+            emit(Result.Success(data = events))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
     }
 
     override fun postEvent(request:RequestEvent): Flow<Result<String>> = flow{
@@ -58,8 +94,15 @@ constructor(
             }
     }
 
-    override fun getAvailabilities(): Flow<Result<List<Availability>>> {
-        TODO("Not yet implemented")
+    override fun getAvailabilities(): Flow<Result<List<Availability>>>  = flow {
+        try {
+            emit(Result.Loading())
+            delay(600)
+            val events = featProvider.getAvailabilities().body() ?: listOf()
+            emit(Result.Success(data = events))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
     }
 
     override fun getAvailability(id: Int): Flow<Result<Availability>> {

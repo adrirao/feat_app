@@ -12,5 +12,4 @@ data class Address(
     val zipCode: String,
     val latitude: String,
     val longitude: String,
-    val person: Person
 )
