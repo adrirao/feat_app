@@ -383,8 +383,8 @@ constructor(
     override fun createUser(req: RequestUser): Flow<Result<String>> = flow {
         try {
             emit(Result.Loading())
-            val response = featProvider.createUser(req).code()
-            if (response in 200..299) emit(Result.Success(data = "Creado con exito")) else emit(
+            val response = featProvider.createUser(req)
+            if (response.code() in 200..299) emit(Result.Success(data = "Creado con exito")) else emit(
                 Result.Error("Algo malo ocurrio.")
             )
         } catch (e: Exception) {

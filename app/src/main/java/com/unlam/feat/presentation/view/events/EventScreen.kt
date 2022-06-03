@@ -24,7 +24,9 @@ fun Event(
     isRefreshing: Boolean,
     refreshData: () -> Unit
 ) {
-    Column {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
         FeatHeader(text = stringResource(R.string.title_my_events))
         Box(
             modifier = Modifier
