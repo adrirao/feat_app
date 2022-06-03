@@ -64,17 +64,17 @@ fun Home(
                 }
             }
         }
-        if (state.isLoading) {
-            FeatCircularProgress()
-        }
-        if (state.error.isNotBlank()) {
-            FeatAlertDialog(
-                title = stringResource(R.string.error_home),
-                descriptionContent = stringResource(R.string.error_load_events),
-                onDismiss = {
-                    onEvent(HomeEvent.DismissDialog)
-                }
-            )
-        }
+    }
+    if (state.isLoading) {
+        FeatCircularProgress()
+    }
+    if (state.error.isNotBlank()) {
+        FeatAlertDialog(
+            title = stringResource(R.string.error_home),
+            descriptionContent = stringResource(R.string.error_load_events),
+            onDismiss = {
+                onEvent(HomeEvent.DismissDialog)
+            }
+        )
     }
 }

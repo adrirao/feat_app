@@ -4,6 +4,7 @@ import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
 import com.unlam.feat.provider.FeatProvider
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.lang.Exception
@@ -31,6 +32,7 @@ constructor(
     override fun getEventsSuggestedForUser(uId: String): Flow<Result<List<Event>>> = flow {
         try {
             emit(Result.Loading())
+            delay(600)
             val response = featProvider.getEventsSuggestedForUser(uId).body() ?: listOf()
             emit(Result.Success(data = response))
         } catch (e: Exception) {
@@ -41,6 +43,7 @@ constructor(
     override fun getEventsCreatedByUser(uId: String): Flow<Result<List<Event>>> = flow {
         try {
             emit(Result.Loading())
+            delay(600)
             val response = featProvider.getEventsCreatedByUser(uId).body() ?: listOf()
             emit(Result.Success(data = response))
         } catch (e: Exception) {

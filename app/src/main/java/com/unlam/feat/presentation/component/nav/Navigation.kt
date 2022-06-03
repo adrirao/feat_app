@@ -133,7 +133,7 @@ private fun NavGraphBuilder.invite(navController: NavHostController) {
 
         Button(onClick = {
             Firebase.auth.signOut()
-            navController.popBackStack()
+            navController.popBackStack(Screen.Home.route, inclusive = true)
             navController.navigate(Screen.Login.route)
         }) {
 

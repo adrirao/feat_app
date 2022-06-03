@@ -31,7 +31,6 @@ constructor(
         getPeriodicities()
     }
 
-
     fun onEvent(event: AddEventEvent) {
         when (event) {
             is AddEventEvent.EnteredName -> {
@@ -137,4 +136,5 @@ constructor(
             }
         }.launchIn(viewModelScope)
     }
+
 }
