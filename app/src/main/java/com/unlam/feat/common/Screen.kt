@@ -15,4 +15,6 @@ sealed class Screen(
     object Invite : Screen("invite_screen")
 
     object AddEvent: Screen("event_add_screen")
+
+    object ConfigProfile: Screen("config_profile_screen")
 }

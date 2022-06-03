@@ -28,13 +28,15 @@ fun FeatButton(
     colorText: Color = Color.White,
     textAlign: TextAlign = TextAlign.Start,
     onClick: () -> Unit = {},
-    colorFilter: ColorFilter = ColorFilter.tint(Color.White)
+    colorFilter: ColorFilter = ColorFilter.tint(Color.White),
+    enabled:Boolean = true
 ) {
     Button(
         modifier = modifier,
         colors = colors,
         onClick = onClick,
         shape = RoundedCornerShape(10),
+        enabled = enabled
     ) {
 
         if (textAlign != TextAlign.Start) {

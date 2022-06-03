@@ -30,6 +30,9 @@ import com.unlam.feat.presentation.view.register.Register
 import com.unlam.feat.presentation.view.search.Search
 import com.unlam.feat.presentation.view.search.SearchViewModel
 import com.unlam.feat.presentation.view.splash.SplashScreen
+import com.unlam.feat.presentation.view.configProfile.ConfigProfileScreen
+import com.unlam.feat.presentation.view.configProfile.ConfigProfileState
+import com.unlam.feat.presentation.view.configProfile.ConfigProfileViewModel
 
 @Composable
 fun Navigation(navController: NavHostController) {
@@ -38,6 +41,7 @@ fun Navigation(navController: NavHostController) {
         splash(navController)
 
         login(navController)
+        configProfile(navController)
         register(navController)
 
         profile(navController)
@@ -48,6 +52,7 @@ fun Navigation(navController: NavHostController) {
 
         addEvent(navController)
         searchList(navController)
+
 
     }
 
@@ -64,6 +69,18 @@ private fun NavGraphBuilder.login(navController: NavHostController) {
         LoginScreen(navController)
     }
 }
+
+
+fun NavGraphBuilder.configProfile(navController: NavHostController) {
+    composable(Screen.ConfigProfile.route) {
+
+        val configProfileViewModel: ConfigProfileViewModel = hiltViewModel()
+        val state = configProfileViewModel.state.value
+
+        ConfigProfileScreen(navController,state)
+    }
+}
+
 
 private fun NavGraphBuilder.register(navController: NavHostController) {
     composable(Screen.Register.route) {
