@@ -4,6 +4,8 @@ import android.location.Geocoder
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -37,15 +39,16 @@ fun AddNewEventScreen(
     var openMap by remember {
         mutableStateOf(false)
     }
+    Box(modifier = Modifier.fillMaxWidth()) {
 
-    Column {
-        FeatHeader("Creacion Evento")
-        Box(
-            modifier = Modifier
-                .padding(10.dp)
-                .background(MaterialTheme.colors.card)
-        ) {
-            Column {
+        Column {
+            FeatHeader("Creacion Evento")
+            Column(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .background(MaterialTheme.colors.card)
+                    .verticalScroll(rememberScrollState())
+            ) {
                 FeatTextField(
                     text = state.name,
                     textLabel = stringResource(R.string.input_name_event),
@@ -113,6 +116,10 @@ fun AddNewEventScreen(
                     text = state.description,
                     textLabel = stringResource(R.string.text_description),
                     onValueChange = { onValueChange(AddEventEvent.EnteredDescription(it)) })
+                FeatTextField(
+                    text = state.organizer,
+                    textLabel = stringResource(R.string.text_organizer),
+                    onValueChange = { onValueChange(AddEventEvent.EnteredOrganizer(it)) })
                 Row {
                     FeatButton(
                         textButton = stringResource(R.string.text_cancel),
@@ -135,56 +142,58 @@ fun AddNewEventScreen(
                 }
             }
 
+//        }
+        }
+
+        if (openMap) {
+            FeatMap(
+                setLocation = {
+                    onValueChange(
+                        AddEventEvent.EnteredLatLong(
+                            lat = it.latitude.toString(),
+                            long = it.longitude.toString()
+                        )
+                    )
+
+                    openMap = false
+                }
+            )
+        }
+
+        if (state.latitude.isNotEmpty() && state.longitude.isNotEmpty()) {
+            val address = Geocoder(LocalContext.current).getFromLocation(
+                state.latitude.toDouble(),
+                state.longitude.toDouble(),
+                1
+            )
+            onValueChange(AddEventEvent.EnteredAddress(address[0].getAddressLine(0)))
+        }
+
+
+        if (state.isCreatedMessage?.isNotEmpty() == true) {
+            val title = stringResource(R.string.text_event_created)
+            val description = stringResource(R.string.text_description_event_created)
+            FeatAlertDialog(
+                title = title,
+                descriptionContent = description,
+                onDismiss = {
+                    onValueChange(AddEventEvent.DismissDialog)
+                    navigateToHome()
+                }
+            )
+        } else if (state.error.isNotBlank()) {
+            val title = stringResource(R.string.error_created_event)
+            val description =
+                stringResource(R.string.error_description_event_created)
+            FeatAlertDialog(
+                title = title,
+                descriptionContent = description,
+                onDismiss = {
+                    onValueChange(AddEventEvent.DismissDialog)
+                    navigateToHome()
+                }
+            )
         }
     }
 
-    if (openMap) {
-        FeatMap(
-            setLocation = {
-                onValueChange(
-                    AddEventEvent.EnteredLatLong(
-                        lat = it.latitude.toString(),
-                        long = it.longitude.toString()
-                    )
-                )
-
-                openMap = false
-            }
-        )
-    }
-
-    if (state.latitude.isNotEmpty() && state.longitude.isNotEmpty()) {
-        val address = Geocoder(LocalContext.current).getFromLocation(
-            state.latitude.toDouble(),
-            state.longitude.toDouble(),
-            1
-        )
-        onValueChange(AddEventEvent.EnteredAddress(address[0].getAddressLine(0)))
-    }
-
-
-    if (state.isCreatedMessage?.isNotEmpty() == true) {
-        val title = stringResource(R.string.text_event_created)
-        val description = stringResource(R.string.text_description_event_created)
-        FeatAlertDialog(
-            title = title,
-            descriptionContent = description,
-            onDismiss = {
-                onValueChange(AddEventEvent.DismissDialog)
-                navigateToHome()
-            }
-        )
-    } else if (state.error.isNotBlank()) {
-        val title = stringResource(R.string.error_created_event)
-        val description =
-            stringResource(R.string.error_description_event_created)
-        FeatAlertDialog(
-            title = title,
-            descriptionContent = description,
-            onDismiss = {
-                onValueChange(AddEventEvent.DismissDialog)
-                navigateToHome()
-            }
-        )
-    }
 }

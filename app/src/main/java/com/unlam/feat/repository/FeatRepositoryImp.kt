@@ -1,5 +1,6 @@
 package com.unlam.feat.repository
 
+import android.util.Log
 import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
@@ -84,8 +85,9 @@ constructor(
     override fun getEventsByUser(uId: String): Flow<Result<List<Event>>> = flow {
         try {
             emit(Result.Loading())
-            val response = featProvider.getEventsConfirmed(uId).body() ?: listOf()
-            emit(Result.Success(data = response))
+            val response = featProvider.getEventsByUser(uId)
+            Log.e("rao",response.toString())
+            emit(Result.Success(data = response.body() ?: listOf()))
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }

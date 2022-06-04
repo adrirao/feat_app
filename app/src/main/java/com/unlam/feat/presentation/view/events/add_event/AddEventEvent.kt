@@ -1,7 +1,6 @@
 package com.unlam.feat.presentation.view.events.add_event
 
 
-import com.unlam.feat.presentation.view.register.RegisterEvent
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -14,6 +13,7 @@ sealed class AddEventEvent {
     data class EnteredPeriodicity(val value: String) : AddEventEvent()
     data class EnteredAddress(val value: String) : AddEventEvent()
     data class EnteredLatLong(val lat: String,val long:String) : AddEventEvent()
+    data class EnteredOrganizer(val value:String) : AddEventEvent()
     object DismissDialog : AddEventEvent()
 
 

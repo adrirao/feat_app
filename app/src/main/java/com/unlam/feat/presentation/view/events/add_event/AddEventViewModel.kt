@@ -74,6 +74,11 @@ constructor(
                     longitude = event.long
                 )
             }
+            is AddEventEvent.EnteredOrganizer -> {
+                _state.value = _state.value.copy(
+                    organizer = event.value
+                )
+            }
             is AddEventEvent.DismissDialog -> {
                 _state.value = _state.value.copy(
                     isCreatedMessage = null

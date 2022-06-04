@@ -52,4 +52,5 @@
     <string name="error_invalid_credential">Creadenciales invalidas.</string>
     <string name="error_user_not_exist">El usuario no existe.</string>
     <string name="error_verify_email">Pendiente de verificacion, por favor revisar tu email.</string>
+    <string name="text_organizer">Organizador</string>
 </resources>
