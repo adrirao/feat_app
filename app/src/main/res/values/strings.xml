@@ -27,9 +27,9 @@
     <string name="text_finish">Finalizar</string>
     <string name="text_day">Día</string>
     <string name="text_select_date">Seleccione una fecha</string>
-    <string name="text_start_time">Horario de inicio</string>
+    <string name="text_start_time">Hora inicio</string>
     <string name="text_select_start_time">Seleccione una hora de inicio</string>
-    <string name="text_ending_time">Horario de finalizacion</string>
+    <string name="text_ending_time">Hora fin</string>
     <string name="text_select_ending_time">Seleccione una hora de fin</string>
     <string name="text_priodicity">Periodicidad</string>
     <string name="text_location">Lugar</string>

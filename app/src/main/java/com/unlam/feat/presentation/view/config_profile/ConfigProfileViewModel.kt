@@ -1,10 +1,8 @@
-package com.unlam.feat.presentation.view.configProfile
+package com.unlam.feat.presentation.view.config_profile
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.unlam.feat.presentation.view.configProfile.ConfigProfileEvent
-import com.unlam.feat.presentation.view.configProfile.ConfigProfileState
 
 
 class ConfigProfileViewModel: ViewModel() {

@@ -1,17 +1,7 @@
-package com.unlam.feat.presentation.view.configProfile
+package com.unlam.feat.presentation.view.config_profile.personal_data
 
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
-import android.location.Address
-import android.location.Geocoder
-import android.location.Location
-import android.net.Uri
-import android.os.Looper
-import android.provider.Settings
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -22,38 +12,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.*
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
 import com.unlam.feat.R
 import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.*
+import com.unlam.feat.presentation.view.config_profile.ConfigProfileEvent
+import com.unlam.feat.presentation.view.config_profile.ConfigProfileState
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import java.io.IOException
 import java.time.format.DateTimeFormatter
 
 
 @Composable
-fun ConfigProfileScreen(
+fun ConfigProfilePersonalDataScreen(
     navController: NavHostController,
-    state: ConfigProfileState,
-    onValueChange: (ConfigProfileEvent) -> Unit
+    state: ConfigProfilePersonalDataState,
+    onValueChange: (ConfigProfilePersonalDataEvent) -> Unit
 ) {
-    ConfigProfileContent(state, navigateToConfigSport = {
+    ConfigProfilePersonalData(state, navigateToConfigAddress = {
         navController.popBackStack()
         navController.navigate(Screen.ConfigProfileAddress.route)
     }, onValueChange)
@@ -62,10 +46,10 @@ fun ConfigProfileScreen(
 @SuppressLint("MissingPermission")
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-private fun ConfigProfileContent(
-    state: ConfigProfileState,
-    navigateToConfigSport: () -> Unit,
-    onValueChange: (ConfigProfileEvent) -> Unit
+private fun ConfigProfilePersonalData(
+    state: ConfigProfilePersonalDataState,
+    navigateToConfigAddress: () -> Unit,
+    onValueChange: (ConfigProfilePersonalDataEvent) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -109,7 +93,7 @@ private fun ConfigProfileContent(
                 FeatTextField(
                     text = state.lastName,
                     onValueChange = {
-                        onValueChange(ConfigProfileEvent.EnteredLastName(it))
+                        onValueChange(ConfigProfilePersonalDataEvent.EnteredLastName(it))
                     },
                     textLabel = "Apellido"
                 )
@@ -117,7 +101,7 @@ private fun ConfigProfileContent(
                 FeatTextField(
                     text = state.name,
                     onValueChange = {
-                        onValueChange(ConfigProfileEvent.EnteredName(it))
+                        onValueChange(ConfigProfilePersonalDataEvent.EnteredName(it))
                     },
                     textLabel = "Nombres"
                 )
@@ -151,7 +135,7 @@ private fun ConfigProfileContent(
 
                     ) {
                     datepicker() { date ->
-                        onValueChange(ConfigProfileEvent.EnteredDateOfBirth(date))
+                        onValueChange(ConfigProfilePersonalDataEvent.EnteredDateOfBirth(date))
 
                     }
                 }
@@ -159,7 +143,7 @@ private fun ConfigProfileContent(
                 FeatTextField(
                     text = state.nickname,
                     onValueChange = {
-                        onValueChange(ConfigProfileEvent.EnteredNickname(it))
+                        onValueChange(ConfigProfilePersonalDataEvent.EnteredNickname(it))
                     },
                     textLabel = "Apodo"
                 )
@@ -187,7 +171,7 @@ private fun ConfigProfileContent(
                             selection = currentSelection.value,
                             onItemClick = { clickedItem ->
                                 currentSelection.value = clickedItem
-                                onValueChange(ConfigProfileEvent.EnteredSex(clickedItem))
+                                onValueChange(ConfigProfilePersonalDataEvent.EnteredSex(clickedItem))
                             }
                         )
                     }
@@ -206,7 +190,7 @@ private fun ConfigProfileContent(
                     textAlign = TextAlign.Center,
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
                     onClick = {
-                        navigateToConfigSport()
+                        navigateToConfigAddress()
                         //persistir en la base
                     }
                 )

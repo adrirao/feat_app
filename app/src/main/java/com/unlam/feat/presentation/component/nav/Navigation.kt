@@ -6,8 +6,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -16,10 +14,16 @@ import androidx.navigation.compose.composable
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.unlam.feat.common.Screen
-import com.unlam.feat.presentation.component.map.FeatMap
 import com.unlam.feat.presentation.component.map.FeatMapWhitMaker
-import com.unlam.feat.presentation.component.map.Marker
-import com.unlam.feat.presentation.view.configProfile.*
+import com.unlam.feat.presentation.view.config_profile.*
+import com.unlam.feat.presentation.view.config_profile.address.ConfigProfileAddressEvent
+import com.unlam.feat.presentation.view.config_profile.address.ConfigProfileAddressScreen
+import com.unlam.feat.presentation.view.config_profile.address.ConfigProfileAddressViewModel
+import com.unlam.feat.presentation.view.config_profile.availability.ConfigProfileAvailabilityEvent
+import com.unlam.feat.presentation.view.config_profile.availability.ConfigProfileAvailabilityViewModel
+import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataEvent
+import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataScreen
+import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataViewModel
 import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddEventViewModel
@@ -39,10 +43,10 @@ fun Navigation(navController: NavHostController) {
         splash(navController)
 
         login(navController)
-        configProfilPersonalData(navController)
-        configProfilAddress(navController)
-        configProfilAvailability(navController)
-        configProfilAdditionalInformation(navController)
+        configProfilePersonalData(navController)
+        configProfileAddress(navController)
+        configProfileAvailability(navController)
+        configProfileAdditionalInformation(navController)
 //        configProfilsport(navController)
         register(navController)
 
@@ -79,79 +83,130 @@ private fun NavGraphBuilder.register(navController: NavHostController) {
 }
 
 
-fun NavGraphBuilder.configProfilPersonalData(navController: NavHostController) {
+fun NavGraphBuilder.configProfilePersonalData(navController: NavHostController) {
     composable(Screen.ConfigProfilePersonalData.route) {
 
-        val configProfileViewModel: ConfigProfileViewModel = hiltViewModel()
-        val state = configProfileViewModel.state.value
+        val configProfilePersonalDataViewModel: ConfigProfilePersonalDataViewModel = hiltViewModel()
+        val state = configProfilePersonalDataViewModel.state.value
 
-        ConfigProfileScreen(navController, state, onValueChange = {
+        ConfigProfilePersonalDataScreen(navController, state, onValueChange = {
             when (it) {
-                is ConfigProfileEvent.EnteredLastName -> {
-                    configProfileViewModel.onEvent(it)
+                is ConfigProfilePersonalDataEvent.EnteredLastName -> {
+                    configProfilePersonalDataViewModel.onEvent(it)
                 }
-                is ConfigProfileEvent.EnteredName -> {
-                    configProfileViewModel.onEvent(it)
+                is ConfigProfilePersonalDataEvent.EnteredName -> {
+                    configProfilePersonalDataViewModel.onEvent(it)
                 }
-                is ConfigProfileEvent.EnteredDateOfBirth -> {
-                    configProfileViewModel.onEvent(it)
+                is ConfigProfilePersonalDataEvent.EnteredDateOfBirth -> {
+                    configProfilePersonalDataViewModel.onEvent(it)
                 }
-                is ConfigProfileEvent.EnteredNickname -> {
-                    configProfileViewModel.onEvent(it)
+                is ConfigProfilePersonalDataEvent.EnteredNickname -> {
+                    configProfilePersonalDataViewModel.onEvent(it)
                 }
-                is ConfigProfileEvent.EnteredSex -> {
-                    configProfileViewModel.onEvent(it)
+                is ConfigProfilePersonalDataEvent.EnteredSex -> {
+                    configProfilePersonalDataViewModel.onEvent(it)
                 }
             }
         })
     }
 }
 
-private fun NavGraphBuilder.configProfilAddress(navController: NavHostController) {
+private fun NavGraphBuilder.configProfileAddress(navController: NavHostController) {
     composable(Screen.ConfigProfileAddress.route) {
-        val configProfileViewModel: ConfigProfileViewModel = hiltViewModel()
-        val state = configProfileViewModel.state.value
+        val configProfileAddressViewModel: ConfigProfileAddressViewModel = hiltViewModel()
+        val state = configProfileAddressViewModel.state.value
 
          ConfigProfileAddressScreen(navController,state,onValueChange = {
              when (it) {
-                 is ConfigProfileEvent.EnteredAddressAlias -> {
-                     configProfileViewModel.onEvent(it)
+                 is ConfigProfileAddressEvent.EnteredAddressAlias -> {
+                     configProfileAddressViewModel.onEvent(it)
                  }
-                 is ConfigProfileEvent.EnteredAddressStreet -> {
-                     configProfileViewModel.onEvent(it)
+                 is ConfigProfileAddressEvent.EnteredAddressStreet -> {
+                     configProfileAddressViewModel.onEvent(it)
                  }
-                 is ConfigProfileEvent.EnteredAddressNumber -> {
-                     configProfileViewModel.onEvent(it)
+                 is ConfigProfileAddressEvent.EnteredAddressNumber -> {
+                     configProfileAddressViewModel.onEvent(it)
                  }
-                 is ConfigProfileEvent.EnteredAddressTown -> {
-                     configProfileViewModel.onEvent(it)
+                 is ConfigProfileAddressEvent.EnteredAddressTown -> {
+                     configProfileAddressViewModel.onEvent(it)
                  }
-                 is ConfigProfileEvent.EnteredAddressZipCode -> {
-                     configProfileViewModel.onEvent(it)
+                 is ConfigProfileAddressEvent.EnteredAddressZipCode -> {
+                     configProfileAddressViewModel.onEvent(it)
                  }
-                 is ConfigProfileEvent.EnteredAddressLatitude -> {
-                     configProfileViewModel.onEvent(it)
+                 is ConfigProfileAddressEvent.EnteredAddressLatitude -> {
+                     configProfileAddressViewModel.onEvent(it)
                  }
-                 is ConfigProfileEvent.EnteredAddressLongitude -> {
-                     configProfileViewModel.onEvent(it)
+                 is ConfigProfileAddressEvent.EnteredAddressLongitude -> {
+                     configProfileAddressViewModel.onEvent(it)
                  }
-                 is ConfigProfileEvent.ShowAlertPermission -> {
-                     configProfileViewModel.onEvent(it)
+                 is ConfigProfileAddressEvent.ShowAlertPermission -> {
+                     configProfileAddressViewModel.onEvent(it)
                  }
-                 is ConfigProfileEvent.DismissDialog -> {
-                     configProfileViewModel.onEvent(it)
+                 is ConfigProfileAddressEvent.DismissDialog -> {
+                     configProfileAddressViewModel.onEvent(it)
                  }
 
              }
          })
     }
 }
-private fun NavGraphBuilder.configProfilAvailability(navController: NavHostController) {
+private fun NavGraphBuilder.configProfileAvailability(navController: NavHostController) {
     composable(Screen.ConfigProfileAvailability.route) {
-        Register(navController)
+
+        val configProfileAvailabilityViewModel: ConfigProfileAvailabilityViewModel = hiltViewModel()
+        val state = configProfileAvailabilityViewModel.state.value
+
+        ConfigProfileAvailabilityScreen(navController,state, onValueChange = {
+            when (it) {
+                is ConfigProfileAvailabilityEvent.EnteredStartTime1 -> {
+                    configProfileAvailabilityViewModel.onEvent(it)
+                }
+                is ConfigProfileAvailabilityEvent.EnteredEndTime1 -> {
+                    configProfileAvailabilityViewModel.onEvent(it)
+                }
+                is ConfigProfileAvailabilityEvent.EnteredStartTime2 -> {
+                    configProfileAvailabilityViewModel.onEvent(it)
+                }
+                is ConfigProfileAvailabilityEvent.EnteredEndTime2 -> {
+                    configProfileAvailabilityViewModel.onEvent(it)
+                }
+                is ConfigProfileAvailabilityEvent.EnteredStartTime3 -> {
+                    configProfileAvailabilityViewModel.onEvent(it)
+                }
+                is ConfigProfileAvailabilityEvent.EnteredEndTime3 -> {
+                    configProfileAvailabilityViewModel.onEvent(it)
+                }
+                is ConfigProfileAvailabilityEvent.EnteredStartTime4 -> {
+                    configProfileAvailabilityViewModel.onEvent(it)
+                }
+                is ConfigProfileAvailabilityEvent.EnteredEndTime4 -> {
+                    configProfileAvailabilityViewModel.onEvent(it)
+                }
+                is ConfigProfileAvailabilityEvent.EnteredStartTime5 -> {
+                    configProfileAvailabilityViewModel.onEvent(it)
+                }
+                is ConfigProfileAvailabilityEvent.EnteredEndTime5 -> {
+                    configProfileAvailabilityViewModel.onEvent(it)
+                }
+                is ConfigProfileAvailabilityEvent.EnteredStartTime6 -> {
+                    configProfileAvailabilityViewModel.onEvent(it)
+                }
+                is ConfigProfileAvailabilityEvent.EnteredEndTime6 -> {
+                    configProfileAvailabilityViewModel.onEvent(it)
+                }
+                is ConfigProfileAvailabilityEvent.EnteredStartTime7 -> {
+                    configProfileAvailabilityViewModel.onEvent(it)
+                }
+                is ConfigProfileAvailabilityEvent.EnteredEndTime7 -> {
+                    configProfileAvailabilityViewModel.onEvent(it)
+                }
+
+            }
+
+        })
     }
 }
-private fun NavGraphBuilder.configProfilAdditionalInformation(navController: NavHostController) {
+private fun NavGraphBuilder.configProfileAdditionalInformation(navController: NavHostController) {
     composable(Screen.ConfigProfileAdditionalInformation.route) {
         Register(navController)
     }

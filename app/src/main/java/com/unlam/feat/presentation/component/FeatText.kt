@@ -17,7 +17,6 @@ fun FeatText(
     text: String,
     fontWeight: FontWeight = FontWeight.Normal,
     color: Color = MaterialTheme.colors.text,
-//    color: Color = Color.White,
     fontSize: TextUnit = 15.sp,
     textAlign:TextAlign? = null
 ){

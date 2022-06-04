@@ -1,16 +1,11 @@
-package com.unlam.feat.presentation.view.configProfile
+package com.unlam.feat.presentation.view.config_profile.address
 
 import java.time.LocalDate
+import java.time.LocalTime
 
 
-data class ConfigProfileState(
-    val lastName: String = "",
-    val name: String = "",
-    val dateOfBirth: LocalDate? = null,
-    val nickname: String = "",
-    val sex: String = "",
 
-//    val addrress:List<String>? = null,
+data class ConfigProfileAddressState(
     val addressAlias: String = "",
     val addressStreet: String = "",
     val addressNumber: String = "",

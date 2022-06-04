@@ -1,4 +1,4 @@
-package com.unlam.feat.presentation.view.configProfile
+package com.unlam.feat.presentation.view.config_profile.address
 
 
 import android.Manifest
@@ -29,9 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.*
 import com.google.android.gms.location.LocationCallback
@@ -41,22 +39,19 @@ import com.google.android.gms.location.LocationServices
 import com.unlam.feat.R
 import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.*
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.datetime.date.datepicker
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import com.unlam.feat.presentation.view.config_profile.ConfigProfileEvent
 import java.io.IOException
-import java.time.format.DateTimeFormatter
 
 
 @Composable
 fun ConfigProfileAddressScreen(
     navController: NavHostController,
-    state: ConfigProfileState,
-    onValueChange: (ConfigProfileEvent) -> Unit
+    state: ConfigProfileAddressState,
+    onValueChange: (ConfigProfileAddressEvent) -> Unit
 ) {
-    ConfigProfileAddressScreenContent(state, navigateToConfigSport = {
-//        navController.popBackStack()
-//        navController.navigate(Screen.ConfigSport.route)
+    ConfigProfileAddressScreenContent(state, navigateToConfigAvailability = {
+        navController.popBackStack()
+        navController.navigate(Screen.ConfigProfileAvailability.route)
     }, onValueChange)
 }
 
@@ -64,9 +59,9 @@ fun ConfigProfileAddressScreen(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun ConfigProfileAddressScreenContent(
-    state: ConfigProfileState,
-    navigateToConfigSport: () -> Unit,
-    onValueChange: (ConfigProfileEvent) -> Unit
+    state: ConfigProfileAddressState,
+    navigateToConfigAvailability: () -> Unit,
+    onValueChange: (ConfigProfileAddressEvent) -> Unit
 ) {
     val context = LocalContext.current
     val permissionState = rememberMultiplePermissionsState(
@@ -97,32 +92,32 @@ private fun ConfigProfileAddressScreenContent(
                         addrees = getAddress(it.last(), context)
                         if (addrees != null) {
                             onValueChange(
-                                ConfigProfileEvent.EnteredAddressStreet(
+                                ConfigProfileAddressEvent.EnteredAddressStreet(
                                     addrees!!.thoroughfare
                                 )
                             )
                             onValueChange(
-                                ConfigProfileEvent.EnteredAddressNumber(
+                                ConfigProfileAddressEvent.EnteredAddressNumber(
                                     addrees!!.featureName
                                 )
                             )
                             onValueChange(
-                                ConfigProfileEvent.EnteredAddressTown(
+                                ConfigProfileAddressEvent.EnteredAddressTown(
                                     addrees!!.locality
                                 )
                             )
                             onValueChange(
-                                ConfigProfileEvent.EnteredAddressZipCode(
+                                ConfigProfileAddressEvent.EnteredAddressZipCode(
                                     addrees!!.postalCode
                                 )
                             )
                             onValueChange(
-                                ConfigProfileEvent.EnteredAddressLatitude(
+                                ConfigProfileAddressEvent.EnteredAddressLatitude(
                                     addrees!!.latitude.toString()
                                 )
                             )
                             onValueChange(
-                                ConfigProfileEvent.EnteredAddressLongitude(
+                                ConfigProfileAddressEvent.EnteredAddressLongitude(
                                     addrees!!.longitude.toString()
                                 )
                             )
@@ -218,7 +213,7 @@ private fun ConfigProfileAddressScreenContent(
 
                                     } else if (permissionState.shouldShowRationale) {
                                         onValueChange(
-                                            ConfigProfileEvent.ShowAlertPermission(
+                                            ConfigProfileAddressEvent.ShowAlertPermission(
                                                 true,
                                                 "Permisos de ubicacion necesarios",
                                                 "Se necesitan los permisos de ubicacion para acceder a su ubicacion actual"
@@ -226,7 +221,7 @@ private fun ConfigProfileAddressScreenContent(
                                         )
                                     } else if (permissionState.revokedPermissions.size != permissionState.permissions.size) {
                                         onValueChange(
-                                            ConfigProfileEvent.ShowAlertPermission(
+                                            ConfigProfileAddressEvent.ShowAlertPermission(
                                                 true,
                                                 "Se necesitan permisos de ubicacion exacta",
                                                 "Se necesitan los permisos de ubicacion exacta para acceder a su ubicacion actual"
@@ -237,7 +232,7 @@ private fun ConfigProfileAddressScreenContent(
                                         permissionState.permissionRequested
                                     ) {
                                         onValueChange(
-                                            ConfigProfileEvent.ShowAlertPermission(
+                                            ConfigProfileAddressEvent.ShowAlertPermission(
                                                 true,
                                                 "Se denegaron los permisos de ubicacion",
                                                 "Se han denegado los permisos de ubicacion, por favor acceder a configuraciones de la applicacion y otorgar los permisos"
@@ -252,7 +247,7 @@ private fun ConfigProfileAddressScreenContent(
                                     title = state.titleAlert,
                                     descriptionContent = state.descriptionAlert,
                                     onDismiss = {
-                                        onValueChange(ConfigProfileEvent.DismissDialog)
+                                        onValueChange(ConfigProfileAddressEvent.DismissDialog)
                                         permissionState.launchMultiplePermissionRequest()
                                     },
                                     onClick = {
@@ -282,35 +277,35 @@ private fun ConfigProfileAddressScreenContent(
                 FeatTextField(
                     text = state.addressAlias,
                     onValueChange = {
-                        onValueChange(ConfigProfileEvent.EnteredAddressAlias(it))
+                        onValueChange(ConfigProfileAddressEvent.EnteredAddressAlias(it))
                     },
                     textLabel = "Alias"
                 )
                 FeatTextField(
                     text = state.addressStreet,
                     onValueChange = {
-                        onValueChange(ConfigProfileEvent.EnteredAddressStreet(it))
+                        onValueChange(ConfigProfileAddressEvent.EnteredAddressStreet(it))
                     },
                     textLabel = "Calle"
                 )
                 FeatTextField(
                     text = state.addressNumber,
                     onValueChange = {
-                        onValueChange((ConfigProfileEvent.EnteredAddressNumber(it)))
+                        onValueChange((ConfigProfileAddressEvent.EnteredAddressNumber(it)))
                     },
                     textLabel = "Numero"
                 )
                 FeatTextField(
                     text = state.addressTown,
                     onValueChange = {
-                        onValueChange(ConfigProfileEvent.EnteredAddressTown(it))
+                        onValueChange(ConfigProfileAddressEvent.EnteredAddressTown(it))
                     },
                     textLabel = "Ciudad"
                 )
                 FeatTextField(
                     text = state.addressZipCode,
                     onValueChange = {
-                        onValueChange(ConfigProfileEvent.EnteredAddressZipCode(it))
+                        onValueChange(ConfigProfileAddressEvent.EnteredAddressZipCode(it))
                     },
                     textLabel = "Codigo Postal"
                 )
@@ -361,7 +356,7 @@ private fun ConfigProfileAddressScreenContent(
                     textAlign = TextAlign.Center,
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
                     onClick = {
-                        navigateToConfigSport()
+                        navigateToConfigAvailability()
                         //persistir en la base
                     }
                 )

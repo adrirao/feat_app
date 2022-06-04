@@ -1,4 +1,4 @@
-package com.unlam.feat.presentation.view.configProfile
+package com.unlam.feat.presentation.view.config_profile
 
 
 import java.time.LocalDate
