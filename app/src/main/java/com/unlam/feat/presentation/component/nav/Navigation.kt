@@ -19,7 +19,7 @@ import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.map.FeatMap
 import com.unlam.feat.presentation.component.map.FeatMapWhitMaker
 import com.unlam.feat.presentation.component.map.Marker
-import com.unlam.feat.presentation.view.configProfile.ConfigProfileEvent
+import com.unlam.feat.presentation.view.configProfile.*
 import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddEventViewModel
@@ -31,9 +31,6 @@ import com.unlam.feat.presentation.view.register.Register
 import com.unlam.feat.presentation.view.search.Search
 import com.unlam.feat.presentation.view.search.SearchViewModel
 import com.unlam.feat.presentation.view.splash.SplashScreen
-import com.unlam.feat.presentation.view.configProfile.ConfigProfileScreen
-import com.unlam.feat.presentation.view.configProfile.ConfigProfileState
-import com.unlam.feat.presentation.view.configProfile.ConfigProfileViewModel
 
 @Composable
 fun Navigation(navController: NavHostController) {
@@ -42,7 +39,11 @@ fun Navigation(navController: NavHostController) {
         splash(navController)
 
         login(navController)
-        configProfile(navController)
+        configProfilPersonalData(navController)
+        configProfilAddress(navController)
+        configProfilAvailability(navController)
+        configProfilAdditionalInformation(navController)
+//        configProfilsport(navController)
         register(navController)
 
         profile(navController)
@@ -71,9 +72,15 @@ private fun NavGraphBuilder.login(navController: NavHostController) {
     }
 }
 
+private fun NavGraphBuilder.register(navController: NavHostController) {
+    composable(Screen.Register.route) {
+        Register(navController)
+    }
+}
 
-fun NavGraphBuilder.configProfile(navController: NavHostController) {
-    composable(Screen.ConfigProfile.route) {
+
+fun NavGraphBuilder.configProfilPersonalData(navController: NavHostController) {
+    composable(Screen.ConfigProfilePersonalData.route) {
 
         val configProfileViewModel: ConfigProfileViewModel = hiltViewModel()
         val state = configProfileViewModel.state.value
@@ -95,45 +102,61 @@ fun NavGraphBuilder.configProfile(navController: NavHostController) {
                 is ConfigProfileEvent.EnteredSex -> {
                     configProfileViewModel.onEvent(it)
                 }
-                is ConfigProfileEvent.EnteredAddressAlias -> {
-                    configProfileViewModel.onEvent(it)
-                }
-                is ConfigProfileEvent.EnteredAddressStreet -> {
-                    configProfileViewModel.onEvent(it)
-                }
-                is ConfigProfileEvent.EnteredAddressNumber -> {
-                    configProfileViewModel.onEvent(it)
-                }
-                is ConfigProfileEvent.EnteredAddressTown -> {
-                    configProfileViewModel.onEvent(it)
-                }
-                is ConfigProfileEvent.EnteredAddressZipCode -> {
-                    configProfileViewModel.onEvent(it)
-                }
-                is ConfigProfileEvent.EnteredAddressLatitude -> {
-                    configProfileViewModel.onEvent(it)
-                }
-                is ConfigProfileEvent.EnteredAddressLongitude -> {
-                    configProfileViewModel.onEvent(it)
-                }
-                is ConfigProfileEvent.ShowAlertPermission -> {
-                    configProfileViewModel.onEvent(it)
-                }
-                is ConfigProfileEvent.DismissDialog -> {
-                    configProfileViewModel.onEvent(it)
-                }
-
             }
         })
     }
 }
 
+private fun NavGraphBuilder.configProfilAddress(navController: NavHostController) {
+    composable(Screen.ConfigProfileAddress.route) {
+        val configProfileViewModel: ConfigProfileViewModel = hiltViewModel()
+        val state = configProfileViewModel.state.value
 
-    private fun NavGraphBuilder.register(navController: NavHostController) {
-        composable(Screen.Register.route) {
-            Register(navController)
-        }
+         ConfigProfileAddressScreen(navController,state,onValueChange = {
+             when (it) {
+                 is ConfigProfileEvent.EnteredAddressAlias -> {
+                     configProfileViewModel.onEvent(it)
+                 }
+                 is ConfigProfileEvent.EnteredAddressStreet -> {
+                     configProfileViewModel.onEvent(it)
+                 }
+                 is ConfigProfileEvent.EnteredAddressNumber -> {
+                     configProfileViewModel.onEvent(it)
+                 }
+                 is ConfigProfileEvent.EnteredAddressTown -> {
+                     configProfileViewModel.onEvent(it)
+                 }
+                 is ConfigProfileEvent.EnteredAddressZipCode -> {
+                     configProfileViewModel.onEvent(it)
+                 }
+                 is ConfigProfileEvent.EnteredAddressLatitude -> {
+                     configProfileViewModel.onEvent(it)
+                 }
+                 is ConfigProfileEvent.EnteredAddressLongitude -> {
+                     configProfileViewModel.onEvent(it)
+                 }
+                 is ConfigProfileEvent.ShowAlertPermission -> {
+                     configProfileViewModel.onEvent(it)
+                 }
+                 is ConfigProfileEvent.DismissDialog -> {
+                     configProfileViewModel.onEvent(it)
+                 }
+
+             }
+         })
     }
+}
+private fun NavGraphBuilder.configProfilAvailability(navController: NavHostController) {
+    composable(Screen.ConfigProfileAvailability.route) {
+        Register(navController)
+    }
+}
+private fun NavGraphBuilder.configProfilAdditionalInformation(navController: NavHostController) {
+    composable(Screen.ConfigProfileAdditionalInformation.route) {
+        Register(navController)
+    }
+}
+
 
     private fun NavGraphBuilder.profile(navController: NavHostController) {
         composable(Screen.Profile.route) {

@@ -46,7 +46,7 @@ fun LoginScreen(
     }else if(state.isAuthenticate && state.isFirstLogin){
         LaunchedEffect(true) {
         navController.popBackStack()
-        navController.navigate(Screen.ConfigProfile.route)
+        navController.navigate(Screen.ConfigProfilePersonalData.route)
         }
     }
 

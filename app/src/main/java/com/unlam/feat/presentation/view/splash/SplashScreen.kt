@@ -44,7 +44,7 @@ fun SplashScreen(
             } */
             else if(it.isAuthenticate == false) {
                 navController.popBackStack()
-                navController.navigate(Screen.Login.route)
+                navController.navigate(Screen.ConfigProfilePersonalData.route)
             }
         }
     }

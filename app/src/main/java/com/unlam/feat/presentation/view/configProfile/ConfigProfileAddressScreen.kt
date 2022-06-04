@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -48,12 +49,12 @@ import java.time.format.DateTimeFormatter
 
 
 @Composable
-fun ConfigProfileScreen(
+fun ConfigProfileAddressScreen(
     navController: NavHostController,
     state: ConfigProfileState,
     onValueChange: (ConfigProfileEvent) -> Unit
 ) {
-    ConfigProfileContent(state, navigateToConfigSport = {
+    ConfigProfileAddressScreenContent(state, navigateToConfigSport = {
 //        navController.popBackStack()
 //        navController.navigate(Screen.ConfigSport.route)
     }, onValueChange)
@@ -62,7 +63,7 @@ fun ConfigProfileScreen(
 @SuppressLint("MissingPermission")
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun ConfigProfileContent(
+private fun ConfigProfileAddressScreenContent(
     state: ConfigProfileState,
     navigateToConfigSport: () -> Unit,
     onValueChange: (ConfigProfileEvent) -> Unit
@@ -148,11 +149,11 @@ fun ConfigProfileContent(
         ) {
             Image(
                 modifier = Modifier.size(200.dp),
-                painter = painterResource(R.drawable.logotipo),
+                painter = painterResource(R.drawable.ic_isologotype_2),
                 contentDescription = stringResource(R.string.feat_logo)
             )
             FeatText(
-                text = "Es tu primer inicio de sesión  en Feat, necesitaremos algunos datos para configurar tu perfil.",
+                text = "Agregar direcciones.",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
@@ -172,95 +173,6 @@ fun ConfigProfileContent(
                 verticalArrangement = Arrangement.Center,
 
                 ) {
-
-                FeatTextField(
-                    text = state.lastName,
-                    onValueChange = {
-                        onValueChange(ConfigProfileEvent.EnteredLastName(it))
-                    },
-                    textLabel = "Apellido"
-                )
-
-                FeatTextField(
-                    text = state.name,
-                    onValueChange = {
-                        onValueChange(ConfigProfileEvent.EnteredName(it))
-                    },
-                    textLabel = "Nombres"
-                )
-
-
-                val dialogState = rememberMaterialDialogState()
-                FeatTextField(
-                    text = if (state.dateOfBirth != null) {
-                        state.dateOfBirth!!.format(
-                            DateTimeFormatter.ofPattern(
-                                "dd LLLL yyyy"
-                            )
-                        )
-                    } else {
-                        " "
-                    },
-                    onValueChange = {},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { dialogState.show() },
-                    enabled = false,
-                    textLabel = "Fecha de nacimiento"
-
-                )
-                MaterialDialog(
-                    dialogState = dialogState,
-                    buttons = {
-                        positiveButton("Ok")
-                        negativeButton("Cancel")
-                    },
-
-                    ) {
-                    datepicker() { date ->
-                        onValueChange(ConfigProfileEvent.EnteredDateOfBirth(date))
-
-                    }
-                }
-
-                FeatTextField(
-                    text = state.nickname,
-                    onValueChange = {
-                        onValueChange(ConfigProfileEvent.EnteredNickname(it))
-                    },
-                    textLabel = "Apodo"
-                )
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-                    FeatText(
-                        modifier = Modifier
-                            .padding(top = 10.dp, bottom = 10.dp)
-                            .fillMaxWidth(), text = "Sexo"
-                    )
-                    val sexs = listOf("", "Hombre", "Mujer", "Otro")
-                    val currentSelection = remember { mutableStateOf(sexs.first()) }
-                    Row {
-                        FeatRadioGroup(
-                            modifier = Modifier
-                                .padding(horizontal = 5.dp),
-                            items = sexs,
-                            selection = currentSelection.value,
-                            onItemClick = { clickedItem ->
-                                currentSelection.value = clickedItem
-                                onValueChange(ConfigProfileEvent.EnteredSex(clickedItem))
-                            }
-                        )
-                    }
-
-
-                }
 
                 Column(
                     modifier = Modifier
@@ -300,7 +212,6 @@ fun ConfigProfileContent(
                                             locationCallback,
                                             Looper.getMainLooper()
                                         )
-
 
                                     } else if (!permissionState.permissionRequested) {
                                         permissionState.launchMultiplePermissionRequest()
@@ -465,15 +376,12 @@ fun ConfigProfileContent(
 
 }
 
+
 private fun getAddress(location: Location, context: Context): Address {
     val geocoder = Geocoder(context)
     val list = geocoder.getFromLocation(location.latitude, location.longitude, 1)
     return list[0]
 }
-
-
-
-
 
 
 
