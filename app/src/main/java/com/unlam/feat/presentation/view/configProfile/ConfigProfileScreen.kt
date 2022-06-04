@@ -47,22 +47,26 @@ import java.io.IOException
 import java.time.format.DateTimeFormatter
 
 
-
 @Composable
 fun ConfigProfileScreen(
     navController: NavHostController,
-    state:ConfigProfileState
+    state: ConfigProfileState,
+    onValueChange: (ConfigProfileEvent) -> Unit
 ) {
     ConfigProfileContent(state, navigateToConfigSport = {
 //        navController.popBackStack()
 //        navController.navigate(Screen.ConfigSport.route)
-    })
+    }, onValueChange)
 }
 
 @SuppressLint("MissingPermission")
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun ConfigProfileContent(state: ConfigProfileState, navigateToConfigSport: () -> Unit) {
+fun ConfigProfileContent(
+    state: ConfigProfileState,
+    navigateToConfigSport: () -> Unit,
+    onValueChange: (ConfigProfileEvent) -> Unit
+) {
     val context = LocalContext.current
     val permissionState = rememberMultiplePermissionsState(
         permissions = listOf(
@@ -86,37 +90,37 @@ fun ConfigProfileContent(state: ConfigProfileState, navigateToConfigSport: () ->
     val locationCallback =
         object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
-                locationResult?.locations.let{
+                locationResult?.locations.let {
 
                     if (it != null) {
                         addrees = getAddress(it.last(), context)
-                        if(addrees != null){
-                            viewModel.onEvent(
+                        if (addrees != null) {
+                            onValueChange(
                                 ConfigProfileEvent.EnteredAddressStreet(
                                     addrees!!.thoroughfare
                                 )
                             )
-                            viewModel.onEvent(
+                            onValueChange(
                                 ConfigProfileEvent.EnteredAddressNumber(
                                     addrees!!.featureName
                                 )
                             )
-                            viewModel.onEvent(
+                            onValueChange(
                                 ConfigProfileEvent.EnteredAddressTown(
                                     addrees!!.locality
                                 )
                             )
-                            viewModel.onEvent(
+                            onValueChange(
                                 ConfigProfileEvent.EnteredAddressZipCode(
                                     addrees!!.postalCode
                                 )
                             )
-                            viewModel.onEvent(
+                            onValueChange(
                                 ConfigProfileEvent.EnteredAddressLatitude(
                                     addrees!!.latitude.toString()
                                 )
                             )
-                            viewModel.onEvent(
+                            onValueChange(
                                 ConfigProfileEvent.EnteredAddressLongitude(
                                     addrees!!.longitude.toString()
                                 )
@@ -170,17 +174,17 @@ fun ConfigProfileContent(state: ConfigProfileState, navigateToConfigSport: () ->
                 ) {
 
                 FeatTextField(
-                    text = viewModel.state.value.lastName,
+                    text = state.lastName,
                     onValueChange = {
-                        viewModel.onEvent(ConfigProfileEvent.EnteredLastName(it))
+                        onValueChange(ConfigProfileEvent.EnteredLastName(it))
                     },
                     textLabel = "Apellido"
                 )
 
                 FeatTextField(
-                    text = viewModel.state.value.name,
+                    text = state.name,
                     onValueChange = {
-                        viewModel.onEvent(ConfigProfileEvent.EnteredName(it))
+                        onValueChange(ConfigProfileEvent.EnteredName(it))
                     },
                     textLabel = "Nombres"
                 )
@@ -188,8 +192,8 @@ fun ConfigProfileContent(state: ConfigProfileState, navigateToConfigSport: () ->
 
                 val dialogState = rememberMaterialDialogState()
                 FeatTextField(
-                    text = if (viewModel.state.value.dateOfBirth != null) {
-                        viewModel.state.value.dateOfBirth!!.format(
+                    text = if (state.dateOfBirth != null) {
+                        state.dateOfBirth!!.format(
                             DateTimeFormatter.ofPattern(
                                 "dd LLLL yyyy"
                             )
@@ -214,15 +218,15 @@ fun ConfigProfileContent(state: ConfigProfileState, navigateToConfigSport: () ->
 
                     ) {
                     datepicker() { date ->
-                        viewModel.onEvent(ConfigProfileEvent.EnteredDateOfBirth(date))
+                        onValueChange(ConfigProfileEvent.EnteredDateOfBirth(date))
 
                     }
                 }
 
                 FeatTextField(
-                    text = viewModel.state.value.nickname,
+                    text = state.nickname,
                     onValueChange = {
-                        viewModel.onEvent(ConfigProfileEvent.EnteredNickname(it))
+                        onValueChange(ConfigProfileEvent.EnteredNickname(it))
                     },
                     textLabel = "Apodo"
                 )
@@ -250,7 +254,7 @@ fun ConfigProfileContent(state: ConfigProfileState, navigateToConfigSport: () ->
                             selection = currentSelection.value,
                             onItemClick = { clickedItem ->
                                 currentSelection.value = clickedItem
-                                viewModel.onEvent(ConfigProfileEvent.EnteredSex(clickedItem))
+                                onValueChange(ConfigProfileEvent.EnteredSex(clickedItem))
                             }
                         )
                     }
@@ -302,7 +306,7 @@ fun ConfigProfileContent(state: ConfigProfileState, navigateToConfigSport: () ->
                                         permissionState.launchMultiplePermissionRequest()
 
                                     } else if (permissionState.shouldShowRationale) {
-                                        viewModel.onEvent(
+                                        onValueChange(
                                             ConfigProfileEvent.ShowAlertPermission(
                                                 true,
                                                 "Permisos de ubicacion necesarios",
@@ -310,34 +314,34 @@ fun ConfigProfileContent(state: ConfigProfileState, navigateToConfigSport: () ->
                                             )
                                         )
                                     } else if (permissionState.revokedPermissions.size != permissionState.permissions.size) {
-                                        viewModel.onEvent(
+                                        onValueChange(
                                             ConfigProfileEvent.ShowAlertPermission(
                                                 true,
                                                 "Se necesitan permisos de ubicacion exacta",
                                                 "Se necesitan los permisos de ubicacion exacta para acceder a su ubicacion actual"
                                             )
                                         )
+
                                     } else if (permissionState.revokedPermissions.size == permissionState.permissions.size &&
                                         permissionState.permissionRequested
                                     ) {
-                                        viewModel.onEvent(
+                                        onValueChange(
                                             ConfigProfileEvent.ShowAlertPermission(
                                                 true,
                                                 "Se denegaron los permisos de ubicacion",
                                                 "Se han denegado los permisos de ubicacion, por favor acceder a configuraciones de la applicacion y otorgar los permisos"
                                             )
                                         )
-
                                     }
                                 }
                             )
 
-                            if (viewModel.state.value.showAlertPermission) {
+                            if (state.showAlertPermission) {
                                 FeatAlertDialog(
-                                    title = viewModel.state.value.titleAlert,
-                                    descriptionContent = viewModel.state.value.descriptionAlert,
+                                    title = state.titleAlert,
+                                    descriptionContent = state.descriptionAlert,
                                     onDismiss = {
-                                        viewModel.onEvent(ConfigProfileEvent.DismissDialog)
+                                        onValueChange(ConfigProfileEvent.DismissDialog)
                                         permissionState.launchMultiplePermissionRequest()
                                     },
                                     onClick = {
@@ -365,37 +369,37 @@ fun ConfigProfileContent(state: ConfigProfileState, navigateToConfigSport: () ->
                 }
 
                 FeatTextField(
-                    text = viewModel.state.value.addressAlias,
+                    text = state.addressAlias,
                     onValueChange = {
-                        viewModel.onEvent(ConfigProfileEvent.EnteredAddressAlias(it))
+                        onValueChange(ConfigProfileEvent.EnteredAddressAlias(it))
                     },
                     textLabel = "Alias"
                 )
                 FeatTextField(
-                    text = viewModel.state.value.addressStreet,
+                    text = state.addressStreet,
                     onValueChange = {
-                        viewModel.onEvent(ConfigProfileEvent.EnteredAddressStreet(it))
+                        onValueChange(ConfigProfileEvent.EnteredAddressStreet(it))
                     },
                     textLabel = "Calle"
                 )
                 FeatTextField(
-                    text = viewModel.state.value.addressNumber,
+                    text = state.addressNumber,
                     onValueChange = {
-                        viewModel.onEvent(ConfigProfileEvent.EnteredAddressNumber(it))
+                        onValueChange((ConfigProfileEvent.EnteredAddressNumber(it)))
                     },
                     textLabel = "Numero"
                 )
                 FeatTextField(
-                    text = viewModel.state.value.addressTown,
+                    text = state.addressTown,
                     onValueChange = {
-                        viewModel.onEvent(ConfigProfileEvent.EnteredAddressTown(it))
+                        onValueChange(ConfigProfileEvent.EnteredAddressTown(it))
                     },
                     textLabel = "Ciudad"
                 )
                 FeatTextField(
-                    text = viewModel.state.value.addressZipCode,
+                    text = state.addressZipCode,
                     onValueChange = {
-                        viewModel.onEvent(ConfigProfileEvent.EnteredAddressZipCode(it))
+                        onValueChange(ConfigProfileEvent.EnteredAddressZipCode(it))
                     },
                     textLabel = "Codigo Postal"
                 )
@@ -412,7 +416,7 @@ fun ConfigProfileContent(state: ConfigProfileState, navigateToConfigSport: () ->
                         val geocoder = Geocoder(context)
                         val addresses: List<Address>?
                         val addressText: String =
-                            viewModel.state.value.addressStreet + " " + viewModel.state.value.addressNumber + " " + viewModel.state.value.addressTown + " " + viewModel.state.value.addressZipCode
+                            state.addressStreet + " " + state.addressNumber + " " + state.addressTown + " " + state.addressZipCode
                         val latitude: Double
                         val longitude: Double
                         try {

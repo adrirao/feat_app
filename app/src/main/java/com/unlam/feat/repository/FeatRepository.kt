@@ -62,5 +62,11 @@ interface FeatRepository {
     fun getUser(id: Int): Flow<Result<User>> // @GET("/users/{id}")
     fun createUser(req:RequestUser): Flow<Result<String>> // @POST("/users/create")
     //</editor-fold desc="Users">
+
+    //<editor-fold desc="Persons">
+    fun getPerson(uId: String): Flow<Result<Person>> // @GET("/persons/getPersonById{id}")
+    fun createPerson(req:RequestPerson): Flow<Result<String>> // @POST("/persons/create")
+    fun updatePerson(req:RequestPerson): Flow<Result<String>> // @PUT("/persons/update")
+    //</editor-fold desc="Persons">
 }
 

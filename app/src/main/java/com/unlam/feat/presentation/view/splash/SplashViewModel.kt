@@ -2,6 +2,9 @@ package com.unlam.feat.presentation.view.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.unlam.feat.common.Result
+import com.unlam.feat.presentation.view.login.LoginState
+import com.unlam.feat.repository.FeatRepositoryImp
 import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -12,7 +15,8 @@ import javax.inject.Inject
 class SplashViewModel
 @Inject
 constructor(
-    private val firebaseAuthRepository: FirebaseAuthRepositoryImp
+    private val firebaseAuthRepository: FirebaseAuthRepositoryImp,
+    private val featRepository: FeatRepositoryImp
 ) : ViewModel() {
     private val _state = MutableSharedFlow<SplashState>()
     val state: SharedFlow<SplashState> = _state.asSharedFlow()
@@ -21,6 +25,7 @@ constructor(
         when (event) {
             is SplashEvent.Authenticate -> {
                 authenticateUser()
+                checkIsFirstLogin()
             }
         }
     }
@@ -32,5 +37,27 @@ constructor(
                 SplashState(isAuthenticate = isAuthenticate)
             )
         }
+    }
+
+    private fun checkIsFirstLogin() {
+        val uId = firebaseAuthRepository.getUserId()
+        featRepository.getPerson(uId).onEach { result ->
+            when (result) {
+                is Result.Success -> {
+                    if (result.data == null) {
+                        _state.emit(
+                        SplashState(isFirstLogin = true)
+                        )
+                    } else {
+                        _state.emit(
+                        SplashState(isFirstLogin = false)
+                        )
+                    }
+                }
+//                is Result.Error -> {
+//
+//                }
+            }
+        }.launchIn(viewModelScope)
     }
 }

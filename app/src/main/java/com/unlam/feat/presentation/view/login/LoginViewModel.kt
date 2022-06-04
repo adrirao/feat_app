@@ -1,14 +1,22 @@
 package com.unlam.feat.presentation.view.login
 
+import android.util.Log
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.unlam.feat.R
 import com.unlam.feat.common.Constants
+import com.unlam.feat.common.Result
+import com.unlam.feat.model.Person
+import com.unlam.feat.presentation.view.events.EventState
+import com.unlam.feat.repository.FeatRepositoryImp
 import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,11 +24,11 @@ import javax.inject.Inject
 class LoginViewModel
 @Inject
 constructor(
-    private val firebaseAuthRepository: FirebaseAuthRepositoryImp
+    private val firebaseAuthRepository: FirebaseAuthRepositoryImp,
+    private val featRepository: FeatRepositoryImp
 ) : ViewModel() {
     private val _state = mutableStateOf(LoginState())
     val state: State<LoginState> = _state
-
 
     fun onEvent(event: LoginEvent) {
         when (event) {
@@ -43,6 +51,8 @@ constructor(
                 validateEmailOrPhone(_state.value.emailOrPhoneText)
                 validatePassword(_state.value.passwordText)
                 authenticateUser()
+                checkIsFirstLogin()
+
             }
             is LoginEvent.DismissDialog -> {
                 _state.value = _state.value.copy(
@@ -53,6 +63,31 @@ constructor(
             }
 
         }
+    }
+
+
+    private fun checkIsFirstLogin() {
+        val uId = firebaseAuthRepository.getUserId()
+        featRepository.getPerson(uId).onEach { result ->
+            when (result) {
+                is Result.Success -> {
+                    if (result.data == null) {
+                        _state.value = _state.value.copy(
+                            isFirstLogin = true
+                        )
+                    } else {
+                        _state.value = _state.value.copy(
+                            isFirstLogin = false
+                        )
+                    }
+                }
+                is Result.Error -> {
+                    _state.value = _state.value.copy(
+                        apiError = LoginState.ApiError.ApiConnectionError
+                    )
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun validatePassword(password: String) {
@@ -100,6 +135,7 @@ constructor(
         viewModelScope.launch {
             firebaseAuthRepository.authenticate(email, password) { isLoged, error ->
                 if (isLoged) {
+                    checkIsFirstLogin()
                     _state.value = _state.value.copy(
                         isAuthenticate = true
                     )

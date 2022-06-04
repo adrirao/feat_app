@@ -38,10 +38,15 @@ fun LoginScreen(
 
     setMessages(viewModel,navController)
 
-    if (state.isAuthenticate) {
+    if (state.isAuthenticate && !state.isFirstLogin) {
         LaunchedEffect(true) {
             navController.popBackStack()
             navController.navigate(Screen.Home.route)
+        }
+    }else if(state.isAuthenticate && state.isFirstLogin){
+        LaunchedEffect(true) {
+        navController.popBackStack()
+        navController.navigate(Screen.ConfigProfile.route)
         }
     }
 
@@ -126,7 +131,7 @@ private fun Content(
             )
             FeatButton(
                 textButton = stringResource(R.string.register),
-                colors = ButtonDefaults.buttonColors(Color.White),
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
                 colorText = MaterialTheme.colors.primary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(0.5f)
@@ -221,6 +226,22 @@ fun setMessages(viewModel: LoginViewModel,navController: NavController){
             }
             is LoginState.AuthenticateError.VerifyEmail -> {
                 description = stringResource(R.string.error_verify_email)
+            }
+        }
+        FeatAlertDialog(
+            title = title,
+            descriptionContent = description,
+            onDismiss = {
+                viewModel.onEvent(LoginEvent.DismissDialog)
+            }
+        )
+    }
+    if(state.apiError != null){
+        var title: String = stringResource(R.string.error_api_connection)
+        var description: String
+        when(state.apiError){
+            is LoginState.ApiError.ApiConnectionError -> {
+                description = stringResource(R.string.error_description_api_connection)
             }
         }
         FeatAlertDialog(

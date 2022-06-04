@@ -7,7 +7,9 @@ data class LoginState(
     val passwordError: PasswordError? = null,
     val isPasswordVisible : Boolean = false,
     val isAuthenticate : Boolean = false,
-    val authenticateError : AuthenticateError? = null
+    val isFirstLogin : Boolean = true,
+    val authenticateError : AuthenticateError? = null,
+    val apiError : ApiError? = null
 ){
     sealed class EmailError {
         object FieldEmpty : EmailError()
@@ -23,5 +25,8 @@ data class LoginState(
         object VerifyEmail : AuthenticateError()
         object UserNotExist : AuthenticateError()
         object InvalidCredentials : AuthenticateError()
+    }
+    sealed class ApiError {
+        object ApiConnectionError : ApiError()
     }
 }

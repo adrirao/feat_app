@@ -6,9 +6,9 @@ import com.unlam.feat.model.request.*
 import com.unlam.feat.provider.FeatProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.Exception
 
 @Singleton
 class FeatRepositoryImp
@@ -391,5 +391,44 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+
+
     //</editor-fold desc="Users">
+
+    //<editor-fold desc="Persons">
+    override fun getPerson(uId: String): Flow<Result<Person>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.getPerson(uId).body()
+           emit(Result.Success(data = response))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+    override fun createPerson(req: RequestPerson): Flow<Result<String>> = flow  {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.createPerson(req).code()
+            if (response in 200..299) emit(Result.Success(data = "Creado con exito")) else emit(
+                Result.Error("Algo malo ocurrio.")
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+    override fun updatePerson(req: RequestPerson): Flow<Result<String>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.updatePerson(req).code()
+            if (response in 200..299) emit(Result.Success(data = "Actualizado con exito")) else emit(
+                Result.Error("Algo malo ocurrio.")
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+    //</editor-fold desc="Persons">
 }
+

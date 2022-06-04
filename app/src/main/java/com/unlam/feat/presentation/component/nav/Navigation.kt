@@ -19,6 +19,7 @@ import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.map.FeatMap
 import com.unlam.feat.presentation.component.map.FeatMapWhitMaker
 import com.unlam.feat.presentation.component.map.Marker
+import com.unlam.feat.presentation.view.configProfile.ConfigProfileEvent
 import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddEventViewModel
@@ -77,124 +78,170 @@ fun NavGraphBuilder.configProfile(navController: NavHostController) {
         val configProfileViewModel: ConfigProfileViewModel = hiltViewModel()
         val state = configProfileViewModel.state.value
 
-        ConfigProfileScreen(navController,state)
-    }
-}
+        ConfigProfileScreen(navController, state, onValueChange = {
+            when (it) {
+                is ConfigProfileEvent.EnteredLastName -> {
+                    configProfileViewModel.onEvent(it)
+                }
+                is ConfigProfileEvent.EnteredName -> {
+                    configProfileViewModel.onEvent(it)
+                }
+                is ConfigProfileEvent.EnteredDateOfBirth -> {
+                    configProfileViewModel.onEvent(it)
+                }
+                is ConfigProfileEvent.EnteredNickname -> {
+                    configProfileViewModel.onEvent(it)
+                }
+                is ConfigProfileEvent.EnteredSex -> {
+                    configProfileViewModel.onEvent(it)
+                }
+                is ConfigProfileEvent.EnteredAddressAlias -> {
+                    configProfileViewModel.onEvent(it)
+                }
+                is ConfigProfileEvent.EnteredAddressStreet -> {
+                    configProfileViewModel.onEvent(it)
+                }
+                is ConfigProfileEvent.EnteredAddressNumber -> {
+                    configProfileViewModel.onEvent(it)
+                }
+                is ConfigProfileEvent.EnteredAddressTown -> {
+                    configProfileViewModel.onEvent(it)
+                }
+                is ConfigProfileEvent.EnteredAddressZipCode -> {
+                    configProfileViewModel.onEvent(it)
+                }
+                is ConfigProfileEvent.EnteredAddressLatitude -> {
+                    configProfileViewModel.onEvent(it)
+                }
+                is ConfigProfileEvent.EnteredAddressLongitude -> {
+                    configProfileViewModel.onEvent(it)
+                }
+                is ConfigProfileEvent.ShowAlertPermission -> {
+                    configProfileViewModel.onEvent(it)
+                }
+                is ConfigProfileEvent.DismissDialog -> {
+                    configProfileViewModel.onEvent(it)
+                }
 
-
-private fun NavGraphBuilder.register(navController: NavHostController) {
-    composable(Screen.Register.route) {
-        Register(navController)
-    }
-}
-
-private fun NavGraphBuilder.profile(navController: NavHostController) {
-    composable(Screen.Profile.route) {
-        Box() {
-            Text(text = "Hola mundo")
-        }
-    }
-}
-
-private fun NavGraphBuilder.events(
-    navController: NavHostController,
-) {
-    composable(Screen.Events.route) {
-        val eventViewModel: EventViewModel = hiltViewModel()
-        val state = eventViewModel.state.value
-        val isRefreshing = eventViewModel.isRefreshing.collectAsState()
-
-        Event(
-            state = state,
-            onEvent = eventViewModel::onEvent,
-            isRefreshing = isRefreshing.value,
-            refreshData = eventViewModel::getEventsCreatedByUser
-        )
-    }
-}
-
-private fun NavGraphBuilder.home(
-    navController: NavHostController,
-) {
-    composable(Screen.Home.route) {
-        val homeViewModel: HomeViewModel = hiltViewModel()
-        val state = homeViewModel.state.value
-        val isRefreshing = homeViewModel.isRefreshing.collectAsState()
-
-        Home(
-            state = state,
-            onEvent = homeViewModel::onEvent,
-            isRefreshing = isRefreshing.value,
-            refreshData = homeViewModel::getEventsByUser
-        )
-    }
-}
-
-private fun NavGraphBuilder.search(navController: NavHostController) {
-    composable(Screen.Search.route) {
-        val searchViewModel : SearchViewModel = hiltViewModel()
-        var marker  = searchViewModel.marker.value
-        
-        FeatMapWhitMaker(onClick = {
-        })
-        
-        if(marker.position != null){
-            Log.e("RAO","click")
-
-        }
-    }
-}
-
-private fun NavGraphBuilder.invite(navController: NavHostController) {
-    composable(Screen.Invite.route) {
-
-        Button(onClick = {
-            Firebase.auth.signOut()
-            navController.popBackStack()
-            navController.navigate(Screen.Login.route)
-        }) {
-
-        }
-    }
-}
-
-private fun NavGraphBuilder.addEvent(navController: NavHostController) {
-    composable(Screen.AddEvent.route) {
-
-        val addEventViewModel: AddEventViewModel = hiltViewModel()
-        val state = addEventViewModel.state.value
-
-        AddNewEventScreen(
-            state = state,
-            createEvent = addEventViewModel::createEvent,
-            navigateToEvents = {
-                navController.popBackStack()
-                navController.navigate(Screen.Events.route)
-            },
-            navigateToHome = {
-                navController.popBackStack()
-                navController.navigate(Screen.Home.route)
-            },
-            onValueChange = {
-                addEventViewModel.onEvent(it)
             }
-        )
+        })
     }
 }
 
-private fun NavGraphBuilder.searchList(
-    navController: NavHostController,
-) {
-    composable(Screen.SearchList.route) {
-        val eventViewModel: EventViewModel = hiltViewModel()
-        val state = eventViewModel.state.value
-        val isRefreshing = eventViewModel.isRefreshing.collectAsState()
 
-        Search(
-            state = state,
-            onEvent = eventViewModel::onEvent,
-            isRefreshing = isRefreshing.value,
-            refreshData = eventViewModel::getEventsCreatedByUser
-        )
+    private fun NavGraphBuilder.register(navController: NavHostController) {
+        composable(Screen.Register.route) {
+            Register(navController)
+        }
     }
-}
+
+    private fun NavGraphBuilder.profile(navController: NavHostController) {
+        composable(Screen.Profile.route) {
+            Box() {
+                Text(text = "Hola mundo")
+            }
+        }
+    }
+
+    private fun NavGraphBuilder.events(
+        navController: NavHostController,
+    ) {
+        composable(Screen.Events.route) {
+            val eventViewModel: EventViewModel = hiltViewModel()
+            val state = eventViewModel.state.value
+            val isRefreshing = eventViewModel.isRefreshing.collectAsState()
+
+            Event(
+                state = state,
+                onEvent = eventViewModel::onEvent,
+                isRefreshing = isRefreshing.value,
+                refreshData = eventViewModel::getEventsCreatedByUser
+            )
+        }
+    }
+
+    private fun NavGraphBuilder.home(
+        navController: NavHostController,
+    ) {
+        composable(Screen.Home.route) {
+            val homeViewModel: HomeViewModel = hiltViewModel()
+            val state = homeViewModel.state.value
+            val isRefreshing = homeViewModel.isRefreshing.collectAsState()
+
+            Home(
+                state = state,
+                onEvent = homeViewModel::onEvent,
+                isRefreshing = isRefreshing.value,
+                refreshData = homeViewModel::getEventsByUser
+            )
+        }
+    }
+
+    private fun NavGraphBuilder.search(navController: NavHostController) {
+        composable(Screen.Search.route) {
+            val searchViewModel: SearchViewModel = hiltViewModel()
+            var marker = searchViewModel.marker.value
+
+            FeatMapWhitMaker(onClick = {
+            })
+
+            if (marker.position != null) {
+                Log.e("RAO", "click")
+
+            }
+        }
+    }
+
+    private fun NavGraphBuilder.invite(navController: NavHostController) {
+        composable(Screen.Invite.route) {
+
+            Button(onClick = {
+                Firebase.auth.signOut()
+                navController.popBackStack()
+                navController.navigate(Screen.Login.route)
+            }) {
+
+            }
+        }
+    }
+
+    private fun NavGraphBuilder.addEvent(navController: NavHostController) {
+        composable(Screen.AddEvent.route) {
+
+            val addEventViewModel: AddEventViewModel = hiltViewModel()
+            val state = addEventViewModel.state.value
+
+            AddNewEventScreen(
+                state = state,
+                createEvent = addEventViewModel::createEvent,
+                navigateToEvents = {
+                    navController.popBackStack()
+                    navController.navigate(Screen.Events.route)
+                },
+                navigateToHome = {
+                    navController.popBackStack()
+                    navController.navigate(Screen.Home.route)
+                },
+                onValueChange = {
+                    addEventViewModel.onEvent(it)
+                }
+            )
+        }
+    }
+
+    private fun NavGraphBuilder.searchList(
+        navController: NavHostController,
+    ) {
+        composable(Screen.SearchList.route) {
+            val eventViewModel: EventViewModel = hiltViewModel()
+            val state = eventViewModel.state.value
+            val isRefreshing = eventViewModel.isRefreshing.collectAsState()
+
+            Search(
+                state = state,
+                onEvent = eventViewModel::onEvent,
+                isRefreshing = isRefreshing.value,
+                refreshData = eventViewModel::getEventsCreatedByUser
+            )
+        }
+    }
