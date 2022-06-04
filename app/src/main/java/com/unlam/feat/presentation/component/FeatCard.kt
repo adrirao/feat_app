@@ -70,7 +70,7 @@ fun FeatCard(
                 Constants.Sports.SOCCER, Constants.Sports.SOCCER_6 ->  Image(
                     painter = painterResource(id = R.drawable.soccer),
                     contentDescription = sportDescription,
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .padding(8.dp)
                         .size(100.dp)
@@ -81,7 +81,7 @@ fun FeatCard(
                 Constants.Sports.BASKETBALL ->  Image(
                     painter = painterResource(id = R.drawable.basketball),
                     contentDescription = sportDescription,
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .padding(8.dp)
                         .size(100.dp)
@@ -92,7 +92,7 @@ fun FeatCard(
                 Constants.Sports.TENNIS ->  Image(
                     painter = painterResource(id = R.drawable.tennis),
                     contentDescription = sportDescription,
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .padding(8.dp)
                         .size(100.dp)
@@ -103,7 +103,7 @@ fun FeatCard(
                 Constants.Sports.PADDLE ->  Image(
                     painter = painterResource(id = R.drawable.padel),
                     contentDescription = sportDescription,
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .padding(8.dp)
                         .size(100.dp)
@@ -126,7 +126,7 @@ fun FeatCard(
                             .align(Alignment.CenterVertically),
                         painter = painterResource(id = R.drawable.calendar),
                         contentDescription = "Calendar",
-                        contentScale = ContentScale.Crop,
+                        contentScale = ContentScale.Fit,
                     )
                     Text(
                         modifier = Modifier
@@ -148,7 +148,7 @@ fun FeatCard(
                             .align(Alignment.CenterVertically),
                         painter = painterResource(id = R.drawable.watch),
                         contentDescription = "Day",
-                        contentScale = ContentScale.Crop,
+                        contentScale = ContentScale.Fit,
                     )
                     Text(
                         modifier = Modifier
@@ -170,7 +170,7 @@ fun FeatCard(
                             .align(Alignment.CenterVertically),
                         painter = painterResource(id = R.drawable.location),
                         contentDescription = "Location",
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Fit,
                     )
                     Text(
                         modifier = Modifier
