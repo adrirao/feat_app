@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.unlam.feat.R
+import com.unlam.feat.model.Event
 import com.unlam.feat.presentation.component.FeatAlertDialog
 import com.unlam.feat.presentation.component.FeatCard
 import com.unlam.feat.presentation.component.FeatCircularProgress
@@ -27,6 +28,7 @@ fun Home(
     state: HomeState,
     onEvent: (HomeEvent) -> Unit,
     isRefreshing: Boolean,
+    navigateToDetail: (Event) -> Unit,
     refreshData: () -> Unit
 ) {
     Column {
@@ -58,6 +60,9 @@ fun Home(
                                 } - ${event.endTime.substring(0, 5)}",
                                 textState = event.state.description,
                                 sport = event.sport.description,
+                                onClickCard = {
+                                    navigateToDetail(event)
+                                }
                             )
                         }
                     )
