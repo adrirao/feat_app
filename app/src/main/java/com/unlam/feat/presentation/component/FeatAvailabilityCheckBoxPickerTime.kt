@@ -17,15 +17,16 @@ fun FeatAvailabilityCheckBoxPickerTime(
     label: String = "Day",
     starTime: LocalTime?,
     endTime: LocalTime?,
-    onValueChangeStartTime: (LocalTime) -> Unit,
-    onValueChangeEndTime: (LocalTime) -> Unit
+    onValueChangeStartTime: (LocalTime?) -> Unit,
+    onValueChangeEndTime: (LocalTime?) -> Unit
 ) {
 
 
     FeatLabelledCheckbox(
         modifier = Modifier.fillMaxWidth(),
         checked = checked.value,
-        onCheckedChange = { onCheckedChange(it) }, label = label
+        onCheckedChange = { onCheckedChange(it) },
+        label = label
     )
 
     Row(modifier = Modifier,
@@ -49,6 +50,10 @@ fun FeatAvailabilityCheckBoxPickerTime(
                 onValueChange = { onValueChangeEndTime(it) },
                 titlePicker = stringResource(R.string.text_select_ending_time)
             )
+
+        }else{
+            onValueChangeStartTime(null)
+            onValueChangeEndTime(null)
 
         }
     }

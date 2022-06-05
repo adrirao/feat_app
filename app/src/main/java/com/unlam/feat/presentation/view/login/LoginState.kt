@@ -7,7 +7,7 @@ data class LoginState(
     val passwordError: PasswordError? = null,
     val isPasswordVisible : Boolean = false,
     val isAuthenticate : Boolean = false,
-    val isFirstLogin : Boolean = true,
+    val isFirstLogin : Boolean? = null,
     val authenticateError : AuthenticateError? = null,
     val apiError : ApiError? = null
 ){

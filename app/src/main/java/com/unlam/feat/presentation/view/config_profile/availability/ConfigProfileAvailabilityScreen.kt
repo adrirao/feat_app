@@ -1,4 +1,4 @@
-package com.unlam.feat.presentation.view.config_profile
+package com.unlam.feat.presentation.view.config_profile.availability
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -21,8 +21,6 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.unlam.feat.R
 import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.*
-import com.unlam.feat.presentation.view.config_profile.availability.ConfigProfileAvailabilityEvent
-import com.unlam.feat.presentation.view.config_profile.availability.ConfigProfileAvailabilityState
 
 
 @Composable
@@ -33,7 +31,7 @@ fun ConfigProfileAvailabilityScreen(
 ) {
     ConfigProfileAvailabilityContent(state, navigateToConfigAdditionalInformation = {
         navController.popBackStack()
-        navController.navigate(Screen.Home.route)
+        navController.navigate(Screen.ConfigProfileAdditionalInformation.route)
     }, onValueChange)
 }
 

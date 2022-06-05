@@ -58,7 +58,8 @@ constructor(
                 _state.value = _state.value.copy(
                     emailError = null,
                     passwordError = null,
-                    authenticateError = null
+                    authenticateError = null,
+                    apiError = null
                 )
             }
 

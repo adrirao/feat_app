@@ -38,15 +38,17 @@ fun LoginScreen(
 
     setMessages(viewModel,navController)
 
-    if (state.isAuthenticate && !state.isFirstLogin) {
-        LaunchedEffect(true) {
-            navController.popBackStack()
-            navController.navigate(Screen.Home.route)
-        }
-    }else if(state.isAuthenticate && state.isFirstLogin){
-        LaunchedEffect(true) {
-        navController.popBackStack()
-        navController.navigate(Screen.ConfigProfilePersonalData.route)
+    if(state.isFirstLogin != null) {
+        if (state.isAuthenticate && !state.isFirstLogin) {
+            LaunchedEffect(true) {
+                navController.popBackStack()
+                navController.navigate(Screen.Home.route)
+            }
+        } else if (state.isAuthenticate && state.isFirstLogin) {
+            LaunchedEffect(true) {
+                navController.popBackStack()
+                navController.navigate(Screen.ConfigProfilePersonalData.route)
+            }
         }
     }
 
@@ -98,7 +100,7 @@ private fun Content(
                 onValueChange = {
                     viewModel.onEvent(LoginEvent.EnteredEmailOrPhone(it))
                 },
-                textLabel = stringResource(R.string.email_or_numberphone)
+                textLabel = stringResource(R.string.email_or_numberphone),
             )
             FeatTextField(
                 text = viewModel.state.value.passwordText,

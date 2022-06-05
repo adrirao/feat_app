@@ -15,11 +15,14 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.map.FeatMapWhitMaker
-import com.unlam.feat.presentation.view.config_profile.*
+import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationEvent
+import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationScreen
+import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationViewModel
 import com.unlam.feat.presentation.view.config_profile.address.ConfigProfileAddressEvent
 import com.unlam.feat.presentation.view.config_profile.address.ConfigProfileAddressScreen
 import com.unlam.feat.presentation.view.config_profile.address.ConfigProfileAddressViewModel
 import com.unlam.feat.presentation.view.config_profile.availability.ConfigProfileAvailabilityEvent
+import com.unlam.feat.presentation.view.config_profile.availability.ConfigProfileAvailabilityScreen
 import com.unlam.feat.presentation.view.config_profile.availability.ConfigProfileAvailabilityViewModel
 import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataEvent
 import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataScreen
@@ -113,6 +116,7 @@ fun NavGraphBuilder.configProfilePersonalData(navController: NavHostController) 
 
 private fun NavGraphBuilder.configProfileAddress(navController: NavHostController) {
     composable(Screen.ConfigProfileAddress.route) {
+
         val configProfileAddressViewModel: ConfigProfileAddressViewModel = hiltViewModel()
         val state = configProfileAddressViewModel.state.value
 
@@ -208,7 +212,32 @@ private fun NavGraphBuilder.configProfileAvailability(navController: NavHostCont
 }
 private fun NavGraphBuilder.configProfileAdditionalInformation(navController: NavHostController) {
     composable(Screen.ConfigProfileAdditionalInformation.route) {
-        Register(navController)
+
+        val configProfileAdditionalInformationViewModel: ConfigProfileAdditionalInformationViewModel = hiltViewModel()
+        val state = configProfileAdditionalInformationViewModel.state.value
+
+        ConfigProfileAdditionalInformationScreen(
+            navController,
+            onValueChange = {
+                when (it) {
+                    is ConfigProfileAdditionalInformationEvent.EnteredMinAge -> {
+                        configProfileAdditionalInformationViewModel.onEvent(it)
+                    }
+                    is ConfigProfileAdditionalInformationEvent.EnteredMaxAge -> {
+                        configProfileAdditionalInformationViewModel.onEvent(it)
+                    }
+                    is ConfigProfileAdditionalInformationEvent.EnteredNotifications -> {
+                        configProfileAdditionalInformationViewModel.onEvent(it)
+                    }
+                    is ConfigProfileAdditionalInformationEvent.EnteredWillingDistance -> {
+                        configProfileAdditionalInformationViewModel.onEvent(it)
+                    }
+
+                }
+
+            },
+            state = state
+        )
     }
 }
 

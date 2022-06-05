@@ -18,6 +18,7 @@ constructor(
     private val firebaseAuthRepository: FirebaseAuthRepositoryImp,
     private val featRepository: FeatRepositoryImp
 ) : ViewModel() {
+
     private val _state = MutableSharedFlow<SplashState>()
     val state: SharedFlow<SplashState> = _state.asSharedFlow()
 
@@ -32,10 +33,8 @@ constructor(
 
     private fun authenticateUser() {
         val isAuthenticate: Boolean = firebaseAuthRepository.isLogged()
-        viewModelScope.launch {
-            _state.emit(
-                SplashState(isAuthenticate = isAuthenticate)
-            )
+        if(isAuthenticate){
+            checkIsFirstLogin()
         }
     }
 
@@ -46,11 +45,11 @@ constructor(
                 is Result.Success -> {
                     if (result.data == null) {
                         _state.emit(
-                        SplashState(isFirstLogin = true)
+                        SplashState(isAuthenticate = true, isFirstLogin = true)
                         )
                     } else {
                         _state.emit(
-                        SplashState(isFirstLogin = false)
+                            SplashState(isAuthenticate = true, isFirstLogin = false)
                         )
                     }
                 }

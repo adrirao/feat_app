@@ -39,7 +39,6 @@ import com.google.android.gms.location.LocationServices
 import com.unlam.feat.R
 import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.*
-import com.unlam.feat.presentation.view.config_profile.ConfigProfileEvent
 import java.io.IOException
 
 
