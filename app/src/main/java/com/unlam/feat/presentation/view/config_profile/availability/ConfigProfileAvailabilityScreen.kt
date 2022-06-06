@@ -29,7 +29,7 @@ fun ConfigProfileAvailabilityScreen(
     state: ConfigProfileAvailabilityState,
     onValueChange: (ConfigProfileAvailabilityEvent) -> Unit
 ) {
-    ConfigProfileAvailabilityContent(state, navigateToConfigAdditionalInformation = {
+    ConfigProfileAvailabilityContent(state, navigateToConfigProfileAdditionalInformation = {
         navController.popBackStack()
         navController.navigate(Screen.ConfigProfileAdditionalInformation.route)
     }, onValueChange)
@@ -40,7 +40,7 @@ fun ConfigProfileAvailabilityScreen(
 @Composable
 private fun ConfigProfileAvailabilityContent(
     state: ConfigProfileAvailabilityState,
-    navigateToConfigAdditionalInformation: () -> Unit,
+    navigateToConfigProfileAdditionalInformation: () -> Unit,
     onValueChange: (ConfigProfileAvailabilityEvent) -> Unit
 ) {
     Box(
@@ -174,7 +174,7 @@ private fun ConfigProfileAvailabilityContent(
                     textAlign = TextAlign.Center,
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
                     onClick = {
-                        navigateToConfigAdditionalInformation()
+                        navigateToConfigProfileAdditionalInformation()
                         //persistir en la base
                     }
                 )

@@ -55,7 +55,6 @@ interface FeatRepository {
     //<editor-fold desc="Sports">
     fun getSports(): Flow<Result<List<Sport>>> // @GET("/sports/")
     fun getSport(id: Int): Flow<Result<Sport>> // @GET("/positions/{id}")
-
     //</editor-fold desc="Sports">
     //<editor-fold desc="Users">
     fun getUsers(): Flow<Result<List<User>>> // @GET("/users/")
@@ -68,5 +67,9 @@ interface FeatRepository {
     fun createPerson(req:RequestPerson): Flow<Result<String>> // @POST("/persons/create")
     fun updatePerson(req:RequestPerson): Flow<Result<String>> // @PUT("/persons/update")
     //</editor-fold desc="Persons">
+
+    //<editor-fold desc="SportsGenerics">
+    fun getGenericsSports(): Flow<Result<List<SportGeneric>>> // @GET("/sportsGeneric/")
+    //</editor-fold desc="SportsGenerics">
 }
 

@@ -101,8 +101,9 @@ interface FeatProvider {
     @GET("/sports/")
     suspend fun getSports(): Response<List<Sport>>
 
-    @GET("/positions/{id}")
+    @GET("/sports/{id}")
     suspend fun getSport(@Path("id") id: Int): Response<Sport>
+
     //</editor-fold>
     //<editor-fold desc="Users">
     @GET("/users/")
@@ -127,6 +128,11 @@ interface FeatProvider {
     @Headers("Content-type: application/json")
     @PUT("/persons/update/{id}")
     suspend fun updatePerson(@Body requestEvent: RequestPerson): Response<String>
+    //</editor-fold>
+    //<editor-fold desc="Sports">
+
+    @GET("/sportsGeneric/")
+    suspend fun getGenericsSports(): Response<List<SportGeneric>>
 
     //</editor-fold>
 }

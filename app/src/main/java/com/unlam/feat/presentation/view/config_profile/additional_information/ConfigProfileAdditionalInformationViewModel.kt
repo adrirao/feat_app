@@ -3,7 +3,7 @@ package com.unlam.feat.presentation.view.config_profile.additional_information
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.unlam.feat.presentation.view.config_profile.ConfigProfileEvent
+
 
 
 

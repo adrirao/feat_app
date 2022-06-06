@@ -48,7 +48,7 @@ fun ConfigProfileAddressScreen(
     state: ConfigProfileAddressState,
     onValueChange: (ConfigProfileAddressEvent) -> Unit
 ) {
-    ConfigProfileAddressScreenContent(state, navigateToConfigAvailability = {
+    ConfigProfileAddressScreenContent(state, navigateToConfigProfileAvailability = {
         navController.popBackStack()
         navController.navigate(Screen.ConfigProfileAvailability.route)
     }, onValueChange)
@@ -59,7 +59,7 @@ fun ConfigProfileAddressScreen(
 @Composable
 private fun ConfigProfileAddressScreenContent(
     state: ConfigProfileAddressState,
-    navigateToConfigAvailability: () -> Unit,
+    navigateToConfigProfileAvailability: () -> Unit,
     onValueChange: (ConfigProfileAddressEvent) -> Unit
 ) {
     val context = LocalContext.current
@@ -355,7 +355,7 @@ private fun ConfigProfileAddressScreenContent(
                     textAlign = TextAlign.Center,
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
                     onClick = {
-                        navigateToConfigAvailability()
+                        navigateToConfigProfileAvailability()
                         //persistir en la base
                     }
                 )

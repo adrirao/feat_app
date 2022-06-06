@@ -31,9 +31,9 @@ fun ConfigProfileAdditionalInformationScreen(
     state: ConfigProfileAdditionalInformationState,
     onValueChange: (ConfigProfileAdditionalInformationEvent) -> Unit
 ) {
-    ConfigProfileAdditionalInformationContent(state, navigateToConfigAdditionalInformation = {
+    ConfigProfileAdditionalInformationContent(state, navigateToConfigSport = {
         navController.popBackStack()
-        navController.navigate(Screen.Home.route)
+        navController.navigate(Screen.ConfigSport.route)
     }, onValueChange)
 }
 
@@ -42,7 +42,7 @@ fun ConfigProfileAdditionalInformationScreen(
 @Composable
 private fun ConfigProfileAdditionalInformationContent(
     state: ConfigProfileAdditionalInformationState,
-    navigateToConfigAdditionalInformation: () -> Unit,
+    navigateToConfigSport: () -> Unit,
     onValueChange: (ConfigProfileAdditionalInformationEvent) -> Unit
 ) {
     Box(
@@ -150,7 +150,9 @@ private fun ConfigProfileAdditionalInformationContent(
                                 value = state.willingDistance.toFloat(),
                                 valueRange = 0f..20000f,
                                 onValueChange = {
-                                    onValueChange(ConfigProfileAdditionalInformationEvent.EnteredWillingDistance(it.roundToInt().toString()))
+                                    onValueChange(
+                                        ConfigProfileAdditionalInformationEvent.EnteredWillingDistance(it.roundToInt().toString())
+                                    )
                                 },
                                 steps = 0,
                                 colors = SliderDefaults.colors(
@@ -208,7 +210,7 @@ private fun ConfigProfileAdditionalInformationContent(
                     textAlign = TextAlign.Center,
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
                     onClick = {
-                        navigateToConfigAdditionalInformation()
+                        navigateToConfigSport()
                         //persistir en la base
                     }
                 )

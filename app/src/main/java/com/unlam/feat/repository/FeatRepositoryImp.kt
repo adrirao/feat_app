@@ -352,6 +352,20 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+
+    override fun getGenericsSports(): Flow<Result<List<SportGeneric>>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.getGenericsSports().body()
+            if (response != null) emit(Result.Success(data = response)) else emit(
+                Result.Error(
+                    message = "Unknown Error"
+                )
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
     //</editor-fold desc="Sports">
     //<editor-fold desc="Users">
 

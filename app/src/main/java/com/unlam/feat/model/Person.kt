@@ -14,5 +14,8 @@ data class Person(
     @SerializedName("max_age")
     val maxAge: Int,
     val nickname: String,
-    val user: User,
+    val userUid: User,
+    val notifications: String,
+    @SerializedName("willing_distance")
+    val willingDistance: Int
 )

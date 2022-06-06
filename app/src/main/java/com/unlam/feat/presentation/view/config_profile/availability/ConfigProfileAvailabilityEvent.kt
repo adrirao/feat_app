@@ -1,6 +1,6 @@
 package com.unlam.feat.presentation.view.config_profile.availability
 
-import com.unlam.feat.presentation.view.config_profile.ConfigProfileEvent
+
 import java.time.LocalDate
 import java.time.LocalTime
 

@@ -20,5 +20,6 @@ sealed class Screen(
     object ConfigProfileAddress: Screen("config_profile_address_screen")
     object ConfigProfileAvailability: Screen("config_profile_availability_screen")
     object ConfigProfileAdditionalInformation: Screen("config_profile_additional_information_screen")
-//    object ConfigSport: Screen("config_sport_screen")
+    object ConfigSport: Screen("config_sport_screen")
+    object SportData: Screen("sport_data_screen")
 }

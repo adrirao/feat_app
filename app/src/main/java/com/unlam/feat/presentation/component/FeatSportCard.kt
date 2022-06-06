@@ -37,6 +37,7 @@ fun FeatSportCard(
     //ICON SPORT
     sport: String = "",
     sportDescription: String = "",
+    idSport:Int  = 0
 ) {
 
     Card(
@@ -46,33 +47,33 @@ fun FeatSportCard(
         backgroundColor = backgroundColor,
         shape = shape
     ) {
-        when (sport) {
-            "soccer" -> contentCard(
-                textSport = "Futbol",
+        when (idSport) {
+            1 -> contentCard(
+                textSport = sport,
                 shape = shape,
                 sportDescription = sportDescription,
                 routeImage = R.drawable.soccer
             )
-            "basketball" -> contentCard(
-                textSport = "Basquet",
+            2-> contentCard(
+                textSport = sport,
                 shape = shape,
                 sportDescription = sportDescription,
                 routeImage = R.drawable.basketball
             )
-            "tennis" -> contentCard(
-                textSport = "Tenis",
+            3 -> contentCard(
+                textSport = sport,
                 shape = shape,
                 sportDescription = sportDescription,
                 routeImage = R.drawable.tennis
             )
-            "padel" -> contentCard(
-                textSport = "Padel",
+            4 -> contentCard(
+                textSport = sport,
                 shape = shape,
                 sportDescription = sportDescription,
                 routeImage = R.drawable.padel
             )
-            "recreationalEvent" -> contentCard(
-                textSport = "Evento recreativo",
+            5 -> contentCard(
+                textSport = sport,
                 shape = shape,
                 sportDescription = sportDescription,
                 routeImage = R.drawable.recreational_event

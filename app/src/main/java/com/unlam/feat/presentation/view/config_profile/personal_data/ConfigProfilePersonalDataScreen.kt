@@ -23,8 +23,6 @@ import com.google.accompanist.permissions.*
 import com.unlam.feat.R
 import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.*
-import com.unlam.feat.presentation.view.config_profile.ConfigProfileEvent
-import com.unlam.feat.presentation.view.config_profile.ConfigProfileState
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
@@ -37,7 +35,7 @@ fun ConfigProfilePersonalDataScreen(
     state: ConfigProfilePersonalDataState,
     onValueChange: (ConfigProfilePersonalDataEvent) -> Unit
 ) {
-    ConfigProfilePersonalData(state, navigateToConfigAddress = {
+    ConfigProfilePersonalData(state, navigateToConfigProfileAddress = {
         navController.popBackStack()
         navController.navigate(Screen.ConfigProfileAddress.route)
     }, onValueChange)
@@ -48,7 +46,7 @@ fun ConfigProfilePersonalDataScreen(
 @Composable
 private fun ConfigProfilePersonalData(
     state: ConfigProfilePersonalDataState,
-    navigateToConfigAddress: () -> Unit,
+    navigateToConfigProfileAddress: () -> Unit,
     onValueChange: (ConfigProfilePersonalDataEvent) -> Unit
 ) {
     Box(
@@ -190,7 +188,7 @@ private fun ConfigProfilePersonalData(
                     textAlign = TextAlign.Center,
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
                     onClick = {
-                        navigateToConfigAddress()
+                        navigateToConfigProfileAddress()
                         //persistir en la base
                     }
                 )
