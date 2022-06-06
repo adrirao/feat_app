@@ -1,9 +1,9 @@
 package com.unlam.feat.presentation.view.home.detail_event
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
@@ -14,10 +14,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.unlam.feat.presentation.component.FeatHeader
+import com.unlam.feat.presentation.ui.theme.Shapes
+import com.unlam.feat.presentation.ui.theme.card
 
-@Preview(showSystemUi = true)
 @Composable
 fun DetailEventHome(
     state: DetailEventHomeState? = null
@@ -26,8 +29,10 @@ fun DetailEventHome(
     val tabTitles = listOf("Descripcion", "Participantes")
 
     Column {
-        Box(modifier = Modifier
-            .background(MaterialTheme.colors.primary)) {
+        Box(
+            modifier = Modifier
+                .background(MaterialTheme.colors.primary)
+        ) {
             Column() {
                 FeatHeader(text = state!!.event!!.name)
                 TabRow(
@@ -49,8 +54,32 @@ fun DetailEventHome(
 
         }
         when (tabIndex) {
-            0 -> Text("Hola")
-            1 -> Text("Mundo")
+            0 -> DescriptionEvent(state!!)
+            1 -> LazyColumn() {
+                items(
+                    items = state?.players!!,
+                    itemContent = { player ->
+                        Text(text = player.id.toString())
+                    }
+                )
+
+            }
+        }
+    }
+}
+
+@Composable
+fun DescriptionEvent(state: DetailEventHomeState) {
+    Box(
+        modifier = Modifier
+            .height(500.dp)
+            .fillMaxSize()
+            .padding(20.dp)
+            .clip(Shapes.large)
+            .background(MaterialTheme.colors.card),
+    ) {
+        Column(modifier = Modifier.padding(10.dp)) {
+            Text(text = state.event!!.description)
         }
     }
 }

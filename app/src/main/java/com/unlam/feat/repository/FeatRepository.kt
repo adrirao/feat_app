@@ -3,6 +3,7 @@ package com.unlam.feat.repository
 import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
+import com.unlam.feat.model.response.ResponseDetailEvent
 import kotlinx.coroutines.flow.Flow
 
 interface FeatRepository {
@@ -60,5 +61,7 @@ interface FeatRepository {
     fun getUser(id: Int): Flow<Result<User>> // @GET("/users/{id}")
     fun createUser(req: RequestUser): Flow<Result<String>> // @POST("/users/create")
     //</editor-fold desc="Users">
+
+    fun getDataDetailEvent(idEvent:Int): Flow<Result<ResponseDetailEvent>>
 }
 

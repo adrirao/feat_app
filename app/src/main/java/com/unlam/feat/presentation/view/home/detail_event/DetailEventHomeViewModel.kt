@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlam.feat.common.Result
-import com.unlam.feat.presentation.view.home.HomeState
 import com.unlam.feat.repository.FeatRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -17,12 +16,12 @@ class DetailEventHomeViewModel
 @Inject
 constructor(
     val featRepository: FeatRepositoryImp
-): ViewModel(){
+) : ViewModel() {
     private val _state = mutableStateOf(DetailEventHomeState())
-    val state : State<DetailEventHomeState> = _state
+    val state: State<DetailEventHomeState> = _state
 
-    fun onEvent(event:DetailEventHomeEvent){
-        when(event){
+    fun onEvent(event: DetailEventHomeEvent) {
+        when (event) {
             is DetailEventHomeEvent.DismissDialog -> {
                 _state.value = _state.value.copy(
                     loading = false
@@ -31,17 +30,18 @@ constructor(
         }
     }
 
-    fun getDetailEvent(idEvent: Int){
-        featRepository.getEventById(idEvent).onEach {result ->
+    fun getDataDetailEvent(idEvent: Int){
+        featRepository.getDataDetailEvent(idEvent).onEach { result ->
             when (result) {
                 is Result.Error -> {
-                    _state.value = DetailEventHomeState(error = result.message ?: "Error Inesperado")
+                    _state.value =
+                        DetailEventHomeState(error = result.message ?: "Error Inesperado")
                 }
                 is Result.Loading -> {
                     _state.value = DetailEventHomeState(loading = true)
                 }
                 is Result.Success -> {
-                    _state.value = DetailEventHomeState(event = result.data)
+                    _state.value = DetailEventHomeState(event = result.data!!.event, players = result.data.players)
                 }
             }
         }.launchIn(viewModelScope)

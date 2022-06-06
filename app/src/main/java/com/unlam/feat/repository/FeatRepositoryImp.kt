@@ -4,6 +4,7 @@ import android.util.Log
 import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
+import com.unlam.feat.model.response.ResponseDetailEvent
 import com.unlam.feat.provider.FeatProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -396,5 +397,21 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+
     //</editor-fold desc="Users">
+
+    override fun getDataDetailEvent(idEvent: Int): Flow<Result<ResponseDetailEvent>> = flow {
+        try{
+            emit(Result.Loading())
+            val responseEvent = featProvider.getEventById(idEvent).body()
+            val responsePlayers =  featProvider.getAllPlayersSuggestedForEvent(idEvent).body()
+            if(responseEvent != null && responsePlayers != null){
+                emit(Result.Success(data = ResponseDetailEvent(event = responseEvent, players = responsePlayers)))
+            }else{
+                emit(Result.Error(message =  "Unknown Error"))
+            }
+        }catch (e:Exception){
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
 }

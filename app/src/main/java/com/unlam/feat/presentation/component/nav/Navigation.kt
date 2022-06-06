@@ -201,10 +201,10 @@ private fun NavGraphBuilder.detailEventHome(
         val state = detailEventHomeViewModel.state.value
 
         LaunchedEffect(key1 = true ){
-            detailEventHomeViewModel.getDetailEvent(idEvent.toInt())
+            detailEventHomeViewModel.getDataDetailEvent(idEvent.toInt())
         }
 
-        if(state.event != null){
+        if(state.event != null && state.players != null){
             DetailEventHome(state)
         }
     }
