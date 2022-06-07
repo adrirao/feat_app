@@ -85,10 +85,10 @@ constructor(
     private fun registerUser() {
         val email = if (_state.value.emailError == null) _state.value.emailText else return
         val password = if (_state.value.passwordError == null) _state.value.passwordText else return
-        val uid = firebaseAuthRepository.getUserId()
 
         firebaseAuthRepository.register(email, password) { isSuccessRegistration, error ->
             if (isSuccessRegistration) {
+                val uid = firebaseAuthRepository.getUserId()
                 val request = RequestUser(uid = uid, email = email, "2")
                 featRepository.createUser(request).onEach { result ->
                     when (result) {
@@ -100,9 +100,9 @@ constructor(
                         }
                         is Result.Error -> {
                             Log.e("Rao", result.message.toString())
-//                            _state.value = _state.value.copy(
-//                                error = result.message!!
-//                            )
+                            _state.value = _state.value.copy(
+                                error = result.message!!
+                            )
                         }
                     }
                 }.launchIn(viewModelScope)

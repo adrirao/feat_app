@@ -31,7 +31,6 @@ constructor(
         getPeriodicities()
     }
 
-
     fun onEvent(event: AddEventEvent) {
         when (event) {
             is AddEventEvent.EnteredName -> {
@@ -73,6 +72,11 @@ constructor(
                 _state.value = _state.value.copy(
                     latitude = event.lat,
                     longitude = event.long
+                )
+            }
+            is AddEventEvent.EnteredOrganizer -> {
+                _state.value = _state.value.copy(
+                    organizer = event.value
                 )
             }
             is AddEventEvent.DismissDialog -> {
@@ -137,4 +141,5 @@ constructor(
             }
         }.launchIn(viewModelScope)
     }
+
 }

@@ -5,19 +5,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.unlam.feat.common.Screen
 import com.unlam.feat.model.SportGeneric
+import com.unlam.feat.presentation.component.map.FeatMap
 import com.unlam.feat.presentation.component.map.FeatMapWhitMaker
 import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationEvent
 import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationScreen
@@ -42,6 +43,9 @@ import com.unlam.feat.presentation.view.events.add_event.AddEventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddNewEventScreen
 import com.unlam.feat.presentation.view.home.Home
 import com.unlam.feat.presentation.view.home.HomeViewModel
+import com.unlam.feat.presentation.view.home.detail_event.DetailEventHome
+import com.unlam.feat.presentation.view.home.detail_event.DetailEventHomeEvent
+import com.unlam.feat.presentation.view.home.detail_event.DetailEventHomeViewModel
 import com.unlam.feat.presentation.view.login.LoginScreen
 import com.unlam.feat.presentation.view.register.Register
 import com.unlam.feat.presentation.view.search.Search
@@ -72,6 +76,7 @@ fun Navigation(navController: NavHostController) {
         addEvent(navController)
         searchList(navController)
 
+        detailEventHome(navController)
 
     }
 
@@ -342,7 +347,12 @@ private fun NavGraphBuilder.home(
             state = state,
             onEvent = homeViewModel::onEvent,
             isRefreshing = isRefreshing.value,
-            refreshData = homeViewModel::getEventsByUser
+            refreshData = homeViewModel::getEventsByUser,
+            navigateToDetail = {
+                navController.navigate(
+                    Screen.DetailEventHome.route + "/${it.id}"
+                )
+            }
         )
     }
 }
@@ -367,7 +377,7 @@ private fun NavGraphBuilder.invite(navController: NavHostController) {
 
         Button(onClick = {
             Firebase.auth.signOut()
-            navController.popBackStack()
+            navController.popBackStack(Screen.Home.route, inclusive = true)
             navController.navigate(Screen.Login.route)
         }) {
 
@@ -413,5 +423,26 @@ private fun NavGraphBuilder.searchList(
             isRefreshing = isRefreshing.value,
             refreshData = eventViewModel::getEventsCreatedByUser
         )
+    }
+}
+
+private fun NavGraphBuilder.detailEventHome(
+    navController: NavHostController,
+) {
+    composable(
+        route = Screen.DetailEventHome.route + "/{idEvent}",
+        arguments = Screen.DetailEventHome.arguments ?: listOf()
+    ) {
+        val idEvent = it.arguments?.getString("idEvent") ?: ""
+        val detailEventHomeViewModel : DetailEventHomeViewModel = hiltViewModel()
+        val state = detailEventHomeViewModel.state.value
+
+        LaunchedEffect(key1 = true ){
+            detailEventHomeViewModel.getDataDetailEvent(idEvent.toInt())
+        }
+
+        if(state.event != null && state.players != null){
+            DetailEventHome(state)
+        }
     }
 }

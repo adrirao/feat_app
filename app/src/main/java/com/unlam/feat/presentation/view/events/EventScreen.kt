@@ -24,7 +24,9 @@ fun Event(
     isRefreshing: Boolean,
     refreshData: () -> Unit
 ) {
-    Column {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
         FeatHeader(text = stringResource(R.string.title_my_events))
         Box(
             modifier = Modifier
@@ -59,17 +61,17 @@ fun Event(
                 }
             }
         }
-        if (state.isLoading) {
-            FeatCircularProgress()
-        }
-        if (state.error.isNotBlank()) {
-            FeatAlertDialog(
-                title = stringResource(R.string.title_error_events),
-                descriptionContent = stringResource(R.string.error_load_events),
-                onDismiss = {
-                    onEvent(EventEvent.DismissDialog)
-                }
-            )
-        }
+    }
+    if (state.isLoading) {
+        FeatCircularProgress()
+    }
+    if (state.error.isNotBlank()) {
+        FeatAlertDialog(
+            title = stringResource(R.string.title_error_events),
+            descriptionContent = stringResource(R.string.error_load_events),
+            onDismiss = {
+                onEvent(EventEvent.DismissDialog)
+            }
+        )
     }
 }

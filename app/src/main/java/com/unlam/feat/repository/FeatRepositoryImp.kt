@@ -1,9 +1,12 @@
 package com.unlam.feat.repository
 
+import android.util.Log
 import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
+import com.unlam.feat.model.response.ResponseDetailEvent
 import com.unlam.feat.provider.FeatProvider
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -31,6 +34,7 @@ constructor(
     override fun getEventsSuggestedForUser(uId: String): Flow<Result<List<Event>>> = flow {
         try {
             emit(Result.Loading())
+            delay(600)
             val response = featProvider.getEventsSuggestedForUser(uId).body() ?: listOf()
             emit(Result.Success(data = response))
         } catch (e: Exception) {
@@ -41,6 +45,7 @@ constructor(
     override fun getEventsCreatedByUser(uId: String): Flow<Result<List<Event>>> = flow {
         try {
             emit(Result.Loading())
+            delay(600)
             val response = featProvider.getEventsCreatedByUser(uId).body() ?: listOf()
             emit(Result.Success(data = response))
         } catch (e: Exception) {
@@ -81,8 +86,9 @@ constructor(
     override fun getEventsByUser(uId: String): Flow<Result<List<Event>>> = flow {
         try {
             emit(Result.Loading())
-            val response = featProvider.getEventsConfirmed(uId).body() ?: listOf()
-            emit(Result.Success(data = response))
+            val response = featProvider.getEventsByUser(uId)
+            Log.e("rao",response.toString())
+            emit(Result.Success(data = response.body() ?: listOf()))
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
@@ -397,14 +403,15 @@ constructor(
     override fun createUser(req: RequestUser): Flow<Result<String>> = flow {
         try {
             emit(Result.Loading())
-            val response = featProvider.createUser(req).code()
-            if (response in 200..299) emit(Result.Success(data = "Creado con exito")) else emit(
+            val response = featProvider.createUser(req)
+            if (response.code() in 200..299) emit(Result.Success(data = "Creado con exito")) else emit(
                 Result.Error("Algo malo ocurrio.")
             )
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+
 
 
     //</editor-fold desc="Users">
@@ -444,5 +451,20 @@ constructor(
         }
     }
     //</editor-fold desc="Persons">
+
+    override fun getDataDetailEvent(idEvent: Int): Flow<Result<ResponseDetailEvent>> = flow {
+        try{
+            emit(Result.Loading())
+            val responseEvent = featProvider.getEventById(idEvent).body()
+            val responsePlayers =  featProvider.getAllPlayersSuggestedForEvent(idEvent).body()
+            if(responseEvent != null && responsePlayers != null){
+                emit(Result.Success(data = ResponseDetailEvent(event = responseEvent, players = responsePlayers)))
+            }else{
+                emit(Result.Error(message =  "Unknown Error"))
+            }
+        }catch (e:Exception){
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
 }
 

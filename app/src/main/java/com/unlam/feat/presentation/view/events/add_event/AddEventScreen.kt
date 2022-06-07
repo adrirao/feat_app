@@ -40,6 +40,7 @@ fun AddNewEventScreen(
     var openMap by remember {
         mutableStateOf(false)
     }
+    Box(modifier = Modifier.fillMaxWidth()) {
 
     Column {
         FeatHeader("Creacion Evento")
@@ -118,6 +119,10 @@ fun AddNewEventScreen(
                     text = state.description,
                     textLabel = stringResource(R.string.text_description),
                     onValueChange = { onValueChange(AddEventEvent.EnteredDescription(it)) })
+                FeatTextField(
+                    text = state.organizer,
+                    textLabel = stringResource(R.string.text_organizer),
+                    onValueChange = { onValueChange(AddEventEvent.EnteredOrganizer(it)) })
                 Row {
                     FeatButton(
                         textButton = stringResource(R.string.text_cancel),
@@ -140,6 +145,7 @@ fun AddNewEventScreen(
                 }
             }
 
+//        }
         }
     }
 
@@ -192,4 +198,6 @@ fun AddNewEventScreen(
             }
         )
     }
+}
+
 }
