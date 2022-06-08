@@ -87,7 +87,7 @@ constructor(
         try {
             emit(Result.Loading())
             val response = featProvider.getEventsByUser(uId)
-            Log.e("rao",response.toString())
+            Log.e("rao", response.toString())
             emit(Result.Success(data = response.body() ?: listOf()))
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
@@ -282,6 +282,26 @@ constructor(
         }
     }
 
+    override fun getAllPlayersConfirmedByEvent(eventId: Int): Flow<Result<List<Player>>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.getAllPlayersConfirmedByEvent(eventId).body() ?: listOf()
+            emit(Result.Success(data = response))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+    override fun getAllPlayersAppliedByEvent(eventId: Int): Flow<Result<List<Player>>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.getAllPlayersAppliedByEvent(eventId).body() ?: listOf()
+            emit(Result.Success(data = response))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
     override fun createPlayer(req: RequestPlayer): Flow<Result<String>> = flow {
         try {
             emit(Result.Loading())
@@ -413,7 +433,6 @@ constructor(
     }
 
 
-
     //</editor-fold desc="Users">
 
     //<editor-fold desc="Persons">
@@ -421,13 +440,13 @@ constructor(
         try {
             emit(Result.Loading())
             val response = featProvider.getPerson(uId).body()
-           emit(Result.Success(data = response))
+            emit(Result.Success(data = response))
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
 
-    override fun createPerson(req: RequestPerson): Flow<Result<String>> = flow  {
+    override fun createPerson(req: RequestPerson): Flow<Result<String>> = flow {
         try {
             emit(Result.Loading())
             val response = featProvider.createPerson(req).code()
@@ -452,17 +471,31 @@ constructor(
     }
     //</editor-fold desc="Persons">
 
+
     override fun getDataDetailEvent(idEvent: Int): Flow<Result<ResponseDetailEvent>> = flow {
-        try{
+        try {
             emit(Result.Loading())
+
             val responseEvent = featProvider.getEventById(idEvent).body()
-            val responsePlayers =  featProvider.getAllPlayersSuggestedForEvent(idEvent).body()
-            if(responseEvent != null && responsePlayers != null){
-                emit(Result.Success(data = ResponseDetailEvent(event = responseEvent, players = responsePlayers)))
-            }else{
-                emit(Result.Error(message =  "Unknown Error"))
+            val playersConfirmed = featProvider.getAllPlayersConfirmedByEvent(idEvent).body()
+            val playersApplied = featProvider.getAllPlayersAppliedByEvent(idEvent).body()
+            val playersSuggested = featProvider.getAllPlayersSuggestedForEvent(idEvent).body() ?: emptyList()
+
+            if (responseEvent != null && playersSuggested != null && playersConfirmed != null && playersApplied != null) {
+                emit(
+                    Result.Success(
+                        data = ResponseDetailEvent(
+                            event = responseEvent,
+                            playersSuggested = playersSuggested,
+                            playersApplied = playersApplied,
+                            playersConfirmed = playersConfirmed
+                        )
+                    )
+                )
+            } else {
+                emit(Result.Error(message = "Unknown Error"))
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }

@@ -5,5 +5,7 @@ import com.unlam.feat.model.Player
 
 data class ResponseDetailEvent(
     val event: Event,
-    val players: List<Player>
+    val playersSuggested: List<Player>,
+    val playersApplied : List<Player>,
+    val playersConfirmed: List<Player>,
 )

@@ -113,8 +113,11 @@ fun FeatApp(
                         onClick = {
                             navController.navigate(floatingButtonNavigation.route!!)
                         },
-                        backgroundColor = Color.Green,
-                        contentColor = Color.White
+                        backgroundColor = MaterialTheme.colors.primary,
+                        contentColor = Color.White,
+                        modifier = if (floatingButtonNavigation.description == "Chat") Modifier.padding(
+                            bottom = 70.dp
+                        ) else Modifier
                     ) {
                         Icon(
                             imageVector = floatingButtonNavigation.icon,

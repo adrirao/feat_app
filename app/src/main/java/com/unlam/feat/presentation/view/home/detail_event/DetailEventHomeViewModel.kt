@@ -41,7 +41,7 @@ constructor(
                     _state.value = DetailEventHomeState(loading = true)
                 }
                 is Result.Success -> {
-                    _state.value = DetailEventHomeState(event = result.data!!.event, players = result.data.players)
+                    _state.value = DetailEventHomeState(event = result.data!!.event, players = result.data.playersApplied)
                 }
             }
         }.launchIn(viewModelScope)

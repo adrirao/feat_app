@@ -18,6 +18,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.unlam.feat.common.Screen
 import com.unlam.feat.model.SportGeneric
+import com.unlam.feat.presentation.component.FeatCircularProgress
 import com.unlam.feat.presentation.component.map.FeatMap
 import com.unlam.feat.presentation.component.map.FeatMapWhitMaker
 import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationEvent
@@ -41,6 +42,9 @@ import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddEventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddNewEventScreen
+import com.unlam.feat.presentation.view.events.detail_event.DetailEvent
+import com.unlam.feat.presentation.view.events.detail_event.DetailEventScreen
+import com.unlam.feat.presentation.view.events.detail_event.DetailEventViewModel
 import com.unlam.feat.presentation.view.home.Home
 import com.unlam.feat.presentation.view.home.HomeViewModel
 import com.unlam.feat.presentation.view.home.detail_event.DetailEventHome
@@ -259,7 +263,8 @@ private fun NavGraphBuilder.configProfileAdditionalInformation(navController: Na
 }
 
 private fun NavGraphBuilder.configSport(navController: NavHostController) {
-    composable(Screen.ConfigSport.route /*+ "/?sportGenericId={sportGenericId}",*/
+    composable(
+        Screen.ConfigSport.route /*+ "/?sportGenericId={sportGenericId}",*/
         /* arguments = listOf(navArgument("sportGenericId") { defaultValue = "" })*/
     ) {
 //            backStackEntry ->
@@ -434,15 +439,19 @@ private fun NavGraphBuilder.detailEventHome(
         arguments = Screen.DetailEventHome.arguments ?: listOf()
     ) {
         val idEvent = it.arguments?.getString("idEvent") ?: ""
-        val detailEventHomeViewModel : DetailEventHomeViewModel = hiltViewModel()
+        val detailEventHomeViewModel: DetailEventViewModel = hiltViewModel()
         val state = detailEventHomeViewModel.state.value
 
-        LaunchedEffect(key1 = true ){
+        LaunchedEffect(key1 = true) {
             detailEventHomeViewModel.getDataDetailEvent(idEvent.toInt())
         }
 
-        if(state.event != null && state.players != null){
-            DetailEventHome(state)
+        if(state.loading){
+            FeatCircularProgress()
+        }
+
+        if (state.event != null && state.playersApplied != null && state.playersConfirmed != null && state.playersSuggested != null) {
+            DetailEventScreen(state)
         }
     }
 }
