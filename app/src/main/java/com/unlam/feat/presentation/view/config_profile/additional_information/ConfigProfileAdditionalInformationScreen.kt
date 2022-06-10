@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -52,17 +53,26 @@ private fun ConfigProfileAdditionalInformationContent(
             .padding(20.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        ){
             Image(
-                modifier = Modifier.size(150.dp),
+                modifier = Modifier
+                    .size(200.dp, 60.dp)
+                    .padding(bottom = 10.dp),
                 painter = painterResource(R.drawable.ic_isologotype_2),
                 contentDescription = stringResource(R.string.feat_logo)
             )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(weight = 0.15f, fill = false)
+                    .align(Alignment.CenterHorizontally),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
             FeatText(
-                text = "Ingresa los siguientes datos adicionales.",
+                text = "Ingresa los siguientes datos adicionales. 4/5",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -75,18 +85,20 @@ private fun ConfigProfileAdditionalInformationContent(
                     .fillMaxWidth()
                     .height(1.dp)
             )
+            }
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
-                    .weight(weight = 1f, fill = false),
-                verticalArrangement = Arrangement.Center,
+                    .weight(weight = 0.8f, fill = true)
+                    .align(Alignment.CenterHorizontally),
+                verticalArrangement = Arrangement.SpaceBetween,
 
                 ) {
 
 
                 FeatText(
-                    modifier = Modifier.padding(top = 4.dp),
+                    modifier = Modifier.padding(top = 10.dp),
                     text = "Ingresa el rango de edad que te gustaria encontrar en los eventos",
                     fontSize = 18.sp,
                     textAlign = TextAlign.Center
@@ -131,7 +143,7 @@ private fun ConfigProfileAdditionalInformationContent(
                 }
 
                 FeatText(
-                    modifier = Modifier.padding(top = 4.dp),
+                    modifier = Modifier.padding(top = 10.dp),
                     text = "¿Cuanto estas dispuesto a trasladarte?",
                     fontSize = 18.sp,
                     textAlign = TextAlign.Center
@@ -148,10 +160,12 @@ private fun ConfigProfileAdditionalInformationContent(
                         Row() {
                             Slider(
                                 value = state.willingDistance.toFloat(),
-                                valueRange = 0f..20000f,
+                                valueRange = 1f..50f,
                                 onValueChange = {
                                     onValueChange(
-                                        ConfigProfileAdditionalInformationEvent.EnteredWillingDistance(it.roundToInt().toString())
+                                        ConfigProfileAdditionalInformationEvent.EnteredWillingDistance(
+                                            it.roundToInt().toString()
+                                        )
                                     )
                                 },
                                 steps = 0,
@@ -165,12 +179,11 @@ private fun ConfigProfileAdditionalInformationContent(
                             )
                         }
                         Row() {
-                            Text(state.willingDistance  + " Km.")
+                            Text(state.willingDistance + " Km.")
 
                         }
 
                     }
-
 
 
                 }
@@ -178,7 +191,7 @@ private fun ConfigProfileAdditionalInformationContent(
 
 
                 FeatText(
-                    modifier = Modifier.padding(top = 4.dp),
+                    modifier = Modifier.padding(top = 10.dp),
                     text = "¿Te gustaria recibir notificaciones de Eventos?",
                     fontSize = 18.sp,
                     textAlign = TextAlign.Center
@@ -198,25 +211,31 @@ private fun ConfigProfileAdditionalInformationContent(
                     )
                 }
 
-
-
-                FeatButton(
+            }
+            Row(
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .weight(0.1f, false),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                FeatButtonRounded(
                     modifier = Modifier
-                        .padding(10.dp)
-                        .height(60.dp),
-                    textButton = "Siguiente",
+                        .padding(top = 0.dp)
+                        .size(60.dp)
+                    ,
+                    drawable = R.drawable.arrow_next,
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                    colorText = MaterialTheme.colors.primary,
-                    textAlign = TextAlign.Center,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
                     onClick = {
                         navigateToConfigSport()
                         //persistir en la base
-                    }
+                    },
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
                 )
             }
 
         }
+
+
     }
 }
 

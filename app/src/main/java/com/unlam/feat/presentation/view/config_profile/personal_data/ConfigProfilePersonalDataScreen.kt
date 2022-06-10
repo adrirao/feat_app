@@ -9,6 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Bottom
+import androidx.compose.ui.Alignment.Companion.BottomEnd
+import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -55,36 +58,54 @@ private fun ConfigProfilePersonalData(
             .background(MaterialTheme.colors.primary)
             .padding(20.dp)
     ) {
+
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                modifier = Modifier.size(150.dp),
-                painter = painterResource(R.drawable.ic_isologotype_2),
-                contentDescription = stringResource(R.string.feat_logo)
-            )
-            FeatText(
-                text = "Configuracion de perfil.",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                color = Color.White
-            )
-            Divider(
-                color = Color.Gray,
+            Column(
                 modifier = Modifier
-                    .padding(top = 8.dp, bottom = 5.dp, start = 10.dp, end = 10.dp)
                     .fillMaxWidth()
-                    .height(1.dp)
-            )
+                    .weight(weight = 0.15f, fill = false)
+                    .align(Alignment.CenterHorizontally),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    modifier = Modifier
+                        .size(200.dp, 60.dp)
+                        .padding(bottom = 10.dp),
+                    painter = painterResource(R.drawable.ic_isologotype_2),
+                    contentDescription = stringResource(R.string.feat_logo)
+                )
+                FeatText(
+                    text = "Configuracion de perfil.",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    color = Color.White
+                )
+                FeatText(
+                    text = "Ingrese sus datos personales. 1/5",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    color = Color.White
+                )
+                Divider(
+                    color = Color.Gray,
+                    modifier = Modifier
+                        .padding(top = 8.dp, bottom = 5.dp, start = 10.dp, end = 10.dp)
+                        .fillMaxWidth()
+                        .height(1.dp)
+                )
+            }
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
-                    .weight(weight = 1f, fill = false),
-                verticalArrangement = Arrangement.Center,
+                    .weight(weight = 0.8f, fill = true)
+                    .align(Alignment.CenterHorizontally),
 
                 ) {
 
@@ -178,25 +199,28 @@ private fun ConfigProfilePersonalData(
                 }
 
 
-                FeatButton(
+            }
+            Row(
+                modifier = Modifier
+                    .align(End)
+                    .weight(0.1f, false),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                FeatButtonRounded(
                     modifier = Modifier
-                        .padding(10.dp)
-                        .height(60.dp),
-                    textButton = "Siguiente",
+                        .padding(top = 10.dp)
+                        .size(60.dp),
+                    drawable = R.drawable.arrow_next,
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                    colorText = MaterialTheme.colors.primary,
-                    textAlign = TextAlign.Center,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
                     onClick = {
                         navigateToConfigProfileAddress()
                         //persistir en la base
-                    }
+                    },
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
                 )
-
-
             }
-        }
 
+        }
 
     }
 

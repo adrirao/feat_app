@@ -58,7 +58,7 @@ fun FeatSportCard(
                 textSport = sport,
                 shape = shape,
                 sportDescription = sportDescription,
-                routeImage = R.drawable.basketball
+                routeImage = R.drawable.padel
             )
             3 -> contentCard(
                 textSport = sport,
@@ -70,7 +70,7 @@ fun FeatSportCard(
                 textSport = sport,
                 shape = shape,
                 sportDescription = sportDescription,
-                routeImage = R.drawable.padel
+                routeImage = R.drawable.basketball
             )
             5 -> contentCard(
                 textSport = sport,

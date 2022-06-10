@@ -4,6 +4,7 @@ import android.util.Log
 import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
+import com.unlam.feat.model.response.ResponseDataSport
 import com.unlam.feat.model.response.ResponseDetailEvent
 import com.unlam.feat.provider.FeatProvider
 import kotlinx.coroutines.delay
@@ -87,7 +88,7 @@ constructor(
         try {
             emit(Result.Loading())
             val response = featProvider.getEventsByUser(uId)
-            Log.e("rao",response.toString())
+            Log.e("rao", response.toString())
             emit(Result.Success(data = response.body() ?: listOf()))
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
@@ -176,6 +177,20 @@ constructor(
         try {
             emit(Result.Loading())
             val response = featProvider.getLevel(id).body()
+            if (response != null) emit(Result.Success(data = response)) else emit(
+                Result.Error(
+                    message = "Unknown Error"
+                )
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+    override fun getAllLevelsBySportGeneric(id: Int): Flow<Result<List<Level>>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.getAllLevelsBySportGeneric(id).body()
             if (response != null) emit(Result.Success(data = response)) else emit(
                 Result.Error(
                     message = "Unknown Error"
@@ -321,6 +336,20 @@ constructor(
         }
     }
 
+    override fun getAllPositionsBySportGeneric(id: Int): Flow<Result<List<Position>>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.getAllPositionsBySportGeneric(id).body()
+            if (response != null) emit(Result.Success(data = response)) else emit(
+                Result.Error(
+                    message = "Unknown Error"
+                )
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
     override fun createPosition(req: RequestPosition): Flow<Result<String>> = flow {
         try {
             emit(Result.Loading())
@@ -413,7 +442,6 @@ constructor(
     }
 
 
-
     //</editor-fold desc="Users">
 
     //<editor-fold desc="Persons">
@@ -421,13 +449,13 @@ constructor(
         try {
             emit(Result.Loading())
             val response = featProvider.getPerson(uId).body()
-           emit(Result.Success(data = response))
+            emit(Result.Success(data = response))
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
 
-    override fun createPerson(req: RequestPerson): Flow<Result<String>> = flow  {
+    override fun createPerson(req: RequestPerson): Flow<Result<String>> = flow {
         try {
             emit(Result.Loading())
             val response = featProvider.createPerson(req).code()
@@ -453,18 +481,66 @@ constructor(
     //</editor-fold desc="Persons">
 
     override fun getDataDetailEvent(idEvent: Int): Flow<Result<ResponseDetailEvent>> = flow {
-        try{
+        try {
             emit(Result.Loading())
             val responseEvent = featProvider.getEventById(idEvent).body()
-            val responsePlayers =  featProvider.getAllPlayersSuggestedForEvent(idEvent).body()
-            if(responseEvent != null && responsePlayers != null){
-                emit(Result.Success(data = ResponseDetailEvent(event = responseEvent, players = responsePlayers)))
-            }else{
-                emit(Result.Error(message =  "Unknown Error"))
+            val responsePlayers = featProvider.getAllPlayersSuggestedForEvent(idEvent).body()
+            if (responseEvent != null && responsePlayers != null) {
+                emit(
+                    Result.Success(
+                        data = ResponseDetailEvent(
+                            event = responseEvent,
+                            players = responsePlayers
+                        )
+                    )
+                )
+            } else {
+                emit(Result.Error(message = "Unknown Error"))
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+
+
+
+    override fun getValuations(): Flow<Result<List<Valuation>>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.getValuations().body()
+            emit(Result.Success(data = response))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+    override fun getDataSportScreen(uid:String,sportGenericId:Int): Flow<Result<ResponseDataSport>> = flow {
+        try {
+            emit(Result.Loading())
+            val responsePerson = featProvider.getPerson(uid).body()
+            val responseLevels = featProvider.getAllLevelsBySportGeneric(sportGenericId).body()
+            val responseValuations = featProvider.getValuations().body()
+            val responsePositions = featProvider.getAllPositionsBySportGeneric(sportGenericId).body()
+
+
+            if (responseLevels != null && responseValuations != null && responsePositions != null && responsePerson != null) {
+                emit(
+                    Result.Success(
+                        data = ResponseDataSport(
+                            person = responsePerson,
+                            levelList = responseLevels,
+                            positionList = responsePositions,
+                            valuationList = responseValuations
+                        )
+                    )
+                )
+            } else {
+                emit(Result.Error(message = "Unknown Error"))
+            }
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
 }
 

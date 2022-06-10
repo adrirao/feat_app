@@ -4,5 +4,5 @@ data class ConfigProfileAdditionalInformationState(
     val minAge: String = "",
     val maxAge: String = "",
     val notifications: Boolean? = null,
-    val willingDistance: String = "0",
+    val willingDistance: String = "1",
 )

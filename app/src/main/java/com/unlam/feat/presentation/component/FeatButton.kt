@@ -106,6 +106,7 @@ fun FeatButtonRounded(
     colors: ButtonColors = ButtonDefaults.buttonColors(Color(0xFF5f7fd3)),
     @DrawableRes drawable: Int? = null,
     onClick: () -> Unit = {},
+    colorFilter: ColorFilter = ColorFilter.tint(Color.White)
 ) {
     Button(
         modifier = modifier,
@@ -116,7 +117,7 @@ fun FeatButtonRounded(
         Image(
             painter = painterResource(drawable!!),
             contentDescription = "Button",
-            colorFilter = ColorFilter.tint(Color.White)
+            colorFilter = colorFilter
 
         )
     }

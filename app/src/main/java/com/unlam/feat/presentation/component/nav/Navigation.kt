@@ -10,15 +10,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.unlam.feat.common.Screen
 import com.unlam.feat.model.SportGeneric
-import com.unlam.feat.presentation.component.map.FeatMap
+import com.unlam.feat.model.ListSportId
 import com.unlam.feat.presentation.component.map.FeatMapWhitMaker
 import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationEvent
 import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationScreen
@@ -32,7 +34,6 @@ import com.unlam.feat.presentation.view.config_profile.availability.ConfigProfil
 import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataEvent
 import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataScreen
 import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataViewModel
-import com.unlam.feat.presentation.view.config_profile.sport.ConfigSportEvent
 import com.unlam.feat.presentation.view.config_profile.sport.ConfigSportScreen
 import com.unlam.feat.presentation.view.config_profile.sport.ConfigSportViewModel
 import com.unlam.feat.presentation.view.config_profile.sport.sport_data.SportDataScreen
@@ -44,7 +45,6 @@ import com.unlam.feat.presentation.view.events.add_event.AddNewEventScreen
 import com.unlam.feat.presentation.view.home.Home
 import com.unlam.feat.presentation.view.home.HomeViewModel
 import com.unlam.feat.presentation.view.home.detail_event.DetailEventHome
-import com.unlam.feat.presentation.view.home.detail_event.DetailEventHomeEvent
 import com.unlam.feat.presentation.view.home.detail_event.DetailEventHomeViewModel
 import com.unlam.feat.presentation.view.login.LoginScreen
 import com.unlam.feat.presentation.view.register.Register
@@ -64,7 +64,7 @@ fun Navigation(navController: NavHostController) {
         configProfileAvailability(navController)
         configProfileAdditionalInformation(navController)
         configSport(navController)
-        SportData(navController)
+        sportData(navController)
         register(navController)
 
         profile(navController)
@@ -107,25 +107,10 @@ fun NavGraphBuilder.configProfilePersonalData(navController: NavHostController) 
         val configProfilePersonalDataViewModel: ConfigProfilePersonalDataViewModel = hiltViewModel()
         val state = configProfilePersonalDataViewModel.state.value
 
-        ConfigProfilePersonalDataScreen(navController, state, onValueChange = {
-            when (it) {
-                is ConfigProfilePersonalDataEvent.EnteredLastName -> {
-                    configProfilePersonalDataViewModel.onEvent(it)
-                }
-                is ConfigProfilePersonalDataEvent.EnteredName -> {
-                    configProfilePersonalDataViewModel.onEvent(it)
-                }
-                is ConfigProfilePersonalDataEvent.EnteredDateOfBirth -> {
-                    configProfilePersonalDataViewModel.onEvent(it)
-                }
-                is ConfigProfilePersonalDataEvent.EnteredNickname -> {
-                    configProfilePersonalDataViewModel.onEvent(it)
-                }
-                is ConfigProfilePersonalDataEvent.EnteredSex -> {
-                    configProfilePersonalDataViewModel.onEvent(it)
-                }
-            }
-        })
+        ConfigProfilePersonalDataScreen(
+            navController,
+            state,
+            onValueChange = { configProfilePersonalDataViewModel.onEvent(it) })
     }
 }
 
@@ -135,38 +120,10 @@ private fun NavGraphBuilder.configProfileAddress(navController: NavHostControlle
         val configProfileAddressViewModel: ConfigProfileAddressViewModel = hiltViewModel()
         val state = configProfileAddressViewModel.state.value
 
-        ConfigProfileAddressScreen(navController, state, onValueChange = {
-            when (it) {
-                is ConfigProfileAddressEvent.EnteredAddressAlias -> {
-                    configProfileAddressViewModel.onEvent(it)
-                }
-                is ConfigProfileAddressEvent.EnteredAddressStreet -> {
-                    configProfileAddressViewModel.onEvent(it)
-                }
-                is ConfigProfileAddressEvent.EnteredAddressNumber -> {
-                    configProfileAddressViewModel.onEvent(it)
-                }
-                is ConfigProfileAddressEvent.EnteredAddressTown -> {
-                    configProfileAddressViewModel.onEvent(it)
-                }
-                is ConfigProfileAddressEvent.EnteredAddressZipCode -> {
-                    configProfileAddressViewModel.onEvent(it)
-                }
-                is ConfigProfileAddressEvent.EnteredAddressLatitude -> {
-                    configProfileAddressViewModel.onEvent(it)
-                }
-                is ConfigProfileAddressEvent.EnteredAddressLongitude -> {
-                    configProfileAddressViewModel.onEvent(it)
-                }
-                is ConfigProfileAddressEvent.ShowAlertPermission -> {
-                    configProfileAddressViewModel.onEvent(it)
-                }
-                is ConfigProfileAddressEvent.DismissDialog -> {
-                    configProfileAddressViewModel.onEvent(it)
-                }
-
-            }
-        })
+        ConfigProfileAddressScreen(
+            navController,
+            state,
+            onValueChange = { configProfileAddressViewModel.onEvent(it) })
     }
 }
 
@@ -176,136 +133,85 @@ private fun NavGraphBuilder.configProfileAvailability(navController: NavHostCont
         val configProfileAvailabilityViewModel: ConfigProfileAvailabilityViewModel = hiltViewModel()
         val state = configProfileAvailabilityViewModel.state.value
 
-        ConfigProfileAvailabilityScreen(navController, state, onValueChange = {
-            when (it) {
-                is ConfigProfileAvailabilityEvent.EnteredStartTime1 -> {
-                    configProfileAvailabilityViewModel.onEvent(it)
-                }
-                is ConfigProfileAvailabilityEvent.EnteredEndTime1 -> {
-                    configProfileAvailabilityViewModel.onEvent(it)
-                }
-                is ConfigProfileAvailabilityEvent.EnteredStartTime2 -> {
-                    configProfileAvailabilityViewModel.onEvent(it)
-                }
-                is ConfigProfileAvailabilityEvent.EnteredEndTime2 -> {
-                    configProfileAvailabilityViewModel.onEvent(it)
-                }
-                is ConfigProfileAvailabilityEvent.EnteredStartTime3 -> {
-                    configProfileAvailabilityViewModel.onEvent(it)
-                }
-                is ConfigProfileAvailabilityEvent.EnteredEndTime3 -> {
-                    configProfileAvailabilityViewModel.onEvent(it)
-                }
-                is ConfigProfileAvailabilityEvent.EnteredStartTime4 -> {
-                    configProfileAvailabilityViewModel.onEvent(it)
-                }
-                is ConfigProfileAvailabilityEvent.EnteredEndTime4 -> {
-                    configProfileAvailabilityViewModel.onEvent(it)
-                }
-                is ConfigProfileAvailabilityEvent.EnteredStartTime5 -> {
-                    configProfileAvailabilityViewModel.onEvent(it)
-                }
-                is ConfigProfileAvailabilityEvent.EnteredEndTime5 -> {
-                    configProfileAvailabilityViewModel.onEvent(it)
-                }
-                is ConfigProfileAvailabilityEvent.EnteredStartTime6 -> {
-                    configProfileAvailabilityViewModel.onEvent(it)
-                }
-                is ConfigProfileAvailabilityEvent.EnteredEndTime6 -> {
-                    configProfileAvailabilityViewModel.onEvent(it)
-                }
-                is ConfigProfileAvailabilityEvent.EnteredStartTime7 -> {
-                    configProfileAvailabilityViewModel.onEvent(it)
-                }
-                is ConfigProfileAvailabilityEvent.EnteredEndTime7 -> {
-                    configProfileAvailabilityViewModel.onEvent(it)
-                }
-
-            }
-
-        })
+        ConfigProfileAvailabilityScreen(
+            navController,
+            state,
+            onValueChange = { configProfileAvailabilityViewModel.onEvent(it) })
     }
 }
 
 private fun NavGraphBuilder.configProfileAdditionalInformation(navController: NavHostController) {
     composable(Screen.ConfigProfileAdditionalInformation.route) {
 
-        val configProfileAdditionalInformationViewModel: ConfigProfileAdditionalInformationViewModel =
-            hiltViewModel()
+        val configProfileAdditionalInformationViewModel: ConfigProfileAdditionalInformationViewModel = hiltViewModel()
         val state = configProfileAdditionalInformationViewModel.state.value
 
         ConfigProfileAdditionalInformationScreen(
             navController, state,
-            onValueChange = {
-                when (it) {
-                    is ConfigProfileAdditionalInformationEvent.EnteredMinAge -> {
-                        configProfileAdditionalInformationViewModel.onEvent(it)
-                    }
-                    is ConfigProfileAdditionalInformationEvent.EnteredMaxAge -> {
-                        configProfileAdditionalInformationViewModel.onEvent(it)
-                    }
-                    is ConfigProfileAdditionalInformationEvent.EnteredNotifications -> {
-                        configProfileAdditionalInformationViewModel.onEvent(it)
-                    }
-                    is ConfigProfileAdditionalInformationEvent.EnteredWillingDistance -> {
-                        configProfileAdditionalInformationViewModel.onEvent(it)
-                    }
-
-                }
-
-            },
+            onValueChange = { configProfileAdditionalInformationViewModel.onEvent(it) },
         )
     }
 }
 
 private fun NavGraphBuilder.configSport(navController: NavHostController) {
-    composable(Screen.ConfigSport.route /*+ "/?sportGenericId={sportGenericId}",*/
-        /* arguments = listOf(navArgument("sportGenericId") { defaultValue = "" })*/
-    ) {
-//            backStackEntry ->
-//        val sportGenericId: String? = backStackEntry.arguments?.getString("sportGenericId")
+    composable(Screen.ConfigSport.route + "?listSportGenericId={listSportGenericId}",
+        arguments = listOf(navArgument("listSportGenericId") { nullable = true })
+    ) { backStackEntry ->
+        val listSportGenericId: ListSportId?
+
+        if (!backStackEntry.arguments?.getString("listSportGenericId").isNullOrEmpty()) {
+            val listSportGenericIdJson = backStackEntry.arguments?.getString("listSportGenericId")
+            val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+            val jsonAdapter = moshi.adapter(ListSportId::class.java).lenient()
+            listSportGenericId = jsonAdapter.fromJson(requireNotNull(listSportGenericIdJson))
+        } else {
+            listSportGenericId = null
+        }
         val configSportViewModel: ConfigSportViewModel = hiltViewModel()
         val state = configSportViewModel.state.value
 
         ConfigSportScreen(
             navController, state,
-            onValueChange = {
-                when (it) {
-//                    is ConfigSportEvent.EnteredMinAge -> {
-//                        configSportViewModel.onEvent(it)
-//                    }
-                }
-
-            },
-//            sportGenericId
+            onValueChange = { configSportViewModel.onEvent(it) },
+            listSportGenericId
         )
 
     }
 }
 
-private fun NavGraphBuilder.SportData(navController: NavHostController) {
-    composable(Screen.SportData.route + "/{sportGeneric}") { backStackEntry ->
+private fun NavGraphBuilder.sportData(navController: NavHostController) {
+    composable(
+        Screen.SportData.route + "/sportGeneric={sportGeneric}&listSportGenericId={listSportGenericId}",
+        arguments = listOf(
+            navArgument("sportGeneric") { type = NavType.StringType },
+            navArgument("listSportGenericId") { type = NavType.StringType })
+    ) { backStackEntry ->
+
         val sportGenericJson = backStackEntry.arguments?.getString("sportGeneric")
         val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
         val jsonAdapter = moshi.adapter(SportGeneric::class.java).lenient()
         val sportGeneric = jsonAdapter.fromJson(requireNotNull(sportGenericJson))
 
+        val listSportGenericIdJson = backStackEntry.arguments?.getString("listSportGenericId")
+        val jsonAdapterId = moshi.adapter(ListSportId::class.java).lenient()
+        val listSportGenericId = jsonAdapterId.fromJson(requireNotNull(listSportGenericIdJson))
 
         val sportDataViewModel: SportDataViewModel = hiltViewModel()
         val state = sportDataViewModel.state.value
 
-        SportDataScreen(
-            navController, state,
-            onValueChange = {
-                when (it) {
-//                    is ConfigSportEvent.EnteredMinAge -> {
-//                        configSportViewModel.onEvent(it)
-//                    }
-                }
+        LaunchedEffect(key1 = true) {
+            if (sportGeneric != null) {
+                sportDataViewModel.getDataSportScreen(sportGeneric.id)
+            }
+        }
 
-            },
-            requireNotNull(sportGeneric)
-        )
+
+            SportDataScreen(
+                navController, state,
+                onValueChange = { sportDataViewModel.onEvent(it) },
+                requireNotNull(sportGeneric),
+                requireNotNull(listSportGenericId)
+            )
 
     }
 }
@@ -434,14 +340,14 @@ private fun NavGraphBuilder.detailEventHome(
         arguments = Screen.DetailEventHome.arguments ?: listOf()
     ) {
         val idEvent = it.arguments?.getString("idEvent") ?: ""
-        val detailEventHomeViewModel : DetailEventHomeViewModel = hiltViewModel()
+        val detailEventHomeViewModel: DetailEventHomeViewModel = hiltViewModel()
         val state = detailEventHomeViewModel.state.value
 
-        LaunchedEffect(key1 = true ){
+        LaunchedEffect(key1 = true) {
             detailEventHomeViewModel.getDataDetailEvent(idEvent.toInt())
         }
 
-        if(state.event != null && state.players != null){
+        if (state.event != null && state.players != null) {
             DetailEventHome(state)
         }
     }

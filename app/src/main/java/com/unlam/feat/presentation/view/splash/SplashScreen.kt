@@ -40,7 +40,7 @@ fun SplashScreen(
                 navController.navigate(Screen.ConfigProfilePersonalData.route)
             } else if(it.isAuthenticate == true && it.isFirstLogin == false){
                 navController.popBackStack()
-                navController.navigate(Screen.Home.route)
+                navController.navigate(Screen.ConfigProfilePersonalData.route)
             }
             else if(it.isAuthenticate == false) {
                 navController.popBackStack()

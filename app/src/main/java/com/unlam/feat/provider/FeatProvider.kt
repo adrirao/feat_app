@@ -34,6 +34,7 @@ interface FeatProvider {
     @Headers("Content-type: application/json")
     @POST("/events/create")
     suspend fun postEvent(@Body requestEvent: RequestEvent): Response<String>
+
     //</editor-fold>
     //<editor-fold desc="Availabilities">
     @GET("/availabilities/")
@@ -50,6 +51,7 @@ interface FeatProvider {
         @Path("id") id: Int,
         @Body req: RequestAvailability
     ): Response<String>
+
     //</editor-fold>
     //<editor-fold desc="Levels">
     @GET("/levels/")
@@ -58,8 +60,13 @@ interface FeatProvider {
     @GET("/levels/{id}")
     suspend fun getLevel(@Path("id") id: Int): Response<Level>
 
+    @GET("/levels/getAllBySportGeneric/{id}")
+    suspend fun getAllLevelsBySportGeneric(@Path("id") id: Int): Response<List<Level>>
+
     @POST("/levels/create")
     suspend fun createLevel(@Body req: RequestLevel): Response<String>
+
+
     //</editor-fold>
     //<editor-fold desc="Periodicities">
     @GET("/periodicities/")
@@ -70,6 +77,7 @@ interface FeatProvider {
 
     @GET("/periodicities/create")
     suspend fun createPeriodicity(@Body req: RequestPeriodicity): Response<String>
+
     //</editor-fold>
     //<editor-fold desc="Players">
     @GET("/players/")
@@ -86,6 +94,7 @@ interface FeatProvider {
 
     @POST("/players/create")
     suspend fun createPlayer(@Body req: RequestPlayer): Response<String>
+
     //</editor-fold>
     //<editor-fold desc="Positions">
     @GET("/positions/")
@@ -94,17 +103,27 @@ interface FeatProvider {
     @GET("/positions/{id}")
     suspend fun getPosition(@Path("id") id: Int): Response<Position>
 
+    @GET("/positions/getAllBySportGeneric/{id}")
+    suspend fun getAllPositionsBySportGeneric(@Path("id") id: Int): Response<List<Position>>
+
+
     @GET("/positions/create")
     suspend fun createPosition(@Body req: RequestPosition): Response<String>
     //</editor-fold>
+
     //<editor-fold desc="Sports">
     @GET("/sports/")
     suspend fun getSports(): Response<List<Sport>>
 
     @GET("/sports/{id}")
     suspend fun getSport(@Path("id") id: Int): Response<Sport>
-
     //</editor-fold>
+
+    //<editor-fold desc="SportsGenerics">
+    @GET("/sportsGeneric/")
+    suspend fun getGenericsSports(): Response<List<SportGeneric>>
+    //</editor-fold>
+
     //<editor-fold desc="Users">
     @GET("/users/")
     suspend fun getUsers(): Response<List<User>>
@@ -129,10 +148,9 @@ interface FeatProvider {
     @PUT("/persons/update/{id}")
     suspend fun updatePerson(@Body requestEvent: RequestPerson): Response<String>
     //</editor-fold>
-    //<editor-fold desc="Sports">
 
-    @GET("/sportsGeneric/")
-    suspend fun getGenericsSports(): Response<List<SportGeneric>>
-
+    //<editor-fold desc="Valuations">
+    @GET("/valuations/")
+    suspend fun getValuations(): Response<List<Valuation>>
     //</editor-fold>
 }

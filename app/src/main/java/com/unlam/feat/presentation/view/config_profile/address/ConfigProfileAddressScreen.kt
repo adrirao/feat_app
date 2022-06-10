@@ -41,7 +41,6 @@ import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.*
 import java.io.IOException
 
-
 @Composable
 fun ConfigProfileAddressScreen(
     navController: NavHostController,
@@ -137,36 +136,45 @@ private fun ConfigProfileAddressScreenContent(
             .padding(20.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                modifier = Modifier.size(200.dp),
-                painter = painterResource(R.drawable.ic_isologotype_2),
-                contentDescription = stringResource(R.string.feat_logo)
-            )
-            FeatText(
-                text = "Agregar direcciones.",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-            Divider(
-                color = Color.Gray,
+            Column(
                 modifier = Modifier
-                    .padding(top = 8.dp, bottom = 5.dp, start = 10.dp, end = 10.dp)
                     .fillMaxWidth()
-                    .height(1.dp)
-            )
+                    .weight(weight = 0.15f, fill = false)
+                    .align(Alignment.CenterHorizontally),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    modifier = Modifier
+                        .size(200.dp, 60.dp)
+                        .padding(bottom = 10.dp),
+                    painter = painterResource(R.drawable.ic_isologotype_2),
+                    contentDescription = stringResource(R.string.feat_logo)
+                )
+                FeatText(
+                    text = "Agregar direcciones. 2/5",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+                Divider(
+                    color = Color.Gray,
+                    modifier = Modifier
+                        .padding(top = 8.dp, bottom = 5.dp, start = 10.dp, end = 10.dp)
+                        .fillMaxWidth()
+                        .height(1.dp)
+                )
+            }
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
-                    .weight(weight = 1f, fill = false),
-                verticalArrangement = Arrangement.Center,
-
-                ) {
+                    .weight(weight = 0.8f, fill = true)
+                    .align(Alignment.CenterHorizontally),
+            ) {
 
                 Column(
                     modifier = Modifier
@@ -176,28 +184,63 @@ private fun ConfigProfileAddressScreenContent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
+
                     FeatText(
                         modifier = Modifier
-                            .padding(top = 10.dp, bottom = 10.dp)
+                            .padding(top = 5.dp, bottom = 2.dp)
                             .fillMaxWidth(), text = "Direccion"
                     )
 
-
-
-
                     Row {
                         Column {
-                            FeatButton(
-                                modifier = Modifier
-                                    .padding(10.dp)
-                                    .height(60.dp),
-                                drawable = R.drawable.gps_locator,
-                                textButton = "Mi ubicación actual",
-                                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                                colorText = MaterialTheme.colors.primary,
-                                textAlign = TextAlign.Center,
-                                colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
-                                enabled = enabled.value,
+
+                            if (state.showAlertPermission) {
+                                FeatAlertDialog(
+                                    title = state.titleAlert,
+                                    descriptionContent = state.descriptionAlert,
+                                    onDismiss = {
+                                        onValueChange(ConfigProfileAddressEvent.DismissDialog)
+                                        permissionState.launchMultiplePermissionRequest()
+                                    },
+                                    onClick = {
+                                        startActivity(
+                                            context,
+                                            Intent(
+                                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                                Uri.fromParts(
+                                                    "package",
+                                                    "com.unlam.feat",
+                                                    null
+                                                )
+                                            ),
+                                            null
+                                        )
+                                    }
+                                )
+
+                            }
+
+                        }
+
+                    }
+                }
+
+                FeatTextField(
+                    text = state.addressAlias,
+                    onValueChange = {
+                        onValueChange(ConfigProfileAddressEvent.EnteredAddressAlias(it))
+                    },
+                    textLabel = "Alias"
+                )
+                FeatTextField(
+                    text = state.addressStreet,
+                    onValueChange = {
+                        onValueChange(ConfigProfileAddressEvent.EnteredAddressStreet(it))
+                    },
+                    textLabel = "Calle",
+                    trailingIcon = {
+                        val icon: @Composable () -> Unit = {
+                            IconButton(
                                 onClick = {
                                     if (permissionState.allPermissionsGranted) {
                                         enabled.value = false
@@ -238,54 +281,17 @@ private fun ConfigProfileAddressScreenContent(
                                             )
                                         )
                                     }
-                                }
-                            )
-
-                            if (state.showAlertPermission) {
-                                FeatAlertDialog(
-                                    title = state.titleAlert,
-                                    descriptionContent = state.descriptionAlert,
-                                    onDismiss = {
-                                        onValueChange(ConfigProfileAddressEvent.DismissDialog)
-                                        permissionState.launchMultiplePermissionRequest()
-                                    },
-                                    onClick = {
-                                        startActivity(
-                                            context,
-                                            Intent(
-                                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                                Uri.fromParts(
-                                                    "package",
-                                                    "com.unlam.feat",
-                                                    null
-                                                )
-                                            ),
-                                            null
-                                        )
-                                    }
+                                },
+                            ) {
+                                Icon(
+                                    painterResource(id = R.drawable.gps_locator),
+                                    tint = Color.Black,
+                                    contentDescription = ""
                                 )
-
                             }
-
-
                         }
-
+                        icon()
                     }
-                }
-
-                FeatTextField(
-                    text = state.addressAlias,
-                    onValueChange = {
-                        onValueChange(ConfigProfileAddressEvent.EnteredAddressAlias(it))
-                    },
-                    textLabel = "Alias"
-                )
-                FeatTextField(
-                    text = state.addressStreet,
-                    onValueChange = {
-                        onValueChange(ConfigProfileAddressEvent.EnteredAddressStreet(it))
-                    },
-                    textLabel = "Calle"
                 )
                 FeatTextField(
                     text = state.addressNumber,
@@ -308,60 +314,50 @@ private fun ConfigProfileAddressScreenContent(
                     },
                     textLabel = "Codigo Postal"
                 )
-                FeatButton(modifier = Modifier
-                    .padding(10.dp)
-                    .height(60.dp),
-                    textButton = "Confirma dirección",
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                    colorText = MaterialTheme.colors.primary,
-                    textAlign = TextAlign.Center,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
-                    onClick = {
-
-                        val geocoder = Geocoder(context)
-                        val addresses: List<Address>?
-                        val addressText: String =
-                            state.addressStreet + " " + state.addressNumber + " " + state.addressTown + " " + state.addressZipCode
-                        val latitude: Double
-                        val longitude: Double
-                        try {
-
-                            addresses = geocoder.getFromLocationName(addressText, 1)
-
-                            if (addresses != null && addresses.isNotEmpty()) {
-                                latitude = addresses[0].latitude
-                                longitude = addresses[0].longitude
-
-                                Log.e("MapsActivity", "$latitude + $longitude ")
-                            }
-                            Log.e("MapsActivity", addressText)
-                            Log.e("AdrresLine", addresses[0].getAddressLine(0))
-                            Log.e("AdrresMaxLine", addresses[0].maxAddressLineIndex.toString())
-
-                        } catch (e: IOException) {
-                            Log.e("MapsActivity", e.localizedMessage)
-                        }
-
-                    }
-                )
-
-                FeatButton(
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .height(60.dp),
-                    textButton = "Siguiente",
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                    colorText = MaterialTheme.colors.primary,
-                    textAlign = TextAlign.Center,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
-                    onClick = {
-                        navigateToConfigProfileAvailability()
-                        //persistir en la base
-                    }
-                )
-
 
             }
+            Row(
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .weight(0.1f, false),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                FeatButtonRounded(
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .size(60.dp),
+                    drawable = R.drawable.arrow_next,
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                    onClick =
+                        { if(state.addressLatitude == "" && state.addressLongitude == "") {
+                                val geocoder = Geocoder(context)
+                                val addresses: List<Address>?
+                                val addressText: String =
+                                    state.addressStreet + " " + state.addressNumber + " " + state.addressTown + " " + state.addressZipCode
+                                try {
+                                    addresses = geocoder.getFromLocationName(addressText, 1)
+
+                                    if (addresses != null && addresses.isNotEmpty()) {
+                                        ConfigProfileAddressEvent.EnteredAddressLatitude(
+                                            addresses[0].latitude.toString()
+                                        )
+                                        ConfigProfileAddressEvent.EnteredAddressLongitude(
+                                            addresses[0].longitude.toString()
+                                        )
+                                    }
+
+                                } catch (e: IOException) {
+                                    Log.e("MapsActivity", e.localizedMessage)
+                                }
+                            }
+
+                        navigateToConfigProfileAvailability()
+                        //persistir en la base
+            },
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
+                )
+            }
+
         }
 
 

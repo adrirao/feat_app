@@ -3,6 +3,7 @@ package com.unlam.feat.repository
 import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
+import com.unlam.feat.model.response.ResponseDataSport
 import com.unlam.feat.model.response.ResponseDetailEvent
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
@@ -30,6 +31,7 @@ interface FeatRepository {
     //<editor-fold desc="Levels">
     fun getLevels(): Flow<Result<List<Level>>> // @GET("/levels/")
     fun getLevel(id: Int): Flow<Result<Level>> // @GET("/levels/{id}")
+    fun getAllLevelsBySportGeneric(id: Int): Flow<Result<List<Level>>>// @GET("/levels/getAllBySportGeneric/{id}")
     fun createLevel(req: RequestLevel): Flow<Result<String>> // @POST("/levels/create")
 
     //</editor-fold desc="Levels">
@@ -50,6 +52,7 @@ interface FeatRepository {
     //<editor-fold desc="Positions">
     fun getPositions(): Flow<Result<List<Position>>> // @GET("/positions/")
     fun getPosition(id: Int): Flow<Result<Position>> // @GET("/positions/{id}")
+    fun getAllPositionsBySportGeneric(id: Int): Flow<Result<List<Position>>> // @GET("/positions/getAllBySportGeneric/{id}")
     fun createPosition(req: RequestPosition): Flow<Result<String>> // @POST("/positions/create")
 
     //</editor-fold desc="Positions">
@@ -65,15 +68,21 @@ interface FeatRepository {
     //</editor-fold desc="Users">
 
     fun getDataDetailEvent(idEvent:Int): Flow<Result<ResponseDetailEvent>>
+    fun getDataSportScreen(uId: String,sportGenericId:Int): Flow<Result<ResponseDataSport>>
+
 
     //<editor-fold desc="Persons">
-    fun getPerson(uId: String): Flow<Result<Person>> // @GET("/persons/getPersonById{id}")
+    fun getPerson(uId: String): Flow<Result<Person>> // @GET("/persons/getPersonById/{id}")
     fun createPerson(req:RequestPerson): Flow<Result<String>> // @POST("/persons/create")
     fun updatePerson(req:RequestPerson): Flow<Result<String>> // @PUT("/persons/update")
     //</editor-fold desc="Persons">
 
     //<editor-fold desc="SportsGenerics">
     fun getGenericsSports(): Flow<Result<List<SportGeneric>>> // @GET("/sportsGeneric/")
+    //</editor-fold desc="SportsGenerics">
+
+    //<editor-fold desc="Valuations">
+    fun getValuations(): Flow<Result<List<Valuation>>> // @GET("/valuations/")
     //</editor-fold desc="SportsGenerics">
 }
 

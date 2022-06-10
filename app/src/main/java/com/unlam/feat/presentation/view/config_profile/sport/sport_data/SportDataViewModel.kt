@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.unlam.feat.R
 import com.unlam.feat.common.Result
 import com.unlam.feat.di.ResourcesProvider
+import com.unlam.feat.presentation.view.home.detail_event.DetailEventHomeState
 import com.unlam.feat.repository.FeatRepositoryImp
 import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,121 +28,50 @@ constructor(
     private val _state = mutableStateOf(SportDataState())
     val state: State<SportDataState> = _state
 
-    init {
-//        getPerson()
-//        getPosition()
-//        getLevel()
-//        getValuation()
-    }
 
     fun onEvent(event: SportDataEvent) {
         when (event) {
-//            is ConfigSportEvent.EnteredLastName -> {
-//                _state.value = _state.value.copy(
-//                    lastName = event.value
-//                )
-//            }
+            is SportDataEvent.SelectedPosition -> {
+                _state.value = _state.value.copy(
+                    positionId = event.value
+                )
+            }
+            is SportDataEvent.SelectedLevel -> {
+                _state.value = _state.value.copy(
+                    levelId = event.value
+                )
+            }
+            is SportDataEvent.SelectedValuation -> {
+                _state.value = _state.value.copy(
+                    valuationId = event.value
+                )
+            }
+            is SportDataEvent.EnteredAbilities -> {
+                _state.value = _state.value.copy(
+                    abilities = event.value
+                )
+            }
         }
     }
 
-    private fun getPerson() {
+     fun getDataSportScreen(sportGenericId:Int){
 
         val uId = firebaseAuthRepository.getUserId()
-        featRepository.getPerson(uId).onEach { result ->
+        featRepository.getDataSportScreen(uId,sportGenericId).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value =
-                        SportDataState(
-                            error = result.message
-                                ?: resourcesProvider.getString(R.string.error_unknown)
-                        )
+                        SportDataState(error = result.message ?: "Error Inesperado")
                 }
                 is Result.Loading -> {
-                    _state.value = _state.value.copy(
-                        isLoadingPerson = true
-                    )
+                    _state.value = SportDataState(isLoading = true)
                 }
                 is Result.Success -> {
-                    _state.value = _state.value.copy(
-                        person = result.data
-                    )
+                    _state.value = SportDataState(levelList = result.data!!.levelList, positionList = result.data.positionList, valuationList = result.data.valuationList, person = result.data.person)
                 }
             }
         }.launchIn(viewModelScope)
     }
-
-    private fun getPosition() {
-        featRepository.getPositions().onEach { result ->
-            when (result) {
-                is Result.Error -> {
-                    _state.value =
-                        SportDataState(
-                            error = result.message
-                                ?: resourcesProvider.getString(R.string.error_unknown)
-                        )
-                }
-                is Result.Loading -> {
-                    _state.value = _state.value.copy(
-                        isLoadingPosition = true
-                    )
-                }
-                is Result.Success -> {
-                    _state.value = _state.value.copy(
-                        positionList = result.data ?: emptyList()
-                    )
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    private fun getLevel() {
-        featRepository.getLevels().onEach { result ->
-            when (result) {
-                is Result.Error -> {
-                    _state.value =
-                        SportDataState(
-                            error = result.message
-                                ?: resourcesProvider.getString(R.string.error_unknown)
-                        )
-                }
-                is Result.Loading -> {
-                    _state.value = _state.value.copy(
-                        isLoadingLevel = true
-                    )
-                }
-                is Result.Success -> {
-                    _state.value = _state.value.copy(
-                        levelList = result.data ?: emptyList()
-                    )
-                }
-            }
-        }.launchIn(viewModelScope)
-    }
-
-//    private fun getValuation() {
-//        featRepository.getLevels().onEach { result ->
-//            when (result) {
-//                is Result.Error -> {
-//                    _state.value =
-//                        SportDataState(
-//                            error = result.message
-//                                ?: resourcesProvider.getString(R.string.error_unknown)
-//                        )
-//                }
-//                is Result.Loading -> {
-//                    _state.value = _state.value.copy(
-//                        isLoadingValuation = true
-//                    )
-//                }
-//                is Result.Success -> {
-//                    _state.value = _state.value.copy(
-//                        valuationList = result.data
-//                    )
-//                }
-//            }
-//
-//        }.launchIn(viewModelScope)
-//    }
 
 
 }
