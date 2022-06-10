@@ -54,6 +54,8 @@ import com.unlam.feat.presentation.view.login.LoginScreen
 import com.unlam.feat.presentation.view.register.Register
 import com.unlam.feat.presentation.view.search.Search
 import com.unlam.feat.presentation.view.search.SearchViewModel
+import com.unlam.feat.presentation.view.search.event_detail.SearchEventDetailScreen
+import com.unlam.feat.presentation.view.search.event_detail.SearchEventDetailViewModel
 import com.unlam.feat.presentation.view.splash.SplashScreen
 
 @Composable
@@ -78,6 +80,7 @@ fun Navigation(navController: NavHostController) {
         invite(navController)
 
         addEvent(navController)
+        searchEventDetail(navController)
         searchList(navController)
 
         detailEventHome(navController)
@@ -365,15 +368,28 @@ private fun NavGraphBuilder.home(
 private fun NavGraphBuilder.search(navController: NavHostController) {
     composable(Screen.Search.route) {
         val searchViewModel: SearchViewModel = hiltViewModel()
-        var marker = searchViewModel.marker.value
+        val state = searchViewModel.state.value
+        val isRefreshing = searchViewModel.isRefreshing.collectAsState()
+        Search(
+            state = state,
+            onEvent = searchViewModel::onEvent,
+            isRefreshing = isRefreshing.value,
+            refreshData = searchViewModel::getEventsSuggestedForUser,
+            onClickCard = {
+                navController.navigate(Screen.SearchEventDetail.route)
+            }
+        )
 
-        FeatMapWhitMaker(onClick = {
-        })
-
-        if (marker.position != null) {
-            Log.e("RAO", "click")
-
-        }
+//        val searchViewModel : SearchViewModel = hiltViewModel()
+//        var marker  = searchViewModel.marker.value
+//
+//        FeatMapWhitMaker(onClick = {
+//        })
+//
+//        if(marker.position != null){
+//            Log.e("RAO","click")
+//
+//        }
     }
 }
 
@@ -414,10 +430,35 @@ private fun NavGraphBuilder.addEvent(navController: NavHostController) {
     }
 }
 
+private fun NavGraphBuilder.searchEventDetail(
+    navController: NavHostController
+) {
+    composable(
+        route = Screen.SearchEventDetail.route+ "/{idEvent}",
+        arguments = Screen.SearchEventDetail.arguments ?: listOf()
+    ) {
+        val idEvent = it.arguments?.getString("idEvent") ?: ""
+        val searchEventDetailViewModel: SearchEventDetailViewModel = hiltViewModel()
+        val state = searchEventDetailViewModel.state.value
+
+        LaunchedEffect(key1 = true) {
+            searchEventDetailViewModel.getDataDetailEvent(idEvent.toInt())
+        }
+
+        if(state.loading){
+            FeatCircularProgress()
+        }
+
+        if (state.event != null && state.playersConfirmed != null ) {
+            SearchEventDetailScreen(state)
+        }
+    }
+}
+
 private fun NavGraphBuilder.searchList(
     navController: NavHostController,
 ) {
-    composable(Screen.SearchList.route) {
+    /*composable(Screen.SearchList.route) {
         val eventViewModel: EventViewModel = hiltViewModel()
         val state = eventViewModel.state.value
         val isRefreshing = eventViewModel.isRefreshing.collectAsState()
@@ -428,6 +469,7 @@ private fun NavGraphBuilder.searchList(
             isRefreshing = isRefreshing.value,
             refreshData = eventViewModel::getEventsCreatedByUser
         )
+
     }
 }
 

@@ -7,6 +7,8 @@ import com.unlam.feat.model.response.ResponseDetailEvent
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import retrofit2.http.Path
+import com.unlam.feat.model.ResponseSearchEventDetail
+
 
 interface FeatRepository {
     //<editor-fold desc="Events">
@@ -66,6 +68,7 @@ interface FeatRepository {
     fun createUser(req:RequestUser): Flow<Result<String>> // @POST("/users/create")
     //</editor-fold desc="Users">
 
+
     fun getDataDetailEvent(idEvent:Int): Flow<Result<ResponseDetailEvent>>
 
     //<editor-fold desc="Persons">
@@ -77,5 +80,6 @@ interface FeatRepository {
     //<editor-fold desc="SportsGenerics">
     fun getGenericsSports(): Flow<Result<List<SportGeneric>>> // @GET("/sportsGeneric/")
     //</editor-fold desc="SportsGenerics">
+
 }
 
