@@ -1,7 +1,12 @@
 package com.unlam.feat.common
 
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+
 sealed class Screen(
-    val route: String
+    val route: String,
+    val arguments: List<NamedNavArgument>? = null
 ) {
     object Splash : Screen("splash_screen")
     object Login : Screen("login_screen")
@@ -15,4 +20,8 @@ sealed class Screen(
     object Invite : Screen("invite_screen")
 
     object AddEvent: Screen("event_add_screen")
+
+    object SearchEventDetail : Screen("search_event_detail", listOf(
+        navArgument("idEvent") { type = NavType.StringType }
+    ))
 }
