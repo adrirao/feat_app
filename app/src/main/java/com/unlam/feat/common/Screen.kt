@@ -30,7 +30,6 @@ sealed class Screen(
         navArgument("idEvent") { type = NavType.StringType }
     ))
     object Chat : Screen("chat_screen")
-    object AddEvent: Screen("event_add_screen")
 
     object SearchEventDetail : Screen("search_event_detail", listOf(
         navArgument("idEvent") { type = NavType.StringType }

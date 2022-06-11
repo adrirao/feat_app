@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlam.feat.common.Result
-import com.unlam.feat.repository.FeatRepository
+import com.unlam.feat.repository.FeatRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -16,7 +16,7 @@ class SearchEventDetailViewModel
 @Inject
 constructor(
 
-    private val featRepository: FeatRepository
+    private val featRepository: FeatRepositoryImp
 ):ViewModel(){
 
     private val _state = mutableStateOf(SearchEventDetailState())

@@ -81,7 +81,7 @@ fun Navigation(navController: NavHostController) {
 
         addEvent(navController)
         searchEventDetail(navController)
-        searchList(navController)
+        search(navController)
 
         detailEventHome(navController)
 
@@ -454,11 +454,11 @@ private fun NavGraphBuilder.searchEventDetail(
         }
     }
 }
-
+/*
 private fun NavGraphBuilder.searchList(
     navController: NavHostController,
 ) {
-    /*composable(Screen.SearchList.route) {
+    composable(Screen.SearchList.route) {
         val eventViewModel: EventViewModel = hiltViewModel()
         val state = eventViewModel.state.value
         val isRefreshing = eventViewModel.isRefreshing.collectAsState()
@@ -467,12 +467,16 @@ private fun NavGraphBuilder.searchList(
             state = state,
             onEvent = eventViewModel::onEvent,
             isRefreshing = isRefreshing.value,
-            refreshData = eventViewModel::getEventsCreatedByUser
+            refreshData = eventViewModel::getEventsCreatedByUser,
+            onClickCard = {
+                navController.navigate(Screen.SearchEventDetail.route)
+            }
+
         )
 
     }
 }
-
+*/
 private fun NavGraphBuilder.detailEventHome(
     navController: NavHostController,
 ) {
