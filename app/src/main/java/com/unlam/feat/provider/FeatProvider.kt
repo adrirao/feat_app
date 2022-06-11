@@ -142,11 +142,11 @@ interface FeatProvider {
 
     @Headers("Content-type: application/json")
     @POST("/persons/create")
-    suspend fun createPerson(@Body requestEvent: RequestPerson): Response<String>
+    suspend fun createPerson(@Body requestPerson: RequestPerson): Response<String>
 
     @Headers("Content-type: application/json")
     @PUT("/persons/update/{id}")
-    suspend fun updatePerson(@Body requestEvent: RequestPerson): Response<String>
+    suspend fun updatePerson(@Body requestPerson: RequestPerson): Response<String>
     //</editor-fold>
 
     //<editor-fold desc="Valuations">

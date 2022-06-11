@@ -6,6 +6,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -21,11 +22,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.*
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.unlam.feat.R
 import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.*
+import com.unlam.feat.presentation.view.register.RegisterEvent
+import com.unlam.feat.presentation.view.register.RegisterState
+import com.unlam.feat.presentation.view.register.RegisterViewModel
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
@@ -38,6 +45,13 @@ fun ConfigProfilePersonalDataScreen(
     state: ConfigProfilePersonalDataState,
     onValueChange: (ConfigProfilePersonalDataEvent) -> Unit
 ) {
+
+    SetMessages(
+        state,
+        navController,
+        onValueChange
+    )
+
     ConfigProfilePersonalData(state, navigateToConfigProfileAddress = {
         navController.popBackStack()
         navController.navigate(Screen.ConfigProfileAddress.route)
@@ -52,6 +66,13 @@ private fun ConfigProfilePersonalData(
     navigateToConfigProfileAddress: () -> Unit,
     onValueChange: (ConfigProfilePersonalDataEvent) -> Unit
 ) {
+    if (state.isSuccessSubmitData) {
+        LaunchedEffect(true) {
+            navigateToConfigProfileAddress()
+        }
+    }
+
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -197,8 +218,6 @@ private fun ConfigProfilePersonalData(
 
 
                 }
-
-
             }
             Row(
                 modifier = Modifier
@@ -213,8 +232,8 @@ private fun ConfigProfilePersonalData(
                     drawable = R.drawable.arrow_next,
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
                     onClick = {
-                        navigateToConfigProfileAddress()
-                        //persistir en la base
+                        onValueChange(ConfigProfilePersonalDataEvent.SubmitData)
+
                     },
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
                 )
@@ -225,6 +244,91 @@ private fun ConfigProfilePersonalData(
     }
 
 }
+
+@Composable
+fun SetMessages(
+    state: ConfigProfilePersonalDataState,
+    navController: NavController,
+    onValueChange: (ConfigProfilePersonalDataEvent) -> Unit
+) {
+    if (state.error != null) {
+        FeatAlertDialog(
+            title = "Error de conexión",
+            descriptionContent = "No se ha podido conectar con el servidor, vuelva a intentarlo.",
+            onDismiss = {
+                onValueChange(ConfigProfilePersonalDataEvent.DismissDialog)
+                onValueChange(ConfigProfilePersonalDataEvent.SingOutUser)
+                navController.popBackStack()
+                navController.navigate(Screen.Login.route)
+            }
+        )
+    }
+    var countFieldEmptys: List<String>
+
+    countFieldEmptys = state.fieldEmpty.split (',')
+    
+
+    if (state.fieldEmpty != "" && countFieldEmptys.size > 2) {
+        FeatAlertDialog(
+            title = "Hay campos vacios",
+            descriptionContent = "Por favor, verifica que los siguientes campos no esten vacios ${state.fieldEmpty}",
+            onDismiss = {onValueChange(ConfigProfilePersonalDataEvent.DismissDialog)
+            }
+        )
+    }else {
+        if (state.nameError != null) {
+            FeatAlertDialog(
+                title = "El campo no puede estar vacío",
+                descriptionContent = "Por favor, ingrese un nombre en el campo",
+                onDismiss = {
+                    onValueChange(ConfigProfilePersonalDataEvent.DismissDialog)
+                }
+            )
+        }
+
+        if (state.lastNameError != null) {
+            FeatAlertDialog(
+                title = "El campo no puede estar vacío",
+                descriptionContent = "Por favor, ingrese un apellido en el campo",
+                onDismiss = {
+                    onValueChange(ConfigProfilePersonalDataEvent.DismissDialog)
+                }
+            )
+        }
+
+        if (state.sexError != null) {
+            FeatAlertDialog(
+                title = "Debe seleccionar un sexo",
+                descriptionContent = "Por favor, seleccione una opción en sexo",
+                onDismiss = {
+                    onValueChange(ConfigProfilePersonalDataEvent.DismissDialog)
+                }
+            )
+        }
+
+        if (state.dateOfBirthError != null) {
+            var title: String = "Error en la fecha ingresada"
+            var description: String
+            when (state.dateOfBirthError) {
+                ConfigProfilePersonalDataState.DateOfBirthError.FieldEmpty -> {
+                    description = "El campo no puede estar vacío."
+                }
+                ConfigProfilePersonalDataState.DateOfBirthError.IsInvalid -> {
+                    description = "Debe ser mayor de 16 para utilizar la app."
+                }
+            }
+            FeatAlertDialog(
+                title = title,
+                descriptionContent = description,
+                onDismiss = {
+                    onValueChange(ConfigProfilePersonalDataEvent.DismissDialog)
+                }
+            )
+        }
+    }
+    }
+
+
 
 
 

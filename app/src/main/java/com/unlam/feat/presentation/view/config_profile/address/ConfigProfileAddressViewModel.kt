@@ -3,10 +3,18 @@ package com.unlam.feat.presentation.view.config_profile.address
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataEvent
+import com.unlam.feat.repository.FeatRepositoryImp
+import com.unlam.feat.repository.FirebaseAuthRepositoryImp
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-
-
-class ConfigProfileAddressViewModel: ViewModel() {
+@HiltViewModel
+class ConfigProfileAddressViewModel@Inject
+constructor(
+    private val firebaseAuthRepository: FirebaseAuthRepositoryImp,
+    private val featRepository: FeatRepositoryImp
+): ViewModel() {
 
     private val _state = mutableStateOf(ConfigProfileAddressState())
     val state: State<ConfigProfileAddressState> = _state
@@ -59,6 +67,10 @@ class ConfigProfileAddressViewModel: ViewModel() {
                 _state.value = _state.value.copy(
                     showAlertPermission = false
                 )
+            }
+            is ConfigProfileAddressEvent.SubmitData -> {
+
+
             }
         }
     }

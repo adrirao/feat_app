@@ -12,5 +12,6 @@ sealed class ConfigProfileAddressEvent {
     data class EnteredAddressLongitude(val value: String) : ConfigProfileAddressEvent()
     data class ShowAlertPermission(val value: Boolean,val title:String,val description:String): ConfigProfileAddressEvent()
     object DismissDialog: ConfigProfileAddressEvent()
+    object SubmitData: ConfigProfileAddressEvent()
 
 }
