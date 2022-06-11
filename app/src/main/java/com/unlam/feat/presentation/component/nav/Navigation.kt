@@ -38,6 +38,8 @@ import com.unlam.feat.presentation.view.config_profile.sport.ConfigSportScreen
 import com.unlam.feat.presentation.view.config_profile.sport.ConfigSportViewModel
 import com.unlam.feat.presentation.view.config_profile.sport.sport_data.SportDataScreen
 import com.unlam.feat.presentation.view.config_profile.sport.sport_data.SportDataViewModel
+import com.unlam.feat.presentation.view.edit_profile.Profile
+import com.unlam.feat.presentation.view.edit_profile.ProfileViewModel
 import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddEventViewModel
@@ -317,9 +319,16 @@ private fun NavGraphBuilder.SportData(navController: NavHostController) {
 
 private fun NavGraphBuilder.profile(navController: NavHostController) {
     composable(Screen.Profile.route) {
-        Box() {
-            Text(text = "Hola mundo")
-        }
+        val profileViewModel: ProfileViewModel = hiltViewModel()
+        val state = profileViewModel.state.value
+        val isRefreshing = profileViewModel.isRefreshing.collectAsState()
+
+        Profile(
+            state = state,
+            onEvent = profileViewModel::onEvent,
+            isRefreshing = isRefreshing.value,
+            refreshData = profileViewModel::getEventsByUser
+        )
     }
 }
 
