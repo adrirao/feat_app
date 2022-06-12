@@ -104,6 +104,11 @@ constructor(
                         isSuccessSubmitData = true
                     )
                 }
+                is Result.Loading -> {
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
+                }
                 is Result.Error -> {
                     _state.value = _state.value.copy(
                         error = result.message!!

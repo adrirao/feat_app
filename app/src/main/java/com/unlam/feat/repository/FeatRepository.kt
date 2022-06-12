@@ -7,6 +7,7 @@ import com.unlam.feat.model.response.ResponseDataSport
 import com.unlam.feat.model.response.ResponseDetailEvent
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
+import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface FeatRepository {
@@ -67,8 +68,6 @@ interface FeatRepository {
     fun createUser(req:RequestUser): Flow<Result<String>> // @POST("/users/create")
     //</editor-fold desc="Users">
 
-    fun getDataDetailEvent(idEvent:Int): Flow<Result<ResponseDetailEvent>>
-    fun getDataSportScreen(uId: String,sportGenericId:Int): Flow<Result<ResponseDataSport>>
 
 
     //<editor-fold desc="Persons">
@@ -83,6 +82,17 @@ interface FeatRepository {
 
     //<editor-fold desc="Valuations">
     fun getValuations(): Flow<Result<List<Valuation>>> // @GET("/valuations/")
-    //</editor-fold desc="SportsGenerics">
+    //</editor-fold desc="Valuations">
+
+    //</editor-fold desc="Addresses">
+    fun getAddress(personId:Int):  Flow<Result<Address>>  // @GET("/addresses/{id}")
+    fun addAddress(req:RequestAddress): Flow<Result<String>> // @POST("/persons/create")
+    //</editor-fold desc="Addresses">
+
+    //</editor-fold desc="Multiple EndPoints">
+    fun getDataDetailEvent(idEvent:Int): Flow<Result<ResponseDetailEvent>>
+    fun getDataSportScreen(uId: String,sportGenericId:Int): Flow<Result<ResponseDataSport>>
+    //</editor-fold desc="Multiple EndPoints">
+
 }
 

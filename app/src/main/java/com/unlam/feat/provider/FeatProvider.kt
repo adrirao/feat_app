@@ -153,4 +153,15 @@ interface FeatProvider {
     @GET("/valuations/")
     suspend fun getValuations(): Response<List<Valuation>>
     //</editor-fold>
+
+    //<editor-fold desc="Addresses">
+    @GET("/addresses/{id}")
+    suspend fun getAddress(@Path("id") id: Int): Response<Address>
+
+    @Headers("Content-type: application/json")
+    @POST("/addresses/create")
+    suspend fun addAddress(@Body requestAddress: RequestAddress): Response<String>
+
+    //</editor-fold>
+
 }

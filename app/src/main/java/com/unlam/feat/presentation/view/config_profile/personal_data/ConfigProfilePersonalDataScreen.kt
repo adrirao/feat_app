@@ -46,6 +46,11 @@ fun ConfigProfilePersonalDataScreen(
     onValueChange: (ConfigProfilePersonalDataEvent) -> Unit
 ) {
 
+
+    if (state.isLoading) {
+        FeatCircularProgress()
+    }
+
     SetMessages(
         state,
         navController,
@@ -71,6 +76,7 @@ private fun ConfigProfilePersonalData(
             navigateToConfigProfileAddress()
         }
     }
+
 
 
     Box(
@@ -246,7 +252,7 @@ private fun ConfigProfilePersonalData(
 }
 
 @Composable
-fun SetMessages(
+private fun SetMessages(
     state: ConfigProfilePersonalDataState,
     navController: NavController,
     onValueChange: (ConfigProfilePersonalDataEvent) -> Unit
@@ -263,19 +269,19 @@ fun SetMessages(
             }
         )
     }
-    var countFieldEmptys: List<String>
 
-    countFieldEmptys = state.fieldEmpty.split (',')
-    
+    var countFieldEmptys: List<String> = state.fieldEmpty.split(',')
+
 
     if (state.fieldEmpty != "" && countFieldEmptys.size > 2) {
         FeatAlertDialog(
             title = "Hay campos vacios",
             descriptionContent = "Por favor, verifica que los siguientes campos no esten vacios ${state.fieldEmpty}",
-            onDismiss = {onValueChange(ConfigProfilePersonalDataEvent.DismissDialog)
+            onDismiss = {
+                onValueChange(ConfigProfilePersonalDataEvent.DismissDialog)
             }
         )
-    }else {
+    } else {
         if (state.nameError != null) {
             FeatAlertDialog(
                 title = "El campo no puede estar vacío",
@@ -326,7 +332,7 @@ fun SetMessages(
             )
         }
     }
-    }
+}
 
 
 

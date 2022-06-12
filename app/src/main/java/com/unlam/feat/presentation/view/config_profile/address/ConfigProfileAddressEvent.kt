@@ -1,5 +1,6 @@
 package com.unlam.feat.presentation.view.config_profile.address
 
+import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataEvent
 
 
 sealed class ConfigProfileAddressEvent {
@@ -13,5 +14,5 @@ sealed class ConfigProfileAddressEvent {
     data class ShowAlertPermission(val value: Boolean,val title:String,val description:String): ConfigProfileAddressEvent()
     object DismissDialog: ConfigProfileAddressEvent()
     object SubmitData: ConfigProfileAddressEvent()
-
+    object SingOutUser: ConfigProfileAddressEvent()
 }

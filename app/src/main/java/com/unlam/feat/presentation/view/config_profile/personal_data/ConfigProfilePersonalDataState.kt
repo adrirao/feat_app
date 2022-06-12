@@ -11,6 +11,7 @@ data class ConfigProfilePersonalDataState(
     val nickname: String = "",
     val sex: String = "",
 
+    val isLoading:Boolean = false,
     val nameError: NameError? = null,
     val lastNameError: LastNameError? = null,
     val sexError: SexError? = null,

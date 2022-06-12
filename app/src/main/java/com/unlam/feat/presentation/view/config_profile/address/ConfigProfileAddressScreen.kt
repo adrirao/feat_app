@@ -16,6 +16,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.*
 import com.google.android.gms.location.LocationCallback
@@ -47,6 +49,13 @@ fun ConfigProfileAddressScreen(
     state: ConfigProfileAddressState,
     onValueChange: (ConfigProfileAddressEvent) -> Unit
 ) {
+
+    SetMessagesAddress(
+        state = state,
+        navController = navController,
+        onValueChange = onValueChange
+    )
+
     ConfigProfileAddressScreenContent(state, navigateToConfigProfileAvailability = {
         navController.popBackStack()
         navController.navigate(Screen.ConfigProfileAvailability.route)
@@ -61,6 +70,18 @@ private fun ConfigProfileAddressScreenContent(
     navigateToConfigProfileAvailability: () -> Unit,
     onValueChange: (ConfigProfileAddressEvent) -> Unit
 ) {
+
+    if (state.isSuccessSubmitData) {
+        LaunchedEffect(true) {
+            navigateToConfigProfileAvailability()
+        }
+    }
+
+    if (state.isLoading) {
+        FeatCircularProgress()
+    }
+
+
     val context = LocalContext.current
     val permissionState = rememberMultiplePermissionsState(
         permissions = listOf(
@@ -328,32 +349,33 @@ private fun ConfigProfileAddressScreenContent(
                         .size(60.dp),
                     drawable = R.drawable.arrow_next,
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                    onClick =
-                        { if(state.addressLatitude == "" && state.addressLongitude == "") {
-                                val geocoder = Geocoder(context)
-                                val addresses: List<Address>?
-                                val addressText: String =
-                                    state.addressStreet + " " + state.addressNumber + " " + state.addressTown + " " + state.addressZipCode
-                                try {
-                                    addresses = geocoder.getFromLocationName(addressText, 1)
+                    onClick = {
 
-                                    if (addresses != null && addresses.isNotEmpty()) {
-                                        ConfigProfileAddressEvent.EnteredAddressLatitude(
-                                            addresses[0].latitude.toString()
-                                        )
-                                        ConfigProfileAddressEvent.EnteredAddressLongitude(
-                                            addresses[0].longitude.toString()
-                                        )
-                                    }
+                            val geocoder = Geocoder(context)
+                            val addresses: List<Address>?
+                            val addressText: String =
+                                state.addressStreet + " " + state.addressNumber + " " + state.addressTown + " " + state.addressZipCode
+                            try {
+                                addresses = geocoder.getFromLocationName(addressText, 1)
 
-                                } catch (e: IOException) {
-                                    Log.e("MapsActivity", e.localizedMessage)
+                                if (addresses != null && addresses.isNotEmpty()) {
+                                   onValueChange( ConfigProfileAddressEvent.EnteredAddressLatitude(
+                                        addresses[0].latitude.toString()
+                                    ))
+                                    onValueChange(
+                                    ConfigProfileAddressEvent.EnteredAddressLongitude(
+                                        addresses[0].longitude.toString()
+                                    ))
                                 }
+
+                                onValueChange(ConfigProfileAddressEvent.SubmitData)
+                            } catch (e: IOException) {
+                                Log.e("MapsActivity", e.localizedMessage)
                             }
 
-                        navigateToConfigProfileAvailability()
-                        //persistir en la base
-            },
+
+
+                    },
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
                 )
             }
@@ -372,6 +394,90 @@ private fun getAddress(location: Location, context: Context): Address {
     val list = geocoder.getFromLocation(location.latitude, location.longitude, 1)
     return list[0]
 }
+
+
+@Composable
+ private fun SetMessagesAddress(
+    state: ConfigProfileAddressState,
+    navController: NavController,
+    onValueChange: (ConfigProfileAddressEvent) -> Unit
+) {
+    if (state.error != null || state.personError != "" ) {
+        FeatAlertDialog(
+            title = "Error de conexión",
+            descriptionContent = "No se ha podido conectar con el servidor, vuelva a intentarlo.",
+            onDismiss = {
+                onValueChange(ConfigProfileAddressEvent.DismissDialog)
+                onValueChange(ConfigProfileAddressEvent.SingOutUser)
+                navController.popBackStack()
+                navController.navigate(Screen.Login.route)
+            }
+        )
+    }
+    var countFieldEmptys: List<String>
+
+    countFieldEmptys = state.fieldEmpty.split (',')
+
+
+    if (state.fieldEmpty != "" && countFieldEmptys.size > 2) {
+        FeatAlertDialog(
+            title = "Hay campos vacios",
+            descriptionContent = "Por favor, verifica que los siguientes campos no esten vacios ${state.fieldEmpty}",
+            onDismiss = {onValueChange(ConfigProfileAddressEvent.DismissDialog)
+            }
+        )
+    }else {
+        if (state.addressStreetError != null) {
+            FeatAlertDialog(
+                title = "El campo no puede estar vacío",
+                descriptionContent = "Por favor, ingrese una calle en el campo",
+                onDismiss = {
+                    onValueChange(ConfigProfileAddressEvent.DismissDialog)
+                }
+            )
+        }
+
+        if (state.addressNumberError != null) {
+            FeatAlertDialog(
+                title = "El campo no puede estar vacío",
+                descriptionContent = "Por favor, ingrese un numero en el campo",
+                onDismiss = {
+                    onValueChange(ConfigProfileAddressEvent.DismissDialog)
+                }
+            )
+        }
+
+        if (state.addressTownError != null) {
+            FeatAlertDialog(
+                title = "Debe seleccionar un sexo",
+                descriptionContent = "Por favor, ingrese una ciudad en el campo",
+                onDismiss = {
+                    onValueChange(ConfigProfileAddressEvent.DismissDialog)
+                }
+            )
+        }
+
+        if (state.addressZipCodeError != null) {
+            FeatAlertDialog(
+                title = "El campo no puede estar vacío",
+                descriptionContent = "Por favor, ingrese un numero en el campo",
+                onDismiss = {
+                    onValueChange(ConfigProfileAddressEvent.DismissDialog)
+                }
+            )
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

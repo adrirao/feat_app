@@ -56,7 +56,7 @@ constructor(
                         )
                 }
                 is Result.Loading -> {
-                    _state.value = EventState(isLoading = true, error = "test")
+                    _state.value = EventState(isLoading = true)
                 }
                 is Result.Success -> {
                     _state.value = EventState(events = result.data ?: emptyList())
