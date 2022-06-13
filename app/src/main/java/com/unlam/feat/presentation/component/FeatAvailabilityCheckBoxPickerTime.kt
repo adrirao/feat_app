@@ -12,7 +12,7 @@ import java.time.LocalTime
 
 @Composable
 fun FeatAvailabilityCheckBoxPickerTime(
-    checked: MutableState<Boolean>,
+    checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     label: String = "Day",
     starTime: LocalTime?,
@@ -24,7 +24,7 @@ fun FeatAvailabilityCheckBoxPickerTime(
 
     FeatLabelledCheckbox(
         modifier = Modifier.fillMaxWidth(),
-        checked = checked.value,
+        checked = checked,
         onCheckedChange = { onCheckedChange(it) },
         label = label
     )
@@ -33,7 +33,7 @@ fun FeatAvailabilityCheckBoxPickerTime(
         verticalAlignment = Alignment.CenterVertically
 
     ) {
-        if (checked.value) {
+        if (checked) {
 
             FeatTimePicker(
                 modifier = Modifier.weight(0.5f),

@@ -3,11 +3,9 @@ package com.unlam.feat.presentation.view.config_profile.additional_information
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.BottomEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -18,6 +16,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.unlam.feat.R
@@ -32,6 +31,19 @@ fun ConfigProfileAdditionalInformationScreen(
     state: ConfigProfileAdditionalInformationState,
     onValueChange: (ConfigProfileAdditionalInformationEvent) -> Unit
 ) {
+
+
+
+    if (state.isLoading) {
+        FeatCircularProgress()
+    }
+
+    SetMessagesAditionalInformation(
+        state,
+        navController,
+        onValueChange
+    )
+
     ConfigProfileAdditionalInformationContent(state, navigateToConfigSport = {
         navController.popBackStack()
         navController.navigate(Screen.ConfigSport.route)
@@ -46,6 +58,12 @@ private fun ConfigProfileAdditionalInformationContent(
     navigateToConfigSport: () -> Unit,
     onValueChange: (ConfigProfileAdditionalInformationEvent) -> Unit
 ) {
+    if (state.isSuccessSubmitData) {
+        LaunchedEffect(true) {
+            navigateToConfigSport()
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -226,8 +244,7 @@ private fun ConfigProfileAdditionalInformationContent(
                     drawable = R.drawable.arrow_next,
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
                     onClick = {
-                        navigateToConfigSport()
-                        //persistir en la base
+                      onValueChange(ConfigProfileAdditionalInformationEvent.SubmitData)
                     },
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
                 )
@@ -240,3 +257,49 @@ private fun ConfigProfileAdditionalInformationContent(
 }
 
 
+@Composable
+private fun SetMessagesAditionalInformation(
+    state: ConfigProfileAdditionalInformationState,
+    navController: NavController,
+    onValueChange: (ConfigProfileAdditionalInformationEvent) -> Unit
+) {
+    if (state.error != null) {
+        FeatAlertDialog(
+            title = "Error de conexión",
+            descriptionContent = "No se ha podido conectar con el servidor, vuelva a intentarlo.",
+            onDismiss = {
+                onValueChange(ConfigProfileAdditionalInformationEvent.DismissDialog)
+                onValueChange(ConfigProfileAdditionalInformationEvent.SingOutUser)
+                navController.popBackStack()
+                navController.navigate(Screen.Login.route)
+            }
+        )
+    }
+
+        if (state.ageError != null) {
+            var title: String = "Error en el rango de edad ingresado"
+            var description: String
+            when (state.ageError) {
+                ConfigProfileAdditionalInformationState.RangeAgeError.MinAgeEmpty -> {
+                    description = "La edad minima no puede estar vacia."
+                }
+                ConfigProfileAdditionalInformationState.RangeAgeError.MaxAgeEmpty -> {
+                    description = "La edad maxima no puede estar vacia."
+                }
+                ConfigProfileAdditionalInformationState.RangeAgeError.FieldEmpty -> {
+                    description = "Los campos edad maxima y minima no pueden estar vacios."
+                }
+                ConfigProfileAdditionalInformationState.RangeAgeError.IsInvalidRange -> {
+                    description = "La edad minima no puede superar a la edad maxima."
+                }
+
+            }
+            FeatAlertDialog(
+                title = title,
+                descriptionContent = description,
+                onDismiss = {
+                    onValueChange(ConfigProfileAdditionalInformationEvent.DismissDialog)
+                }
+            )
+        }
+}

@@ -467,7 +467,7 @@ constructor(
         }
     }
 
-    override fun updatePerson(req: RequestPerson): Flow<Result<String>> = flow {
+    override fun updatePerson(req: RequestUpdatePerson): Flow<Result<String>> = flow {
         try {
             emit(Result.Loading())
             val response = featProvider.updatePerson(req).code()
