@@ -7,5 +7,9 @@ sealed class SportDataEvent {
     data class SelectedLevel(val value : Int) : SportDataEvent()
     data class SelectedValuation(val value : Int) : SportDataEvent()
     data class EnteredAbilities(val value : String) : SportDataEvent()
+    data class EnteredSportGenericId(val value : Int?) : SportDataEvent()
+    object DismissDialog : SportDataEvent()
+    object SingOutUser : SportDataEvent()
+    object SubmitData : SportDataEvent()
 
 }

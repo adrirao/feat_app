@@ -31,7 +31,13 @@ fun LoginScreen(
     navController: NavController = rememberNavController(),
     viewModel: LoginViewModel = hiltViewModel()
 ) {
+
+
     val state = viewModel.state.value
+
+    if (state.isLoading){
+        FeatCircularProgress()
+    }
 
     setMessages(viewModel,navController)
 
@@ -133,7 +139,8 @@ private fun Content(
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
                 colorText = MaterialTheme.colors.primary,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth(0.5f)
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
                     .padding(10.dp)
                     .height(60.dp),
                 onClick = {
@@ -142,7 +149,10 @@ private fun Content(
             )
             Divider(
                 color = Color.Gray,
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 50.dp).fillMaxWidth().height(1.dp)
+                modifier = Modifier
+                    .padding(horizontal = 10.dp, vertical = 50.dp)
+                    .fillMaxWidth()
+                    .height(1.dp)
             )
             Box {
                 Row(

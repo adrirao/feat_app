@@ -51,8 +51,6 @@ constructor(
                 validateEmailOrPhone(_state.value.emailOrPhoneText)
                 validatePassword(_state.value.passwordText)
                 authenticateUser()
-                checkIsFirstLogin()
-
             }
             is LoginEvent.DismissDialog -> {
                 _state.value = _state.value.copy(
@@ -81,6 +79,11 @@ constructor(
                             isFirstLogin = false
                         )
                     }
+                }
+                is Result.Loading ->{
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
                 }
                 is Result.Error -> {
                     _state.value = _state.value.copy(
@@ -136,10 +139,10 @@ constructor(
         viewModelScope.launch {
             firebaseAuthRepository.authenticate(email, password) { isLoged, error ->
                 if (isLoged) {
-                    checkIsFirstLogin()
                     _state.value = _state.value.copy(
                         isAuthenticate = true
                     )
+                    checkIsFirstLogin()
                 } else {
                     when (error) {
                         is FirebaseAuthInvalidUserException -> {

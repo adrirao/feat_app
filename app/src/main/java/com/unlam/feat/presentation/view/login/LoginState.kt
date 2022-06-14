@@ -5,12 +5,13 @@ data class LoginState(
     val passwordText: String = "",
     val emailError: EmailError? = null,
     val passwordError: PasswordError? = null,
-    val isPasswordVisible : Boolean = false,
-    val isAuthenticate : Boolean = false,
-    val isFirstLogin : Boolean? = null,
-    val authenticateError : AuthenticateError? = null,
-    val apiError : ApiError? = null
-){
+    val isPasswordVisible: Boolean = false,
+    val isAuthenticate: Boolean = false,
+    val isFirstLogin: Boolean? = null,
+    val authenticateError: AuthenticateError? = null,
+    val apiError: ApiError? = null,
+    val isLoading: Boolean = false
+) {
     sealed class EmailError {
         object FieldEmpty : EmailError()
         object InvalidEmail : EmailError()
@@ -21,11 +22,13 @@ data class LoginState(
         object InvalidPassword : PasswordError()
         object InputTooShort : PasswordError()
     }
+
     sealed class AuthenticateError {
         object VerifyEmail : AuthenticateError()
         object UserNotExist : AuthenticateError()
         object InvalidCredentials : AuthenticateError()
     }
+
     sealed class ApiError {
         object ApiConnectionError : ApiError()
     }

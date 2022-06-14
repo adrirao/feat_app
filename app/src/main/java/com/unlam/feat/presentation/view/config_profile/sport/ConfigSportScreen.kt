@@ -138,7 +138,6 @@ fun ConfigSportContent(
                             colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
                             onClick = {
                                 navigateToHome()
-                                //persistir en la base
                             },
                             colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
                         )

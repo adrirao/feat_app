@@ -26,15 +26,21 @@ constructor(
         when (event) {
             is SplashEvent.Authenticate -> {
                 authenticateUser()
-                checkIsFirstLogin()
             }
         }
     }
 
     private fun authenticateUser() {
         val isAuthenticate: Boolean = firebaseAuthRepository.isLogged()
-        if(isAuthenticate){
+        if (isAuthenticate) {
             checkIsFirstLogin()
+        } else {
+            viewModelScope.launch {
+                _state.emit(
+                    SplashState(isAuthenticate = false)
+                )
+            }
+
         }
     }
 
@@ -45,7 +51,7 @@ constructor(
                 is Result.Success -> {
                     if (result.data == null) {
                         _state.emit(
-                        SplashState(isAuthenticate = true, isFirstLogin = true)
+                            SplashState(isAuthenticate = true, isFirstLogin = true)
                         )
                     } else {
                         _state.emit(
@@ -53,9 +59,10 @@ constructor(
                         )
                     }
                 }
-//                is Result.Error -> {
-//
-//                }
+                is Result.Error -> {
+                    SplashState(isAuthenticate = false)
+                }
+                is Result.Loading -> {}
             }
         }.launchIn(viewModelScope)
     }

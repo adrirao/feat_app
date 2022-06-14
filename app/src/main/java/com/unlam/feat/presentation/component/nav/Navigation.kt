@@ -36,6 +36,7 @@ import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfi
 import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataViewModel
 import com.unlam.feat.presentation.view.config_profile.sport.ConfigSportScreen
 import com.unlam.feat.presentation.view.config_profile.sport.ConfigSportViewModel
+import com.unlam.feat.presentation.view.config_profile.sport.sport_data.SportDataEvent
 import com.unlam.feat.presentation.view.config_profile.sport.sport_data.SportDataScreen
 import com.unlam.feat.presentation.view.config_profile.sport.sport_data.SportDataViewModel
 import com.unlam.feat.presentation.view.events.Event
