@@ -121,9 +121,9 @@ constructor(
             abilities = abilities,
             position = position,
             level = level,
-            valuation = valuation,
+            valuation = requireNotNull(valuation),
             person = requireNotNull(person),
-            sport = sport
+            sport = requireNotNull(sport)
         )
 
         featRepository.createPlayer(request).onEach { result ->
