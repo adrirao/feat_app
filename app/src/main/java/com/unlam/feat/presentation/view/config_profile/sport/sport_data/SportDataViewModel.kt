@@ -69,22 +69,12 @@ constructor(
                 firebaseAuthRepository.signOut()
             }
             is SportDataEvent.SubmitData -> {
-                when (state.value.sportGenericId) {
-                    1, 4 -> {
-                        _state.value = _state.value.copy(
-                            positionIdError = validateFieldIsNotEmpty(state.value.positionId.toString())
-                        )
-                        _state.value = _state.value.copy(
-                            levelIdError = validateFieldIsNotEmpty(state.value.levelId.toString())
-                        )
-
-                    }
-                    2, 3 -> {
-                        _state.value = _state.value.copy(
-                            levelIdError = validateFieldIsNotEmpty(state.value.levelId.toString())
-                        )
-                    }
-                }
+                _state.value = _state.value.copy(
+                    positionIdError = validateFieldIsNotEmpty(state.value.positionId.toString())
+                )
+                _state.value = _state.value.copy(
+                    levelIdError = validateFieldIsNotEmpty(state.value.levelId.toString())
+                )
                 _state.value = _state.value.copy(
                     valuationIdError = validateFieldIsNotEmpty(state.value.valuationId.toString())
                 )
@@ -104,18 +94,10 @@ constructor(
 
         val abilities = if (!state.value.abilitiesError) _state.value.abilities else return
         val valuation = if (!state.value.valuationIdError) _state.value.valuationId else return
+        var position:Int? = if(!state.value.positionIdError) _state.value.positionId else return
+        var level:Int? = if(!state.value.levelIdError) _state.value.levelId else return
         val person = if(state.value.person != null) _state.value.person?.id else return
         val sport = if(state.value.sportGenericId != null) _state.value.sportGenericId else return
-        var position:Int? = null
-        var level:Int? = null
-
-        if (state.value.sportGenericId == 1 || state.value.sportGenericId == 4) {
-            position = if (!state.value.positionIdError) _state.value.positionId else return
-            level = if (!state.value.levelIdError) _state.value.levelId else return
-        }
-        if (state.value.sportGenericId == 2 || state.value.sportGenericId == 3) {
-            level = if (!state.value.levelIdError) _state.value.levelId else return
-        }
 
         val request = RequestPlayer(
             abilities = abilities,
@@ -163,8 +145,8 @@ constructor(
         var fieldError: String = ""
 
         if (state.value.abilitiesError) fieldError += "Aptitudes, "
-        if (state.value.positionIdError) fieldError += "Posición, "
-        if (state.value.levelIdError) fieldError += "Nivel, "
+        if (state.value.positionIdError && state.value.sportGenericId != 5) fieldError += "Posición, "
+        if (state.value.levelIdError && state.value.sportGenericId != 5) fieldError += "Nivel, "
         if (state.value.valuationIdError) fieldError += "Grado de interés,"
 
         if (fieldError != "") {
