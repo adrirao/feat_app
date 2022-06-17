@@ -54,6 +54,8 @@ import com.unlam.feat.presentation.view.home.HomeViewModel
 import com.unlam.feat.presentation.view.home.detail_event.DetailEventHome
 import com.unlam.feat.presentation.view.home.detail_event.DetailEventHomeEvent
 import com.unlam.feat.presentation.view.home.detail_event.DetailEventHomeViewModel
+import com.unlam.feat.presentation.view.invitation.InvitationScreen
+import com.unlam.feat.presentation.view.invitation.InvitationViewModel
 import com.unlam.feat.presentation.view.login.LoginScreen
 import com.unlam.feat.presentation.view.register.Register
 import com.unlam.feat.presentation.view.search.Search
@@ -81,7 +83,7 @@ fun Navigation(navController: NavHostController) {
         events(navController)
         home(navController)
         search(navController)
-        invite(navController)
+        invitations(navController)
 
         addEvent(navController)
         searchEventDetail(navController)
@@ -229,8 +231,12 @@ private fun NavGraphBuilder.sportData(navController: NavHostController) {
 
 private fun NavGraphBuilder.profile(navController: NavHostController) {
     composable(Screen.Profile.route) {
-        Box() {
-            Text(text = "Hola mundo")
+        Button(onClick = {
+            Firebase.auth.signOut()
+            navController.popBackStack(Screen.Home.route, inclusive = true)
+            navController.navigate(Screen.Login.route)
+        }) {
+
         }
     }
 }
@@ -302,16 +308,24 @@ private fun NavGraphBuilder.search(navController: NavHostController) {
     }
 }
 
-private fun NavGraphBuilder.invite(navController: NavHostController) {
-    composable(Screen.Invite.route) {
+private fun NavGraphBuilder.invitations(navController: NavHostController) {
+    composable(Screen.Invitation.route) {
+        val invitationViewModel: InvitationViewModel = hiltViewModel()
+        val state = invitationViewModel.state.value
+        val isRefreshing = invitationViewModel.isRefreshing.collectAsState()
 
-        Button(onClick = {
-            Firebase.auth.signOut()
-            navController.popBackStack(Screen.Home.route, inclusive = true)
-            navController.navigate(Screen.Login.route)
-        }) {
+        InvitationScreen(
+            state = state,
+            onEvent = invitationViewModel::onEvent,
+            isRefreshing = isRefreshing.value,
+            refreshData = invitationViewModel::getEventsByUser,
+            navigateToDetail = {
+                navController.navigate(
+                    Screen.DetailEventHome.route + "/${it.id}"
+                )
+            }
+        )
 
-        }
     }
 }
 

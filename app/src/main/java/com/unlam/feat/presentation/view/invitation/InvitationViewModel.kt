@@ -1,10 +1,9 @@
-package com.unlam.feat.presentation.view.home
+package com.unlam.feat.presentation.view.invitation
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.unlam.feat.common.Result
 import com.unlam.feat.repository.FeatRepositoryImp
 import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,28 +12,31 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
+import com.unlam.feat.common.Result
+
 
 @HiltViewModel
-class HomeViewModel
+class InvitationViewModel
 @Inject
 constructor(
     private val featRepository: FeatRepositoryImp,
     private val firebaseAuthRepository: FirebaseAuthRepositoryImp,
-) : ViewModel() {
+) :ViewModel() {
 
-    private val _state = mutableStateOf(HomeState())
-    val state: State<HomeState> = _state
-
-    private val _isRefreshing = MutableStateFlow(false)
-    val isRefreshing: StateFlow<Boolean> = _isRefreshing
 
     init {
         getEventsByUser()
     }
 
-    fun onEvent(event: HomeEvent) {
+    private val _state = mutableStateOf(InvitationState())
+    val state: State<InvitationState> = _state
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing
+
+    fun onEvent(event: InvitationEvent) {
         when (event) {
-            is HomeEvent.DismissDialog -> {
+            is InvitationEvent.DismissDialog -> {
                 _state.value = _state.value.copy(
                     error = ""
                 )
@@ -47,17 +49,17 @@ constructor(
         featRepository.getEventsCreatedByUser(uId).onEach { result ->
             when (result) {
                 is Result.Error -> {
-                    _state.value = HomeState(error = result.message ?: "Error Inesperado")
+                    _state.value = InvitationState(error = result.message ?: "Error Inesperado")
                 }
                 is Result.Loading -> {
-                    _state.value = HomeState(isLoading = true)
+                    _state.value = InvitationState(isLoading = true)
                 }
                 is Result.Success -> {
-                    _state.value = HomeState(events = (result.data ?: emptyList()))
+                    _state.value = InvitationState(events = (result.data ?: emptyList()))
                 }
             }
         }.launchIn(viewModelScope)
     }
 
-
 }
+

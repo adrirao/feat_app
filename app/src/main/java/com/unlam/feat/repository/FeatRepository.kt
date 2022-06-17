@@ -40,8 +40,8 @@ interface FeatRepository {
     //<editor-fold desc="Periodicities">
     fun getPeriodicities(): Flow<Result<List<Periodicity>>> // @GET("/periodicities/")
     fun getPeriodicity(id: Int): Flow<Result<Periodicity>> // @GET("/periodicities/{id}")
+    fun getAllLevelsBySportGeneric(id: Int): Flow<Result<List<Level>>>// @GET("/levels/getAllBySportGeneric/{id}")
     fun createPeriodicity(req: RequestPeriodicity): Flow<Result<String>> // @GET("/periodicities/create")
-
     //</editor-fold desc="Periodicities">
     //<editor-fold desc="Players">
     fun getPlayers(): Flow<Result<List<Player>>> // @GET("/players/")
@@ -70,11 +70,6 @@ interface FeatRepository {
     fun getUser(id: Int): Flow<Result<User>> // @GET("/users/{id}")
     fun createUser(req:RequestUser): Flow<Result<String>> // @POST("/users/create")
     //</editor-fold desc="Users">
-
-
-    fun getDataDetailEvent(idEvent:Int): Flow<Result<ResponseDetailEvent>>
-
-
     //<editor-fold desc="Persons">
     fun getPerson(uId: String): Flow<Result<Person>> // @GET("/persons/getPersonById/{id}")
     fun createPerson(req:RequestPerson): Flow<Result<String>> // @POST("/persons/create")
