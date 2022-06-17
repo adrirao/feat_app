@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
+import com.unlam.feat.model.ResponseSearchEventDetail
+
 
 interface FeatRepository {
     //<editor-fold desc="Events">
@@ -32,7 +34,6 @@ interface FeatRepository {
     //<editor-fold desc="Levels">
     fun getLevels(): Flow<Result<List<Level>>> // @GET("/levels/")
     fun getLevel(id: Int): Flow<Result<Level>> // @GET("/levels/{id}")
-    fun getAllLevelsBySportGeneric(id: Int): Flow<Result<List<Level>>>// @GET("/levels/getAllBySportGeneric/{id}")
     fun createLevel(req: RequestLevel): Flow<Result<String>> // @POST("/levels/create")
 
     //</editor-fold desc="Levels">
@@ -47,6 +48,8 @@ interface FeatRepository {
     fun getPlayer(id: Int): Flow<Result<Player>> // @GET("/players/{id}")
     fun getAllByPerson(personId: Int): Flow<Result<List<Player>>> // @GET("/players/getAllByPerson/{personId}")
     fun getAllPlayersSuggestedForEvent(eventId: Int): Flow<Result<List<Player>>> // @GET("/players/getAllPlayersSuggestedForEvent/{eventId}")
+    fun getAllPlayersConfirmedByEvent(eventId: Int) : Flow<Result<List<Player>>> // @GET("/players/getAllConfirmedByEvent/{eventId}")
+    fun getAllPlayersAppliedByEvent(eventId: Int) : Flow<Result<List<Player>>> // @GET("/players/getAllAppliedByEvent/{eventId}")
     fun createPlayer(req: RequestPlayer): Flow<Result<String>> // @POST("/players/create")
 
     //</editor-fold desc="Players">
@@ -68,6 +71,8 @@ interface FeatRepository {
     fun createUser(req:RequestUser): Flow<Result<String>> // @POST("/users/create")
     //</editor-fold desc="Users">
 
+
+    fun getDataDetailEvent(idEvent:Int): Flow<Result<ResponseDetailEvent>>
 
 
     //<editor-fold desc="Persons">
@@ -93,6 +98,7 @@ interface FeatRepository {
     fun getDataDetailEvent(idEvent:Int): Flow<Result<ResponseDetailEvent>>
     fun getDataSportScreen(uId: String,sportGenericId:Int): Flow<Result<ResponseDataSport>>
     //</editor-fold desc="Multiple EndPoints">
+
 
 }
 

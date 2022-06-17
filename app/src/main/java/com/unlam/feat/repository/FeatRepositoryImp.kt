@@ -297,6 +297,26 @@ constructor(
         }
     }
 
+    override fun getAllPlayersConfirmedByEvent(eventId: Int): Flow<Result<List<Player>>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.getAllPlayersConfirmedByEvent(eventId).body() ?: listOf()
+            emit(Result.Success(data = response))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+    override fun getAllPlayersAppliedByEvent(eventId: Int): Flow<Result<List<Player>>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.getAllPlayersAppliedByEvent(eventId).body() ?: listOf()
+            emit(Result.Success(data = response))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
     override fun createPlayer(req: RequestPlayer): Flow<Result<String>> = flow {
         try {
             emit(Result.Loading())
@@ -442,6 +462,7 @@ constructor(
     }
 
 
+
     //</editor-fold desc="Users">
 
     //<editor-fold desc="Persons">
@@ -501,6 +522,7 @@ constructor(
         }
     }
 
+
     override fun addAddress(req: RequestAddress): Flow<Result<String>> = flow {
         try {
             emit(Result.Loading())
@@ -517,14 +539,20 @@ constructor(
     override fun getDataDetailEvent(idEvent: Int): Flow<Result<ResponseDetailEvent>> = flow {
         try {
             emit(Result.Loading())
+
             val responseEvent = featProvider.getEventById(idEvent).body()
-            val responsePlayers = featProvider.getAllPlayersSuggestedForEvent(idEvent).body()
-            if (responseEvent != null && responsePlayers != null) {
+            val playersConfirmed = featProvider.getAllPlayersConfirmedByEvent(idEvent).body()
+            val playersApplied = featProvider.getAllPlayersAppliedByEvent(idEvent).body()
+            val playersSuggested = featProvider.getAllPlayersSuggestedForEvent(idEvent).body() ?: emptyList()
+
+            if (responseEvent != null && playersSuggested != null && playersConfirmed != null && playersApplied != null) {
                 emit(
                     Result.Success(
                         data = ResponseDetailEvent(
                             event = responseEvent,
-                            players = responsePlayers
+                            playersSuggested = playersSuggested,
+                            playersApplied = playersApplied,
+                            playersConfirmed = playersConfirmed
                         )
                     )
                 )
@@ -535,8 +563,6 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
-
-
     override fun getDataSportScreen(uId:String,sportGenericId:Int): Flow<Result<ResponseDataSport>> = flow {
         try {
             emit(Result.Loading())
@@ -548,14 +574,14 @@ constructor(
 
             if (responseLevels != null && responseValuations != null && responsePositions != null && responsePerson != null) {
                 emit(
-                    Result.Success(
-                        data = ResponseDataSport(
-                            person = responsePerson,
-                            levelList = responseLevels,
-                            positionList = responsePositions,
-                            valuationList = responseValuations
+                        Result.Success(
+                                data = ResponseDataSport(
+                                        person = responsePerson,
+                                        levelList = responseLevels,
+                                        positionList = responsePositions,
+                                        valuationList = responseValuations
+                                )
                         )
-                    )
                 )
             } else {
                 emit(Result.Error(message = "Unknown Error"))

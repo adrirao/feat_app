@@ -20,6 +20,8 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.unlam.feat.common.Screen
 import com.unlam.feat.model.SportGeneric
+import com.unlam.feat.presentation.component.FeatCircularProgress
+import com.unlam.feat.presentation.component.map.FeatMap
 import com.unlam.feat.model.ListSportId
 import com.unlam.feat.presentation.component.map.FeatMapWhitMaker
 import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationEvent
@@ -34,6 +36,7 @@ import com.unlam.feat.presentation.view.config_profile.availability.ConfigProfil
 import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataEvent
 import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataScreen
 import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataViewModel
+import com.unlam.feat.presentation.view.config_profile.sport.ConfigSportEvent
 import com.unlam.feat.presentation.view.config_profile.sport.ConfigSportScreen
 import com.unlam.feat.presentation.view.config_profile.sport.ConfigSportViewModel
 import com.unlam.feat.presentation.view.config_profile.sport.sport_data.SportDataEvent
@@ -43,14 +46,20 @@ import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddEventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddNewEventScreen
+import com.unlam.feat.presentation.view.events.detail_event.DetailEvent
+import com.unlam.feat.presentation.view.events.detail_event.DetailEventScreen
+import com.unlam.feat.presentation.view.events.detail_event.DetailEventViewModel
 import com.unlam.feat.presentation.view.home.Home
 import com.unlam.feat.presentation.view.home.HomeViewModel
 import com.unlam.feat.presentation.view.home.detail_event.DetailEventHome
+import com.unlam.feat.presentation.view.home.detail_event.DetailEventHomeEvent
 import com.unlam.feat.presentation.view.home.detail_event.DetailEventHomeViewModel
 import com.unlam.feat.presentation.view.login.LoginScreen
 import com.unlam.feat.presentation.view.register.Register
 import com.unlam.feat.presentation.view.search.Search
 import com.unlam.feat.presentation.view.search.SearchViewModel
+import com.unlam.feat.presentation.view.search.event_detail.SearchEventDetailScreen
+import com.unlam.feat.presentation.view.search.event_detail.SearchEventDetailViewModel
 import com.unlam.feat.presentation.view.splash.SplashScreen
 
 @Composable
@@ -75,7 +84,8 @@ fun Navigation(navController: NavHostController) {
         invite(navController)
 
         addEvent(navController)
-        searchList(navController)
+        searchEventDetail(navController)
+        search(navController)
 
         detailEventHome(navController)
 
@@ -267,15 +277,28 @@ private fun NavGraphBuilder.home(
 private fun NavGraphBuilder.search(navController: NavHostController) {
     composable(Screen.Search.route) {
         val searchViewModel: SearchViewModel = hiltViewModel()
-        var marker = searchViewModel.marker.value
+        val state = searchViewModel.state.value
+        val isRefreshing = searchViewModel.isRefreshing.collectAsState()
+        Search(
+            state = state,
+            onEvent = searchViewModel::onEvent,
+            isRefreshing = isRefreshing.value,
+            refreshData = searchViewModel::getEventsSuggestedForUser,
+            onClickCard = {
+                navController.navigate(Screen.SearchEventDetail.route)
+            }
+        )
 
-        FeatMapWhitMaker(onClick = {
-        })
-
-        if (marker.position != null) {
-            Log.e("RAO", "click")
-
-        }
+//        val searchViewModel : SearchViewModel = hiltViewModel()
+//        var marker  = searchViewModel.marker.value
+//
+//        FeatMapWhitMaker(onClick = {
+//        })
+//
+//        if(marker.position != null){
+//            Log.e("RAO","click")
+//
+//        }
     }
 }
 
@@ -316,6 +339,31 @@ private fun NavGraphBuilder.addEvent(navController: NavHostController) {
     }
 }
 
+private fun NavGraphBuilder.searchEventDetail(
+    navController: NavHostController
+) {
+    composable(
+        route = Screen.SearchEventDetail.route+ "/{idEvent}",
+        arguments = Screen.SearchEventDetail.arguments ?: listOf()
+    ) {
+        val idEvent = it.arguments?.getString("idEvent") ?: ""
+        val searchEventDetailViewModel: SearchEventDetailViewModel = hiltViewModel()
+        val state = searchEventDetailViewModel.state.value
+
+        LaunchedEffect(key1 = true) {
+            searchEventDetailViewModel.getDataDetailEvent(idEvent.toInt())
+        }
+
+        if(state.loading){
+            FeatCircularProgress()
+        }
+
+        if (state.event != null && state.playersConfirmed != null ) {
+            SearchEventDetailScreen(state)
+        }
+    }
+}
+/*
 private fun NavGraphBuilder.searchList(
     navController: NavHostController,
 ) {
@@ -328,11 +376,16 @@ private fun NavGraphBuilder.searchList(
             state = state,
             onEvent = eventViewModel::onEvent,
             isRefreshing = isRefreshing.value,
-            refreshData = eventViewModel::getEventsCreatedByUser
+            refreshData = eventViewModel::getEventsCreatedByUser,
+            onClickCard = {
+                navController.navigate(Screen.SearchEventDetail.route)
+            }
+
         )
+
     }
 }
-
+*/
 private fun NavGraphBuilder.detailEventHome(
     navController: NavHostController,
 ) {
@@ -341,15 +394,19 @@ private fun NavGraphBuilder.detailEventHome(
         arguments = Screen.DetailEventHome.arguments ?: listOf()
     ) {
         val idEvent = it.arguments?.getString("idEvent") ?: ""
-        val detailEventHomeViewModel: DetailEventHomeViewModel = hiltViewModel()
+        val detailEventHomeViewModel: DetailEventViewModel = hiltViewModel()
         val state = detailEventHomeViewModel.state.value
 
-        LaunchedEffect(key1 = true) {
+        LaunchedEffect(key1 = true ){
             detailEventHomeViewModel.getDataDetailEvent(idEvent.toInt())
         }
 
-        if (state.event != null && state.players != null) {
-            DetailEventHome(state)
+        if(state.loading){
+            FeatCircularProgress()
+        }
+
+        if (state.event != null && state.playersApplied != null && state.playersConfirmed != null && state.playersSuggested != null) {
+            DetailEventScreen(state)
         }
     }
 }
