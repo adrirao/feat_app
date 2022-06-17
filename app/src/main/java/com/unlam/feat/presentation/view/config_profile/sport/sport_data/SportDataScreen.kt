@@ -359,6 +359,17 @@ private fun SportDataTennis(
     onValueChange: (SportDataEvent) -> Unit,
     sportGeneric: SportGeneric
 ) {
+    val optionsPosition: MutableList<String> = mutableListOf<String>()
+    state.positionList.forEach { positionList ->
+        optionsPosition.add(positionList.description)
+    }
+    FeatDropDown(label = "Posición", optionsPosition) { positionText ->
+        state.positionList.forEach { position ->
+            if (position.description == positionText) {
+                onValueChange(SportDataEvent.SelectedPosition(position.id))
+            }
+        }
+    }
 
     val optionsLevel: MutableList<String> = mutableListOf<String>()
     state.levelList.forEach { levelList ->
@@ -401,6 +412,17 @@ private fun SportDataPadel(
     onValueChange: (SportDataEvent) -> Unit,
     sportGeneric: SportGeneric
 ) {
+    val optionsPosition: MutableList<String> = mutableListOf<String>()
+    state.positionList.forEach { positionList ->
+        optionsPosition.add(positionList.description)
+    }
+    FeatDropDown(label = "Posición", optionsPosition) { positionText ->
+        state.positionList.forEach { position ->
+            if (position.description == positionText) {
+                onValueChange(SportDataEvent.SelectedPosition(position.id))
+            }
+        }
+    }
 
     val optionsLevel: MutableList<String> = mutableListOf<String>()
     state.levelList.forEach { levelList ->
@@ -443,6 +465,20 @@ private fun SportDataRecreationalActivity(
     onValueChange: (SportDataEvent) -> Unit,
     sportGeneric: SportGeneric
 ) {
+
+
+    state.positionList.forEach { positionList ->
+        if(positionList.description == "No Aplica"){
+          onValueChange(SportDataEvent.SelectedPosition(positionList.id))
+        }
+    }
+    state.levelList.forEach { positionList ->
+        if(positionList.description == "No Aplica"){
+            onValueChange(SportDataEvent.SelectedLevel(positionList.id))
+        }
+    }
+
+
 
     val optionsValuation: MutableList<String> = mutableListOf<String>()
     state.valuationList.forEach { valuationList ->
@@ -509,7 +545,7 @@ private fun SetMessagesSportData(
             )
         }
 
-        if (state.positionIdError) {
+        if (state.positionIdError && state.sportGenericId != 5) {
             FeatAlertDialog(
                 title = "El campo no puede estar vacío",
                 descriptionContent = "Por favor, seleccione una posición para el deporte",
@@ -519,7 +555,7 @@ private fun SetMessagesSportData(
             )
         }
 
-        if (state.levelIdError) {
+        if (state.levelIdError && state.sportGenericId != 5) {
             FeatAlertDialog(
                 title = "El campo no puede estar vacío",
                 descriptionContent = "Por favor, seleccione una opción en el nivel de deporte",
