@@ -56,7 +56,8 @@ fun FeatCard(
     colorTextState: Color = Color(0xFF019C50),
     fontSizeTextState: TextUnit = 20.sp,
     fontWeightTextState: FontWeight = FontWeight.Black,
-    onClickChatButton: () -> Unit = {}
+    onClickChatButton: () -> Unit = {},
+    chatEnable:Boolean = true
 ) {
     Card(
         modifier = modifier,
@@ -168,7 +169,7 @@ fun FeatCard(
                             .size(25.dp)
                             .clip(shape)
                             .align(Alignment.CenterVertically),
-                        painter = painterResource(id = R.drawable.location),
+                        painter = painterResource(id = R.drawable.logotipo),
                         contentDescription = "Location",
                         contentScale = ContentScale.Fit,
                     )
@@ -195,6 +196,7 @@ fun FeatCard(
                     )
                 }
             }
+            if(chatEnable){
             Column(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
@@ -223,6 +225,7 @@ fun FeatCard(
                 }
 
 
+            }
             }
         }
     }

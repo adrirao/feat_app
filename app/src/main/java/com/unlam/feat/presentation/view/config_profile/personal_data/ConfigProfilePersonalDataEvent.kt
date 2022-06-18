@@ -10,7 +10,7 @@ sealed class ConfigProfilePersonalDataEvent {
     data class EnteredDateOfBirth(val value: LocalDate) : ConfigProfilePersonalDataEvent()
     data class EnteredNickname(val value: String) : ConfigProfilePersonalDataEvent()
     data class EnteredSex(val value: String) : ConfigProfilePersonalDataEvent()
-    data class ShowAlertPermission(val value: Boolean,val title:String,val description:String): ConfigProfilePersonalDataEvent()
     object DismissDialog: ConfigProfilePersonalDataEvent()
-
+    object SingOutUser: ConfigProfilePersonalDataEvent()
+    object SubmitData: ConfigProfilePersonalDataEvent()
 }

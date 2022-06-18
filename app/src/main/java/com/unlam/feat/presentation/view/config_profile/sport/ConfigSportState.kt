@@ -7,10 +7,7 @@ data class ConfigSportState(
     val sportsList: List<SportGeneric> = emptyList(),
     val isLoading: Boolean = false,
 
-    val soccerCardEnable: Boolean = true,
-    val basketballCardEnable: Boolean = true,
-    val tennisCardEnable: Boolean = true,
-    val padelCardEnable: Boolean = true,
-    val recreationalActivityCardEnable: Boolean = true,
+
+
 
 )

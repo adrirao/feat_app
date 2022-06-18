@@ -9,3 +9,4 @@ data class ResponseDetailEvent(
     val playersApplied : List<Player>,
     val playersConfirmed: List<Player>,
 )
+

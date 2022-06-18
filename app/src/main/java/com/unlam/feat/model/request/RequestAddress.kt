@@ -10,5 +10,6 @@ data class RequestAddress(
     @SerializedName("zip_code")
     val zipCode: String,
     val latitude: String,
+    val person: Int,
     val longitude: String,
 )

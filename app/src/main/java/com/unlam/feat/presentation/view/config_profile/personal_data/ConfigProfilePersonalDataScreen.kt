@@ -6,9 +6,13 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Bottom
+import androidx.compose.ui.Alignment.Companion.BottomEnd
+import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -18,11 +22,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.*
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.unlam.feat.R
 import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.*
+import com.unlam.feat.presentation.view.register.RegisterEvent
+import com.unlam.feat.presentation.view.register.RegisterState
+import com.unlam.feat.presentation.view.register.RegisterViewModel
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
@@ -35,6 +45,18 @@ fun ConfigProfilePersonalDataScreen(
     state: ConfigProfilePersonalDataState,
     onValueChange: (ConfigProfilePersonalDataEvent) -> Unit
 ) {
+
+
+    if (state.isLoading) {
+        FeatCircularProgress()
+    }
+
+    SetMessages(
+        state,
+        navController,
+        onValueChange
+    )
+
     ConfigProfilePersonalData(state, navigateToConfigProfileAddress = {
         navController.popBackStack()
         navController.navigate(Screen.ConfigProfileAddress.route)
@@ -49,42 +71,68 @@ private fun ConfigProfilePersonalData(
     navigateToConfigProfileAddress: () -> Unit,
     onValueChange: (ConfigProfilePersonalDataEvent) -> Unit
 ) {
+    if (state.isSuccessSubmitData) {
+        LaunchedEffect(true) {
+            navigateToConfigProfileAddress()
+        }
+    }
+
+
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.primary)
             .padding(20.dp)
     ) {
+
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                modifier = Modifier.size(150.dp),
-                painter = painterResource(R.drawable.ic_isologotype_2),
-                contentDescription = stringResource(R.string.feat_logo)
-            )
-            FeatText(
-                text = "Configuracion de perfil.",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                color = Color.White
-            )
-            Divider(
-                color = Color.Gray,
+            Column(
                 modifier = Modifier
-                    .padding(top = 8.dp, bottom = 5.dp, start = 10.dp, end = 10.dp)
                     .fillMaxWidth()
-                    .height(1.dp)
-            )
+                    .weight(weight = 0.15f, fill = false)
+                    .align(Alignment.CenterHorizontally),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    modifier = Modifier
+                        .size(200.dp, 60.dp)
+                        .padding(bottom = 10.dp),
+                    painter = painterResource(R.drawable.ic_isologotype_2),
+                    contentDescription = stringResource(R.string.feat_logo)
+                )
+                FeatText(
+                    text = "Configuracion de perfil.",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    color = Color.White
+                )
+                FeatText(
+                    text = "Ingrese sus datos personales. 1/5",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    color = Color.White
+                )
+                Divider(
+                    color = Color.Gray,
+                    modifier = Modifier
+                        .padding(top = 8.dp, bottom = 5.dp, start = 10.dp, end = 10.dp)
+                        .fillMaxWidth()
+                        .height(1.dp)
+                )
+            }
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
-                    .weight(weight = 1f, fill = false),
-                verticalArrangement = Arrangement.Center,
+                    .weight(weight = 0.8f, fill = true)
+                    .align(Alignment.CenterHorizontally),
 
                 ) {
 
@@ -176,31 +224,117 @@ private fun ConfigProfilePersonalData(
 
 
                 }
-
-
-                FeatButton(
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .height(60.dp),
-                    textButton = "Siguiente",
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                    colorText = MaterialTheme.colors.primary,
-                    textAlign = TextAlign.Center,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
-                    onClick = {
-                        navigateToConfigProfileAddress()
-                        //persistir en la base
-                    }
-                )
-
-
             }
-        }
+            Row(
+                modifier = Modifier
+                    .align(End)
+                    .weight(0.1f, false),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                FeatButtonRounded(
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .size(60.dp),
+                    drawable = R.drawable.arrow_next,
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                    onClick = {
+                        onValueChange(ConfigProfilePersonalDataEvent.SubmitData)
 
+                    },
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
+                )
+            }
+
+        }
 
     }
 
 }
+
+@Composable
+private fun SetMessages(
+    state: ConfigProfilePersonalDataState,
+    navController: NavController,
+    onValueChange: (ConfigProfilePersonalDataEvent) -> Unit
+) {
+    if (state.error != null) {
+        FeatAlertDialog(
+            title = "Error de conexión",
+            descriptionContent = "No se ha podido conectar con el servidor, vuelva a intentarlo.",
+            onDismiss = {
+                onValueChange(ConfigProfilePersonalDataEvent.DismissDialog)
+                onValueChange(ConfigProfilePersonalDataEvent.SingOutUser)
+                navController.popBackStack()
+                navController.navigate(Screen.Login.route)
+            }
+        )
+    }
+
+    var countFieldEmptys: List<String> = state.fieldEmpty.split(',')
+
+
+    if (state.fieldEmpty != "" && countFieldEmptys.size > 2) {
+        FeatAlertDialog(
+            title = "Hay campos vacios",
+            descriptionContent = "Por favor, verifica que los siguientes campos no esten vacios ${state.fieldEmpty}",
+            onDismiss = {
+                onValueChange(ConfigProfilePersonalDataEvent.DismissDialog)
+            }
+        )
+    } else {
+        if (state.nameError != null) {
+            FeatAlertDialog(
+                title = "El campo no puede estar vacío",
+                descriptionContent = "Por favor, ingrese un nombre en el campo",
+                onDismiss = {
+                    onValueChange(ConfigProfilePersonalDataEvent.DismissDialog)
+                }
+            )
+        }
+
+        if (state.lastNameError != null) {
+            FeatAlertDialog(
+                title = "El campo no puede estar vacío",
+                descriptionContent = "Por favor, ingrese un apellido en el campo",
+                onDismiss = {
+                    onValueChange(ConfigProfilePersonalDataEvent.DismissDialog)
+                }
+            )
+        }
+
+        if (state.sexError != null) {
+            FeatAlertDialog(
+                title = "Debe seleccionar un sexo",
+                descriptionContent = "Por favor, seleccione una opción en sexo",
+                onDismiss = {
+                    onValueChange(ConfigProfilePersonalDataEvent.DismissDialog)
+                }
+            )
+        }
+
+        if (state.dateOfBirthError != null) {
+            var title: String = "Error en la fecha ingresada"
+            var description: String
+            when (state.dateOfBirthError) {
+                ConfigProfilePersonalDataState.DateOfBirthError.FieldEmpty -> {
+                    description = "El campo no puede estar vacío."
+                }
+                ConfigProfilePersonalDataState.DateOfBirthError.IsInvalid -> {
+                    description = "Debe ser mayor de 16 para utilizar la app."
+                }
+            }
+            FeatAlertDialog(
+                title = title,
+                descriptionContent = description,
+                onDismiss = {
+                    onValueChange(ConfigProfilePersonalDataEvent.DismissDialog)
+                }
+            )
+        }
+    }
+}
+
+
 
 
 

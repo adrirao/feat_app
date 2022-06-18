@@ -17,8 +17,7 @@ sealed class Screen(
     object Home : Screen("home_screen")
     object SearchList : Screen("search_list_screen")
     object Search : Screen("search_screen")
-    object Invite : Screen("invite_screen")
-
+    object Invitation : Screen("invitation_screen")
 
     object ConfigProfilePersonalData: Screen("config_profile_personal_data_screen")
     object ConfigProfileAddress: Screen("config_profile_address_screen")
@@ -31,4 +30,12 @@ sealed class Screen(
         navArgument("idEvent") { type = NavType.StringType }
     ))
     object Chat : Screen("chat_screen")
+
+    object SearchEventDetail : Screen("search_event_detail", listOf(
+        navArgument("idEvent") { type = NavType.StringType }
+    ))
+
+    object DetailInvitation : Screen("invitation_detail_screen", listOf(
+        navArgument("idEvent") { type = NavType.StringType }
+    ))
 }

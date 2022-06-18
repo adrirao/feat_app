@@ -1,0 +1,15 @@
+package com.unlam.feat.presentation.view.invitation.detail_invitation
+
+import com.unlam.feat.model.Event
+import com.unlam.feat.model.Player
+
+data class DetailInvitationState(
+    val event: Event? = null,
+    val players: List<Player>? = null,
+    val error: String = "",
+    val loading: Boolean = false,
+    val playersConfirmed: List<Player>? = null,
+    val success: Boolean = false,
+    val successTitle: String = "",
+    val successDescription: String = ""
+)

@@ -8,6 +8,8 @@ import com.unlam.feat.common.Result
 import com.unlam.feat.repository.FeatRepositoryImp
 import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -22,10 +24,13 @@ constructor(
     private val _state = mutableStateOf(SearchState())
     val state: State<SearchState> = _state
 
-    val marker = mutableStateOf(com.unlam.feat.presentation.component.map.Marker())
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing
+
+    //val marker = mutableStateOf(com.unlam.feat.presentation.component.map.Marker())
 
     init {
-        getEventsToday()
+        getEventsSuggestedForUser()
     }
 
     fun onEvent(event: SearchEvent) {
@@ -38,9 +43,9 @@ constructor(
         }
     }
 
-    fun getEventsToday() {
+    fun getEventsSuggestedForUser() {
         val uId = firebaseAuthRepository.getUserId()
-        featRepository.getEventsToday(uId).onEach { result ->
+        featRepository.getEventsSuggestedForUser(uId).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value = SearchState(error = result.message ?: "Error Inesperado")

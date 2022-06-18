@@ -16,6 +16,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.*
 import com.google.android.gms.location.LocationCallback
@@ -41,13 +43,19 @@ import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.*
 import java.io.IOException
 
-
 @Composable
 fun ConfigProfileAddressScreen(
     navController: NavHostController,
     state: ConfigProfileAddressState,
     onValueChange: (ConfigProfileAddressEvent) -> Unit
 ) {
+
+    SetMessagesAddress(
+        state = state,
+        navController = navController,
+        onValueChange = onValueChange
+    )
+
     ConfigProfileAddressScreenContent(state, navigateToConfigProfileAvailability = {
         navController.popBackStack()
         navController.navigate(Screen.ConfigProfileAvailability.route)
@@ -62,6 +70,18 @@ private fun ConfigProfileAddressScreenContent(
     navigateToConfigProfileAvailability: () -> Unit,
     onValueChange: (ConfigProfileAddressEvent) -> Unit
 ) {
+
+    if (state.isSuccessSubmitData) {
+        LaunchedEffect(true) {
+            navigateToConfigProfileAvailability()
+        }
+    }
+
+    if (state.isLoading) {
+        FeatCircularProgress()
+    }
+
+
     val context = LocalContext.current
     val permissionState = rememberMultiplePermissionsState(
         permissions = listOf(
@@ -137,36 +157,45 @@ private fun ConfigProfileAddressScreenContent(
             .padding(20.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                modifier = Modifier.size(200.dp),
-                painter = painterResource(R.drawable.ic_isologotype_2),
-                contentDescription = stringResource(R.string.feat_logo)
-            )
-            FeatText(
-                text = "Agregar direcciones.",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-            Divider(
-                color = Color.Gray,
+            Column(
                 modifier = Modifier
-                    .padding(top = 8.dp, bottom = 5.dp, start = 10.dp, end = 10.dp)
                     .fillMaxWidth()
-                    .height(1.dp)
-            )
+                    .weight(weight = 0.15f, fill = false)
+                    .align(Alignment.CenterHorizontally),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    modifier = Modifier
+                        .size(200.dp, 60.dp)
+                        .padding(bottom = 10.dp),
+                    painter = painterResource(R.drawable.ic_isologotype_2),
+                    contentDescription = stringResource(R.string.feat_logo)
+                )
+                FeatText(
+                    text = "Agregar direcciones. 2/5",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+                Divider(
+                    color = Color.Gray,
+                    modifier = Modifier
+                        .padding(top = 8.dp, bottom = 5.dp, start = 10.dp, end = 10.dp)
+                        .fillMaxWidth()
+                        .height(1.dp)
+                )
+            }
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
-                    .weight(weight = 1f, fill = false),
-                verticalArrangement = Arrangement.Center,
-
-                ) {
+                    .weight(weight = 0.8f, fill = true)
+                    .align(Alignment.CenterHorizontally),
+            ) {
 
                 Column(
                     modifier = Modifier
@@ -176,28 +205,63 @@ private fun ConfigProfileAddressScreenContent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
+
                     FeatText(
                         modifier = Modifier
-                            .padding(top = 10.dp, bottom = 10.dp)
+                            .padding(top = 5.dp, bottom = 2.dp)
                             .fillMaxWidth(), text = "Direccion"
                     )
 
-
-
-
                     Row {
                         Column {
-                            FeatButton(
-                                modifier = Modifier
-                                    .padding(10.dp)
-                                    .height(60.dp),
-                                drawable = R.drawable.gps_locator,
-                                textButton = "Mi ubicación actual",
-                                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                                colorText = MaterialTheme.colors.primary,
-                                textAlign = TextAlign.Center,
-                                colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
-                                enabled = enabled.value,
+
+                            if (state.showAlertPermission) {
+                                FeatAlertDialog(
+                                    title = state.titleAlert,
+                                    descriptionContent = state.descriptionAlert,
+                                    onDismiss = {
+                                        onValueChange(ConfigProfileAddressEvent.DismissDialog)
+                                        permissionState.launchMultiplePermissionRequest()
+                                    },
+                                    onClick = {
+                                        startActivity(
+                                            context,
+                                            Intent(
+                                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                                Uri.fromParts(
+                                                    "package",
+                                                    "com.unlam.feat",
+                                                    null
+                                                )
+                                            ),
+                                            null
+                                        )
+                                    }
+                                )
+
+                            }
+
+                        }
+
+                    }
+                }
+
+                FeatTextField(
+                    text = state.addressAlias,
+                    onValueChange = {
+                        onValueChange(ConfigProfileAddressEvent.EnteredAddressAlias(it))
+                    },
+                    textLabel = "Alias"
+                )
+                FeatTextField(
+                    text = state.addressStreet,
+                    onValueChange = {
+                        onValueChange(ConfigProfileAddressEvent.EnteredAddressStreet(it))
+                    },
+                    textLabel = "Calle",
+                    trailingIcon = {
+                        val icon: @Composable () -> Unit = {
+                            IconButton(
                                 onClick = {
                                     if (permissionState.allPermissionsGranted) {
                                         enabled.value = false
@@ -238,54 +302,17 @@ private fun ConfigProfileAddressScreenContent(
                                             )
                                         )
                                     }
-                                }
-                            )
-
-                            if (state.showAlertPermission) {
-                                FeatAlertDialog(
-                                    title = state.titleAlert,
-                                    descriptionContent = state.descriptionAlert,
-                                    onDismiss = {
-                                        onValueChange(ConfigProfileAddressEvent.DismissDialog)
-                                        permissionState.launchMultiplePermissionRequest()
-                                    },
-                                    onClick = {
-                                        startActivity(
-                                            context,
-                                            Intent(
-                                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                                Uri.fromParts(
-                                                    "package",
-                                                    "com.unlam.feat",
-                                                    null
-                                                )
-                                            ),
-                                            null
-                                        )
-                                    }
+                                },
+                            ) {
+                                Icon(
+                                    painterResource(id = R.drawable.gps_locator),
+                                    tint = Color.Black,
+                                    contentDescription = ""
                                 )
-
                             }
-
-
                         }
-
+                        icon()
                     }
-                }
-
-                FeatTextField(
-                    text = state.addressAlias,
-                    onValueChange = {
-                        onValueChange(ConfigProfileAddressEvent.EnteredAddressAlias(it))
-                    },
-                    textLabel = "Alias"
-                )
-                FeatTextField(
-                    text = state.addressStreet,
-                    onValueChange = {
-                        onValueChange(ConfigProfileAddressEvent.EnteredAddressStreet(it))
-                    },
-                    textLabel = "Calle"
                 )
                 FeatTextField(
                     text = state.addressNumber,
@@ -308,60 +335,51 @@ private fun ConfigProfileAddressScreenContent(
                     },
                     textLabel = "Codigo Postal"
                 )
-                FeatButton(modifier = Modifier
-                    .padding(10.dp)
-                    .height(60.dp),
-                    textButton = "Confirma dirección",
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                    colorText = MaterialTheme.colors.primary,
-                    textAlign = TextAlign.Center,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
-                    onClick = {
-
-                        val geocoder = Geocoder(context)
-                        val addresses: List<Address>?
-                        val addressText: String =
-                            state.addressStreet + " " + state.addressNumber + " " + state.addressTown + " " + state.addressZipCode
-                        val latitude: Double
-                        val longitude: Double
-                        try {
-
-                            addresses = geocoder.getFromLocationName(addressText, 1)
-
-                            if (addresses != null && addresses.isNotEmpty()) {
-                                latitude = addresses[0].latitude
-                                longitude = addresses[0].longitude
-
-                                Log.e("MapsActivity", "$latitude + $longitude ")
-                            }
-                            Log.e("MapsActivity", addressText)
-                            Log.e("AdrresLine", addresses[0].getAddressLine(0))
-                            Log.e("AdrresMaxLine", addresses[0].maxAddressLineIndex.toString())
-
-                        } catch (e: IOException) {
-                            Log.e("MapsActivity", e.localizedMessage)
-                        }
-
-                    }
-                )
-
-                FeatButton(
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .height(60.dp),
-                    textButton = "Siguiente",
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                    colorText = MaterialTheme.colors.primary,
-                    textAlign = TextAlign.Center,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
-                    onClick = {
-                        navigateToConfigProfileAvailability()
-                        //persistir en la base
-                    }
-                )
-
 
             }
+            Row(
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .weight(0.1f, false),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                FeatButtonRounded(
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .size(60.dp),
+                    drawable = R.drawable.arrow_next,
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                    onClick = {
+
+                            val geocoder = Geocoder(context)
+                            val addresses: List<Address>?
+                            val addressText: String =
+                                state.addressStreet + " " + state.addressNumber + " " + state.addressTown + " " + state.addressZipCode
+                            try {
+                                addresses = geocoder.getFromLocationName(addressText, 1)
+
+                                if (addresses != null && addresses.isNotEmpty()) {
+                                   onValueChange( ConfigProfileAddressEvent.EnteredAddressLatitude(
+                                        addresses[0].latitude.toString()
+                                    ))
+                                    onValueChange(
+                                    ConfigProfileAddressEvent.EnteredAddressLongitude(
+                                        addresses[0].longitude.toString()
+                                    ))
+                                }
+
+                                onValueChange(ConfigProfileAddressEvent.SubmitData)
+                            } catch (e: IOException) {
+                                Log.e("MapsActivity", e.localizedMessage)
+                            }
+
+
+
+                    },
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
+                )
+            }
+
         }
 
 
@@ -376,6 +394,90 @@ private fun getAddress(location: Location, context: Context): Address {
     val list = geocoder.getFromLocation(location.latitude, location.longitude, 1)
     return list[0]
 }
+
+
+@Composable
+ private fun SetMessagesAddress(
+    state: ConfigProfileAddressState,
+    navController: NavController,
+    onValueChange: (ConfigProfileAddressEvent) -> Unit
+) {
+    if (state.error != null || state.personError != "" ) {
+        FeatAlertDialog(
+            title = "Error de conexión",
+            descriptionContent = "No se ha podido conectar con el servidor, vuelva a intentarlo.",
+            onDismiss = {
+                onValueChange(ConfigProfileAddressEvent.DismissDialog)
+                onValueChange(ConfigProfileAddressEvent.SingOutUser)
+                navController.popBackStack()
+                navController.navigate(Screen.Login.route)
+            }
+        )
+    }
+    var countFieldEmptys: List<String>
+
+    countFieldEmptys = state.fieldEmpty.split (',')
+
+
+    if (state.fieldEmpty != "" && countFieldEmptys.size > 2) {
+        FeatAlertDialog(
+            title = "Hay campos vacios",
+            descriptionContent = "Por favor, verifica que los siguientes campos no esten vacios ${state.fieldEmpty}",
+            onDismiss = {onValueChange(ConfigProfileAddressEvent.DismissDialog)
+            }
+        )
+    }else {
+        if (state.addressStreetError != null) {
+            FeatAlertDialog(
+                title = "El campo no puede estar vacío",
+                descriptionContent = "Por favor, ingrese una calle en el campo",
+                onDismiss = {
+                    onValueChange(ConfigProfileAddressEvent.DismissDialog)
+                }
+            )
+        }
+
+        if (state.addressNumberError != null) {
+            FeatAlertDialog(
+                title = "El campo no puede estar vacío",
+                descriptionContent = "Por favor, ingrese un numero en el campo",
+                onDismiss = {
+                    onValueChange(ConfigProfileAddressEvent.DismissDialog)
+                }
+            )
+        }
+
+        if (state.addressTownError != null) {
+            FeatAlertDialog(
+                title = "Debe seleccionar un sexo",
+                descriptionContent = "Por favor, ingrese una ciudad en el campo",
+                onDismiss = {
+                    onValueChange(ConfigProfileAddressEvent.DismissDialog)
+                }
+            )
+        }
+
+        if (state.addressZipCodeError != null) {
+            FeatAlertDialog(
+                title = "El campo no puede estar vacío",
+                descriptionContent = "Por favor, ingrese un numero en el campo",
+                onDismiss = {
+                    onValueChange(ConfigProfileAddressEvent.DismissDialog)
+                }
+            )
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
