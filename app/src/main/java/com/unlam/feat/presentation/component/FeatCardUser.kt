@@ -51,7 +51,8 @@ fun FeatCardUser(
     colorTextLevel: Color = MaterialTheme.colors.text,
     fontSizeTextLevel: TextUnit = 18.sp,
     fontWeightTextLevel: FontWeight = FontWeight.Medium,
-    painter: Painter = painterResource(id = R.drawable.nahuel)
+    painter: Painter = painterResource(id = R.drawable.nahuel),
+    content: @Composable (RowScope.() -> Unit)? = null
     ) {
     Card(
         modifier = modifier,
@@ -119,8 +120,9 @@ fun FeatCardUser(
                     )
                 }
             }
-
+            if (content != null) {
+                content()
+            }
         }
-
     }
 }
