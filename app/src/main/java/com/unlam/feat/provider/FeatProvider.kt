@@ -78,6 +78,9 @@ interface FeatProvider {
     @GET("/players/{id}")
     suspend fun getPlayer(@Path("id") id: Int): Response<Player>
 
+    @GET("/players/getAllByUser/{userUid}")
+    suspend fun getPlayersByUser(@Path("userUid") userUid: String): Response<List<Player>>
+
     @GET("/players/getAllByPerson/{personId}")
     suspend fun getAllByPerson(@Path("personId") personId: Int): Response<List<Player>>
 
@@ -140,5 +143,17 @@ interface FeatProvider {
     @GET("/sportsGeneric/")
     suspend fun getGenericsSports(): Response<List<SportGeneric>>
 
+    //<editor-fold desc="Addresses">
+    @GET("/addresses/{id}")
+    suspend fun getAddressesByUser(@Path("id") id: String): Response<List<Address>>
+
+    @Headers("Content-type: application/json")
+    @PUT("/addresses/update")
+    suspend fun updateAddress(@Body requestAddress: RequestAddress): Response<String>
+
+    @Headers("Content-type: application/json")
+    @POST("/addresses/create")
+    suspend fun createAddress(@Body requestAddress: RequestAddress): Response<String>
     //</editor-fold>
+
 }

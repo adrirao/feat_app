@@ -4,6 +4,7 @@ import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
 import com.unlam.feat.model.response.ResponseDetailEvent
+import com.unlam.feat.model.response.ResponseDetailProfile
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import retrofit2.http.Path
@@ -42,6 +43,7 @@ interface FeatRepository {
     //<editor-fold desc="Players">
     fun getPlayers(): Flow<Result<List<Player>>> // @GET("/players/")
     fun getPlayer(id: Int): Flow<Result<Player>> // @GET("/players/{id}")
+    fun getPlayersByUser(userUid: String): Flow<Result<List<Player>>> // @GET("/players/getAllByUser/{userUid}")
     fun getAllByPerson(personId: Int): Flow<Result<List<Player>>> // @GET("/players/getAllByPerson/{personId}")
     fun getAllPlayersSuggestedForEvent(eventId: Int): Flow<Result<List<Player>>> // @GET("/players/getAllPlayersSuggestedForEvent/{eventId}")
     fun getAllPlayersConfirmedByEvent(eventId: Int) : Flow<Result<List<Player>>> // @GET("/players/getAllConfirmedByEvent/{eventId}")
@@ -77,5 +79,15 @@ interface FeatRepository {
     //<editor-fold desc="SportsGenerics">
     fun getGenericsSports(): Flow<Result<List<SportGeneric>>> // @GET("/sportsGeneric/")
     //</editor-fold desc="SportsGenerics">
+
+    //<editor-fold desc="Address">
+    fun getAddressesByUser(uId: String): Flow<Result<List<Address>>> // @GET("/persons/getPersonById{id}")
+    fun updateAddress(req:RequestAddress): Flow<Result<String>>
+    fun createAddress(req: RequestAddress): Flow<Result<String>>
+    //</editor-fold desc="Address">
+
+    //<editor-fold desc="Profile">
+    fun getDetailProfile(uId: String): Flow<Result<ResponseDetailProfile>>
+    //</editor-fold desc="Profile">
 }
 

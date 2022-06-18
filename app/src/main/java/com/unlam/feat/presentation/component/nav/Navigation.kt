@@ -327,7 +327,7 @@ private fun NavGraphBuilder.profile(navController: NavHostController) {
             state = state,
             onEvent = profileViewModel::onEvent,
             isRefreshing = isRefreshing.value,
-            refreshData = profileViewModel::getEventsByUser
+            refreshData = profileViewModel::getDetailProfile
         )
     }
 }
