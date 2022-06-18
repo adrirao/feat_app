@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
                         Screen.Profile.route,
                         Screen.Events.route,
                         Screen.Search.route,
-                        Screen.Invite.route,
+                        Screen.Invitation.route,
                         Screen.Home.route,
                     ),
                 )

@@ -121,6 +121,20 @@ constructor(
         }
     }
 
+    override fun getAllInvitationsForUser(uId: String): Flow<Result<List<Event>>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.getAllInvitationsForUser(uId).body() ?: listOf()
+            if (response != null) emit(Result.Success(data = response)) else emit(
+                Result.Error(
+                    message = "Unknown Error"
+                )
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
     //</editor-fold desc="Events">
     //<editor-fold desc="Availabilities">
 
@@ -535,6 +549,30 @@ constructor(
         }
     }
     //<editor-fold desc="Addresses">
+    //<editor-fold desc="EventApplies">
+    override fun setAcceptedApply(req: RequestEventApply): Flow<Result<String>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.setAcceptedApply(req).code()
+            if (response in 200..299) emit(Result.Success(data = "Creado con exito")) else emit(
+                Result.Error("Algo malo ocurrio.")
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+    override fun setDeniedApply(req: RequestEventApply): Flow<Result<String>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.setDeniedApply(req).code()
+            if (response in 200..299) emit(Result.Success(data = "Creado con exito")) else emit(
+                Result.Error("Algo malo ocurrio.")
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+    //<editor-fold desc="EventApplies">
     //<editor-fold desc="Multiple EndPoints">
     override fun getDataDetailEvent(idEvent: Int): Flow<Result<ResponseDetailEvent>> = flow {
         try {

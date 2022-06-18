@@ -6,10 +6,7 @@ import com.unlam.feat.model.request.*
 import com.unlam.feat.model.response.ResponseDataSport
 import com.unlam.feat.model.response.ResponseDetailEvent
 import kotlinx.coroutines.flow.Flow
-import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Path
-import com.unlam.feat.model.ResponseSearchEventDetail
+
 
 
 interface FeatRepository {
@@ -23,6 +20,7 @@ interface FeatRepository {
     fun getEventsByUser(uId: String): Flow<Result<List<Event>>> // @GET("/events/getAllByUser/{uid}")
     fun getEventById(id: Int): Flow<Result<Event>> // @GET("/events/getEventById/{id}")
     fun postEvent(req: RequestEvent): Flow<Result<String>> // @POST("/events/create")
+    fun getAllInvitationsForUser(uId: String): Flow<Result<List<Event>>> //@GET("/events/getAllInvitationsForUser/{uid}")
 
     //</editor-fold">
     //<editor-fold desc="Availabilities">
@@ -88,7 +86,10 @@ interface FeatRepository {
     fun getAddress(personId:Int):  Flow<Result<Address>>  // @GET("/addresses/{id}")
     fun addAddress(req:RequestAddress): Flow<Result<String>> // @POST("/persons/create")
     //</editor-fold desc="Addresses">
-
+    //</editor-fold desc="EventApplies">
+    fun setAcceptedApply(req: RequestEventApply): Flow<Result<String>>//@POST("/eventApplies/setAcceptedApply")
+    fun setDeniedApply(req: RequestEventApply): Flow<Result<String>>//@POST("/eventApplies/setDeniedApply")
+    //</editor-fold desc="EventApplies">
     //</editor-fold desc="Multiple EndPoints">
     fun getDataDetailEvent(idEvent:Int): Flow<Result<ResponseDetailEvent>>
     fun getDataSportScreen(uId: String,sportGenericId:Int): Flow<Result<ResponseDataSport>>

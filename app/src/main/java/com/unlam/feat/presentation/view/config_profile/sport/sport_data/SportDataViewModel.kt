@@ -99,6 +99,7 @@ constructor(
         val person = if(state.value.person != null) _state.value.person?.id else return
         val sport = if(state.value.sportGenericId != null) _state.value.sportGenericId else return
 
+
         val request = RequestPlayer(
             abilities = abilities,
             position = position,

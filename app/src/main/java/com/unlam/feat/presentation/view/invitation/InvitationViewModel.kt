@@ -21,18 +21,19 @@ class InvitationViewModel
 constructor(
     private val featRepository: FeatRepositoryImp,
     private val firebaseAuthRepository: FirebaseAuthRepositoryImp,
-) :ViewModel() {
-
-
-    init {
-        getEventsByUser()
-    }
+) : ViewModel() {
 
     private val _state = mutableStateOf(InvitationState())
     val state: State<InvitationState> = _state
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing
+
+    init {
+        getAllInvitationsForUser()
+    }
+
+
 
     fun onEvent(event: InvitationEvent) {
         when (event) {
@@ -44,9 +45,9 @@ constructor(
         }
     }
 
-    fun getEventsByUser() {
+    fun getAllInvitationsForUser() {
         val uId = firebaseAuthRepository.getUserId()
-        featRepository.getEventsCreatedByUser(uId).onEach { result ->
+        featRepository.getAllInvitationsForUser(uId).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value = InvitationState(error = result.message ?: "Error Inesperado")

@@ -56,6 +56,8 @@ import com.unlam.feat.presentation.view.home.detail_event.DetailEventHomeEvent
 import com.unlam.feat.presentation.view.home.detail_event.DetailEventHomeViewModel
 import com.unlam.feat.presentation.view.invitation.InvitationScreen
 import com.unlam.feat.presentation.view.invitation.InvitationViewModel
+import com.unlam.feat.presentation.view.invitation.detail_invitation.DetailInvitationScreen
+import com.unlam.feat.presentation.view.invitation.detail_invitation.DetailInvitationViewModel
 import com.unlam.feat.presentation.view.login.LoginScreen
 import com.unlam.feat.presentation.view.register.Register
 import com.unlam.feat.presentation.view.search.Search
@@ -83,13 +85,15 @@ fun Navigation(navController: NavHostController) {
         events(navController)
         home(navController)
         search(navController)
-        invitations(navController)
+        invitation(navController)
 
         addEvent(navController)
         searchEventDetail(navController)
         search(navController)
 
         detailEventHome(navController)
+
+        detailInvitation(navController)
 
     }
 
@@ -156,7 +160,8 @@ private fun NavGraphBuilder.configProfileAvailability(navController: NavHostCont
 private fun NavGraphBuilder.configProfileAdditionalInformation(navController: NavHostController) {
     composable(Screen.ConfigProfileAdditionalInformation.route) {
 
-        val configProfileAdditionalInformationViewModel: ConfigProfileAdditionalInformationViewModel = hiltViewModel()
+        val configProfileAdditionalInformationViewModel: ConfigProfileAdditionalInformationViewModel =
+            hiltViewModel()
         val state = configProfileAdditionalInformationViewModel.state.value
 
         ConfigProfileAdditionalInformationScreen(
@@ -167,7 +172,8 @@ private fun NavGraphBuilder.configProfileAdditionalInformation(navController: Na
 }
 
 private fun NavGraphBuilder.configSport(navController: NavHostController) {
-    composable(Screen.ConfigSport.route + "?listSportGenericId={listSportGenericId}",
+    composable(
+        Screen.ConfigSport.route + "?listSportGenericId={listSportGenericId}",
         arguments = listOf(navArgument("listSportGenericId") { nullable = true })
     ) { backStackEntry ->
         val listSportGenericId: ListSportId?
@@ -219,12 +225,12 @@ private fun NavGraphBuilder.sportData(navController: NavHostController) {
         }
 
 
-            SportDataScreen(
-                navController, state,
-                onValueChange = { sportDataViewModel.onEvent(it) },
-                requireNotNull(sportGeneric),
-                requireNotNull(listSportGenericId)
-            )
+        SportDataScreen(
+            navController, state,
+            onValueChange = { sportDataViewModel.onEvent(it) },
+            requireNotNull(sportGeneric),
+            requireNotNull(listSportGenericId)
+        )
 
     }
 }
@@ -308,7 +314,7 @@ private fun NavGraphBuilder.search(navController: NavHostController) {
     }
 }
 
-private fun NavGraphBuilder.invitations(navController: NavHostController) {
+private fun NavGraphBuilder.invitation(navController: NavHostController) {
     composable(Screen.Invitation.route) {
         val invitationViewModel: InvitationViewModel = hiltViewModel()
         val state = invitationViewModel.state.value
@@ -318,14 +324,46 @@ private fun NavGraphBuilder.invitations(navController: NavHostController) {
             state = state,
             onEvent = invitationViewModel::onEvent,
             isRefreshing = isRefreshing.value,
-            refreshData = invitationViewModel::getEventsByUser,
+            refreshData = invitationViewModel::getAllInvitationsForUser,
             navigateToDetail = {
                 navController.navigate(
-                    Screen.DetailEventHome.route + "/${it.id}"
+                    Screen.DetailInvitation.route + "/${it.id}"
                 )
             }
         )
 
+    }
+}
+
+private fun NavGraphBuilder.detailInvitation(
+    navController: NavHostController,
+) {
+    composable(
+        route = Screen.DetailInvitation.route + "/{idEvent}",
+        arguments = Screen.DetailInvitation.arguments ?: listOf()
+    ) {
+        val idEvent = it.arguments?.getString("idEvent") ?: ""
+        val detailInvitation: DetailInvitationViewModel = hiltViewModel()
+        val state = detailInvitation.state.value
+
+        LaunchedEffect(key1 = true) {
+            detailInvitation.getDataDetailEvent(idEvent.toInt())
+        }
+
+        if (state.loading) {
+            FeatCircularProgress()
+        }
+
+        if (state.event != null && state.playersConfirmed != null) {
+            DetailInvitationScreen(
+                state,
+                detailInvitation::onEvent,
+                navigateToInvitation = {
+                    navController.popBackStack()
+                    navController.navigate(Screen.Invitation.route)
+                }
+            )
+        }
     }
 }
 
@@ -357,7 +395,7 @@ private fun NavGraphBuilder.searchEventDetail(
     navController: NavHostController
 ) {
     composable(
-        route = Screen.SearchEventDetail.route+ "/{idEvent}",
+        route = Screen.SearchEventDetail.route + "/{idEvent}",
         arguments = Screen.SearchEventDetail.arguments ?: listOf()
     ) {
         val idEvent = it.arguments?.getString("idEvent") ?: ""
@@ -368,15 +406,16 @@ private fun NavGraphBuilder.searchEventDetail(
             searchEventDetailViewModel.getDataDetailEvent(idEvent.toInt())
         }
 
-        if(state.loading){
+        if (state.loading) {
             FeatCircularProgress()
         }
 
-        if (state.event != null && state.playersConfirmed != null ) {
+        if (state.event != null && state.playersConfirmed != null) {
             SearchEventDetailScreen(state)
         }
     }
 }
+
 /*
 private fun NavGraphBuilder.searchList(
     navController: NavHostController,
@@ -411,11 +450,11 @@ private fun NavGraphBuilder.detailEventHome(
         val detailEventHomeViewModel: DetailEventViewModel = hiltViewModel()
         val state = detailEventHomeViewModel.state.value
 
-        LaunchedEffect(key1 = true ){
+        LaunchedEffect(key1 = true) {
             detailEventHomeViewModel.getDataDetailEvent(idEvent.toInt())
         }
 
-        if(state.loading){
+        if (state.loading) {
             FeatCircularProgress()
         }
 
@@ -424,3 +463,4 @@ private fun NavGraphBuilder.detailEventHome(
         }
     }
 }
+
