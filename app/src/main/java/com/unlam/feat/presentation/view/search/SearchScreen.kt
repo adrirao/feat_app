@@ -5,17 +5,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.unlam.feat.model.Event
 import com.unlam.feat.presentation.component.FeatAlertDialog
 import com.unlam.feat.presentation.component.FeatCard
 import com.unlam.feat.presentation.component.FeatCircularProgress
 import com.unlam.feat.presentation.component.FeatHeader
-import com.unlam.feat.presentation.view.events.EventEvent
-import com.unlam.feat.presentation.view.events.EventState
-import com.unlam.feat.presentation.view.home.HomeEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -24,10 +21,10 @@ fun Search(
     state: SearchState,
     onEvent: (SearchEvent) -> Unit,
     isRefreshing: Boolean,
-    refreshData: () -> Unit,
-    onClickCard: () -> Unit
+    navigateToSeachEventDetail: (Event) -> Unit,
+    refreshData: () -> Unit
 ) {
-    Column() {
+    Column {
         FeatHeader(text = "Buscar Evento")
 
         Box(
@@ -58,7 +55,7 @@ fun Search(
                                 textState = event.state.description,
                                 sport = event.sport.description,
                                 onClickCard = {
-                                    onClickCard
+                                    navigateToSeachEventDetail(event)
                                 }
                             )
                         }
@@ -66,6 +63,7 @@ fun Search(
                 }
             }
         }
+
         if (state.isLoading) {
             FeatCircularProgress()
         }

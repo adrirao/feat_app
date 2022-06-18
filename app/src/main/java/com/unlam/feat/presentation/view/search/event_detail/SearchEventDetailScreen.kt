@@ -16,65 +16,93 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.unlam.feat.R
+import com.unlam.feat.common.Screen
 import com.unlam.feat.model.Event
 import com.unlam.feat.model.Player
-import com.unlam.feat.presentation.component.FeatButton
-import com.unlam.feat.presentation.component.FeatHeader
+import com.unlam.feat.presentation.component.*
 import com.unlam.feat.presentation.ui.theme.Shapes
 import com.unlam.feat.presentation.ui.theme.card
 
 @Composable
 fun SearchEventDetailScreen(
-    state: SearchEventDetailState/*,
-    onEvent: (SearchEventDetailViewModel) -> Unit,
-    isRefreshing: Boolean,
-    refreshData: () -> Unit,
-    onClickCard: () -> Unit*/
-    ) {
+    navController: NavHostController,
+    state: SearchEventDetailState,
+    onEvent: (SearchEventDetailEvent) -> Unit
+) {
     var tabIndex by remember { mutableStateOf(0) } // 1.
     val tabTitles = listOf("Descripcion", "Participantes")
     val event = state.event
     val playersConfirmed = state.playersConfirmed
 
-    Column {
-        Box(
-            modifier = Modifier
-                .background(MaterialTheme.colors.primary),
-        ) {
-            Column() {
-                FeatHeader("Descripcion del evento")
-                TabRow(
-                    selectedTabIndex = tabIndex,
-                    modifier = Modifier.background(MaterialTheme.colors.primary)
-                ) {
-                    tabTitles.forEachIndexed { index, title ->
-                        Tab(
-                            selected = tabIndex == index,
-                            modifier = Modifier.background(MaterialTheme.colors.primary),
-                            onClick = {
-                                tabIndex = index
-                            },
-                            text = { Text(text = title) }
-                        )
+
+    if (state.loading) {
+        FeatCircularProgress()
+    }else{
+
+        Column {
+            Box(
+                modifier = Modifier
+                    .background(MaterialTheme.colors.primary),
+            ) {
+                Column() {
+                    FeatHeader("Descripcion del evento")
+                    TabRow(
+                        selectedTabIndex = tabIndex,
+                        modifier = Modifier.background(MaterialTheme.colors.primary)
+                    ) {
+                        tabTitles.forEachIndexed { index, title ->
+                            Tab(
+                                selected = tabIndex == index,
+                                modifier = Modifier.background(MaterialTheme.colors.primary),
+                                onClick = {
+                                    tabIndex = index
+                                },
+                                text = { Text(text = title) }
+                            )
+                        }
                     }
                 }
-            }
 
-        }
-        when (tabIndex) {
-            0 -> SearchEventDetail(event!!)
-            1 -> ParticipantsDetail(playersConfirmed!!)
+            }
+            when (tabIndex) {
+                0 -> SearchEventDetail(navController!!,event!!,onEvent,state)
+                1 -> ParticipantsDetail(playersConfirmed!!)
+            }
         }
     }
 
+    if (state.error.isNotBlank()) {
+        FeatAlertDialog(
+            title = "Ocurrio un error",
+            descriptionContent = "No se pudo procesar la solicitud",
+            onDismiss = {
+                onEvent(SearchEventDetailEvent.DismissDialog)
+            }
+        )
+    }
+    if (state.success) {
+        FeatAlertDialog(
+            title = "Enhorabuena",
+            descriptionContent = "Solicitud Enviada Correctamente!!",
+            onDismiss = {
+                navController.navigate(Screen.Search.route)
+            }
+        )
+    }
 }
 
 @Composable
 fun SearchEventDetail(
-    event: Event
+    navController: NavHostController,
+    event: Event,
+    onEvent: (SearchEventDetailEvent) ->Unit,
+    state: SearchEventDetailState
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -130,15 +158,19 @@ fun SearchEventDetail(
             modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.Bottom
         ) {
+
             FeatButton(
                 modifier = Modifier
-                    .fillMaxWidth(0.5F)
                     .padding(10.dp)
                     .height(60.dp),
-                textButton = "Rechazar"
-            )
-            FeatButton(
-                textButton = "Confirmar"
+                textButton = "Postularme a Evento",
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                colorText = MaterialTheme.colors.primary,
+                textAlign = TextAlign.Center,
+                colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
+                onClick = {
+                    onEvent(SearchEventDetailEvent.ApplyEvent)
+                }
             )
         }
     }
@@ -176,21 +208,9 @@ fun ParticipantsDetail(
 
         }
         when (tabIndex) {
-            0 -> PlayersConfirmed(playerConfirmed)
+            0 -> FeatCardListPLayer(playerConfirmed)
         }
     }
 }
 
-@Composable
-fun PlayersConfirmed(
-    playerConfirmed: List<Player>
-){
-    LazyColumn(){
-        items(
-            items = playerConfirmed,
-            itemContent = { player ->
-                Text(text = player.person.lastname)
-            }
-        )
-    }
-}
+

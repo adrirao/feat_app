@@ -296,8 +296,10 @@ private fun NavGraphBuilder.search(navController: NavHostController) {
             onEvent = searchViewModel::onEvent,
             isRefreshing = isRefreshing.value,
             refreshData = searchViewModel::getEventsSuggestedForUser,
-            onClickCard = {
-                navController.navigate(Screen.SearchEventDetail.route)
+            navigateToSeachEventDetail = {
+                navController.navigate(
+                    Screen.SearchEventDetail.route + "/${it.id}"
+                )
             }
         )
 
@@ -395,27 +397,30 @@ private fun NavGraphBuilder.searchEventDetail(
     navController: NavHostController
 ) {
     composable(
-        route = Screen.SearchEventDetail.route + "/{idEvent}",
+        route = Screen.SearchEventDetail.route+ "/{idEvent}",
         arguments = Screen.SearchEventDetail.arguments ?: listOf()
     ) {
         val idEvent = it.arguments?.getString("idEvent") ?: ""
         val searchEventDetailViewModel: SearchEventDetailViewModel = hiltViewModel()
         val state = searchEventDetailViewModel.state.value
 
+
+
         LaunchedEffect(key1 = true) {
             searchEventDetailViewModel.getDataDetailEvent(idEvent.toInt())
         }
 
-        if (state.loading) {
+        if(state.loading){
             FeatCircularProgress()
         }
 
-        if (state.event != null && state.playersConfirmed != null) {
-            SearchEventDetailScreen(state)
+        if (state.event != null && state.playersConfirmed != null ) {
+            SearchEventDetailScreen(navController,state) {
+                searchEventDetailViewModel.onEvent(it)
+            }
         }
     }
 }
-
 /*
 private fun NavGraphBuilder.searchList(
     navController: NavHostController,
