@@ -35,7 +35,9 @@ fun InvitationScreen(
     navigateToDetail: (Event) -> Unit,
     refreshData: () -> Unit
 ){
-    Column {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
         FeatHeader(text = "Invitaciones")
         Box(
             modifier = Modifier

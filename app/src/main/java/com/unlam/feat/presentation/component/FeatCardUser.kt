@@ -62,6 +62,9 @@ fun FeatCardUser(
         shape = shape
     ) {
 
+        Column() {
+
+
         Row(){
             Image(
                 painter = painter,
@@ -120,9 +123,18 @@ fun FeatCardUser(
                     )
                 }
             }
-            if (content != null) {
+
+        }
+        if (content != null) {
+        Row(
+            modifier = Modifier
+                .align(Alignment.End),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.SpaceEvenly,
+        ) {
                 content()
             }
+        }
         }
     }
 }

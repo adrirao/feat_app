@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlam.feat.common.Result
+import com.unlam.feat.presentation.view.home.HomeEvent
+import com.unlam.feat.presentation.view.home.detail_event.DetailEventHomeEvent
 import com.unlam.feat.presentation.view.home.detail_event.DetailEventHomeState
 import com.unlam.feat.repository.FeatRepository
 import com.unlam.feat.repository.FeatRepositoryImp
@@ -21,6 +23,18 @@ constructor(
 ) : ViewModel() {
     private val _state = mutableStateOf(DetailEventState())
     val state: State<DetailEventState> = _state
+
+
+
+    fun onEvent(event: DetailEventEvent) {
+        when (event) {
+            is DetailEventEvent.DismissDialog -> {
+                _state.value = _state.value.copy(
+                    loading = false
+                )
+            }
+        }
+    }
 
     fun getDataDetailEvent(idEvent: Int) {
         featRepository.getDataDetailEvent(idEvent).onEach { result ->

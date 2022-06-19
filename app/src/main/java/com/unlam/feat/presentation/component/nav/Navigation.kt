@@ -1,9 +1,7 @@
 package com.unlam.feat.presentation.component.nav
 
-import android.util.Log
-import androidx.compose.foundation.layout.Box
+
 import androidx.compose.material.Button
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -21,10 +19,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.unlam.feat.common.Screen
 import com.unlam.feat.model.SportGeneric
 import com.unlam.feat.presentation.component.FeatCircularProgress
-import com.unlam.feat.presentation.component.map.FeatMap
 import com.unlam.feat.model.ListSportId
-import com.unlam.feat.presentation.component.map.FeatMapWhitMaker
-import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationEvent
 import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationScreen
 import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationViewModel
 import com.unlam.feat.presentation.view.config_profile.address.ConfigProfileAddressEvent
@@ -46,7 +41,6 @@ import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddEventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddNewEventScreen
-import com.unlam.feat.presentation.view.events.detail_event.DetailEvent
 import com.unlam.feat.presentation.view.events.detail_event.DetailEventScreen
 import com.unlam.feat.presentation.view.events.detail_event.DetailEventViewModel
 import com.unlam.feat.presentation.view.home.Home
@@ -88,8 +82,9 @@ fun Navigation(navController: NavHostController) {
         invitation(navController)
 
         addEvent(navController)
+        detailEvent(navController)
         searchEventDetail(navController)
-        search(navController)
+
 
         detailEventHome(navController)
 
@@ -247,22 +242,7 @@ private fun NavGraphBuilder.profile(navController: NavHostController) {
     }
 }
 
-private fun NavGraphBuilder.events(
-    navController: NavHostController,
-) {
-    composable(Screen.Events.route) {
-        val eventViewModel: EventViewModel = hiltViewModel()
-        val state = eventViewModel.state.value
-        val isRefreshing = eventViewModel.isRefreshing.collectAsState()
 
-        Event(
-            state = state,
-            onEvent = eventViewModel::onEvent,
-            isRefreshing = isRefreshing.value,
-            refreshData = eventViewModel::getEventsCreatedByUser
-        )
-    }
-}
 
 private fun NavGraphBuilder.home(
     navController: NavHostController,
@@ -367,6 +347,28 @@ private fun NavGraphBuilder.detailInvitation(
     }
 }
 
+private fun NavGraphBuilder.events(
+    navController: NavHostController,
+) {
+    composable(Screen.Events.route) {
+        val eventViewModel: EventViewModel = hiltViewModel()
+        val state = eventViewModel.state.value
+        val isRefreshing = eventViewModel.isRefreshing.collectAsState()
+
+        Event(
+            state = state,
+            onEvent = eventViewModel::onEvent,
+            isRefreshing = isRefreshing.value,
+            refreshData = eventViewModel::getEventsCreatedByUser,
+            navigateToDetail = {
+                navController.navigate(
+                    Screen.DetailEvent.route + "/${it.id}"
+                )
+            }
+        )
+    }
+}
+
 private fun NavGraphBuilder.addEvent(navController: NavHostController) {
     composable(Screen.AddEvent.route) {
 
@@ -388,6 +390,31 @@ private fun NavGraphBuilder.addEvent(navController: NavHostController) {
                 addEventViewModel.onEvent(it)
             }
         )
+    }
+}
+
+private fun NavGraphBuilder.detailEvent(
+    navController: NavHostController,
+) {
+    composable(
+        route = Screen.DetailEvent.route + "/{idEvent}",
+        arguments = Screen.DetailEvent.arguments ?: listOf()
+    ) {
+        val idEvent = it.arguments?.getString("idEvent") ?: ""
+        val detailEventViewModel: DetailEventViewModel = hiltViewModel()
+        val state = detailEventViewModel.state.value
+
+        LaunchedEffect(key1 = true) {
+            detailEventViewModel.getDataDetailEvent(idEvent.toInt())
+        }
+
+        if (state.loading) {
+            FeatCircularProgress()
+        }
+
+        if (state.event != null && state.playersApplied != null && state.playersConfirmed != null && state.playersSuggested != null) {
+                DetailEventScreen(state = state, onEvent = detailEventViewModel::onEvent)
+        }
     }
 }
 
@@ -416,29 +443,7 @@ private fun NavGraphBuilder.searchEventDetail(
     }
 }
 
-/*
-private fun NavGraphBuilder.searchList(
-    navController: NavHostController,
-) {
-    composable(Screen.SearchList.route) {
-        val eventViewModel: EventViewModel = hiltViewModel()
-        val state = eventViewModel.state.value
-        val isRefreshing = eventViewModel.isRefreshing.collectAsState()
 
-        Search(
-            state = state,
-            onEvent = eventViewModel::onEvent,
-            isRefreshing = isRefreshing.value,
-            refreshData = eventViewModel::getEventsCreatedByUser,
-            onClickCard = {
-                navController.navigate(Screen.SearchEventDetail.route)
-            }
-
-        )
-
-    }
-}
-*/
 private fun NavGraphBuilder.detailEventHome(
     navController: NavHostController,
 ) {
@@ -459,7 +464,7 @@ private fun NavGraphBuilder.detailEventHome(
         }
 
         if (state.event != null && state.playersApplied != null && state.playersConfirmed != null && state.playersSuggested != null) {
-            DetailEventScreen(state)
+//            DetailEventScreen(state)
         }
     }
 }

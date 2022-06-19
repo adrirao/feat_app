@@ -58,7 +58,7 @@ fun Search(
                                 textState = event.state.description,
                                 sport = event.sport.description,
                                 onClickCard = {
-                                    onClickCard
+                                    onClickCard()
                                 }
                             )
                         }

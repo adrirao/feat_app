@@ -180,7 +180,9 @@ private fun ConfigProfilePersonalData(
                     },
 
                     ) {
-                    datepicker() { date ->
+                    datepicker(
+                        title = stringResource(R.string.text_select_date)
+                    ) { date ->
                         onValueChange(ConfigProfilePersonalDataEvent.EnteredDateOfBirth(date))
 
                     }
