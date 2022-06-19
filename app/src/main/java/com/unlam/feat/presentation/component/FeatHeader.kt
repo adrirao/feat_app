@@ -16,13 +16,13 @@ import com.unlam.feat.presentation.ui.theme.text
 fun FeatHeader(text: String) {
     Column(
         modifier = Modifier
-            .height(80.dp)
+            .height(60.dp)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colors.primary)
-                .padding(20.dp)
+                .padding(5.dp)
         ) {
             FeatText(
                 modifier = Modifier.align(Alignment.Center),

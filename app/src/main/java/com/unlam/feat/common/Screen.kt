@@ -38,4 +38,7 @@ sealed class Screen(
     object DetailInvitation : Screen("invitation_detail_screen", listOf(
         navArgument("idEvent") { type = NavType.StringType }
     ))
+    object DetailEvent : Screen("event_detail_screen", listOf(
+        navArgument("idEvent") { type = NavType.StringType }
+    ))
 }

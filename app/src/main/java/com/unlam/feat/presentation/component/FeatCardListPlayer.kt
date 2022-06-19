@@ -8,12 +8,12 @@ import com.unlam.feat.model.Player
 
 @Composable
 fun FeatCardListPLayer(
-    playerConfirmed: List<Player>,
+    players: List<Player>,
     content: @Composable (RowScope.() -> Unit)? = null
 ) {
     LazyColumn() {
         items(
-            items = playerConfirmed,
+            items = players,
             itemContent = { player ->
                 FeatCardUser(
                     textNameUser = player.person.names + " " + player.person.lastname,

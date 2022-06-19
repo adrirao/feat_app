@@ -9,9 +9,7 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +40,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun FeatCardEventDetail(
     event: Event,
-    onClick: (DetailInvitationEvent) -> Unit
+    content :@Composable (RowScope.() -> Unit)? = null
 ) {
 
     val context = LocalContext.current
@@ -229,43 +227,16 @@ fun FeatCardEventDetail(
             }
         }
 
-
-        Row(
-            modifier = Modifier
-                .align(Alignment.End)
-                .fillMaxSize()
-                .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 20.dp),
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        ) {
-            Column(
-
-            ) {
-                FeatButtonRounded(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .fillMaxWidth(),
-                    drawable = R.drawable.cancel,
-                    colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
-                    onClick = { onClick(DetailInvitationEvent.CancelInvitation)},
-                    colorFilter = ColorFilter.tint(Color.White)
-                )
-
-            }
-            Column(
-            ) {
-                FeatButtonRounded(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .fillMaxWidth(),
-                    drawable = R.drawable.check,
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                    onClick = {onClick(DetailInvitationEvent.ConfirmInvitation)},
-                    colorFilter = ColorFilter.tint(Color.White)
-                )
+            Row(
+                modifier = Modifier
+                    .align(Alignment.End)
+            ){
+                if (content != null) {
+                    content()
+                }
             }
 
-        }
+
 
     }
 }
