@@ -132,7 +132,7 @@ fun ParticipantsDetail(
     onEvent: (DetailEventEvent) -> Unit
 ) {
     var tabIndex by remember { mutableStateOf(0) } // 1.
-    val tabTitles = listOf("Jugadores", "Sugeridos y Aplicados")
+    val tabTitles = listOf("Confirmados", "Postulados" ,"Sugeridos")
 
     Column {
         Box(
@@ -159,25 +159,18 @@ fun ParticipantsDetail(
 
         }
         when (tabIndex) {
-            0 -> FeatCardListPLayer(playerConfirmed)
-            1 -> PlayersAppliedAndSuggested(playerApplied, playerSuggested, onEvent)
-        }
-    }
-}
-
-
-@Composable
-fun PlayersAppliedAndSuggested(
-    playerApplied: List<Player>,
-    playerSuggested: List<Player>,
-    onEvent: (DetailEventEvent) -> Unit
-) {
-    Column() {
-
-        Column() {
-
-
-            FeatCardListPLayer(players = playerApplied) {
+            0 -> FeatCardListPLayer(playerConfirmed){
+                Column(
+                    modifier = Modifier.weight(.5f)
+                ) {
+                    FeatButton(
+                        textButton = "Expulsar",
+                        colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
+                        onClick = { onEvent(DetailEventEvent.DismissDialog) }
+                    )
+                }
+            }
+            1 -> FeatCardListPLayer(playerApplied){
                 Column(
                     modifier = Modifier.weight(.5f)
                 ) {
@@ -197,14 +190,7 @@ fun PlayersAppliedAndSuggested(
                     )
                 }
             }
-        }
-        Divider(
-            modifier = Modifier.padding(vertical = 10.dp),
-            color = MaterialTheme.colors.primary
-        )
-        Column() {
-            FeatCardListPLayer(players = playerSuggested) {
-
+            2 -> FeatCardListPLayer(playerSuggested){
                 FeatButton(
                     modifier = Modifier.padding(
                         top = 10.dp,
@@ -216,11 +202,77 @@ fun PlayersAppliedAndSuggested(
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
                     onClick = { onEvent(DetailEventEvent.DismissDialog) }
                 )
-
             }
-
-
         }
     }
-
 }
+
+//
+//@Composable
+//fun PlayersAppliedAndSuggested(
+//    playerApplied: List<Player>,
+//    playerSuggested: List<Player>,
+//    onEvent: (DetailEventEvent) -> Unit
+//) {
+//    Box() {
+//
+//        Column() {
+//
+//
+//            Row(
+//                modifier = Modifier
+//                    .weight(1f)
+//                    .fillMaxWidth()
+//            ) {
+//
+//
+//                FeatCardListPLayer(players = playerApplied) {
+//                    Column(
+//                        modifier = Modifier.weight(.5f)
+//                    ) {
+//                        FeatButton(
+//                            textButton = "Rechazar",
+//                            colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
+//                            onClick = { onEvent(DetailEventEvent.DismissDialog) }
+//                        )
+//                    }
+//                    Column(
+//                        modifier = Modifier.weight(.5f)
+//                    ) {
+//                        FeatButton(
+//                            textButton = "Aceptar",
+//                            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+//                            onClick = { onEvent(DetailEventEvent.DismissDialog) }
+//                        )
+//                    }
+//                }
+//            }
+//            Divider(
+//                modifier = Modifier.padding(vertical = 0.dp),
+//                color = MaterialTheme.colors.primary
+//            )
+//            Row(modifier = Modifier
+//                .weight(1f)
+//                .fillMaxWidth()) {
+//                FeatCardListPLayer(players = playerSuggested) {
+//
+//                    FeatButton(
+//                        modifier = Modifier.padding(
+//                            top = 10.dp,
+//                            end = 40.dp,
+//                            start = 40.dp,
+//                            bottom = 10.dp
+//                        ),
+//                        textButton = "Invitar",
+//                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+//                        onClick = { onEvent(DetailEventEvent.DismissDialog) }
+//                    )
+//
+//                }
+//
+//
+//            }
+//        }
+//    }
+//
+//}
