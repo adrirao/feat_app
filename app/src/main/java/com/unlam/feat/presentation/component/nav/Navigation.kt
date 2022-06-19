@@ -468,4 +468,3 @@ private fun NavGraphBuilder.detailEventHome(
         }
     }
 }
-

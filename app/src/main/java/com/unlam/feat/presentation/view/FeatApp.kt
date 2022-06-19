@@ -91,14 +91,14 @@ fun FeatApp(
                             description = "Add Event"
                         )
                     }
-                    Screen.Search.route -> {
+                    /*Screen.Search.route -> {
                         floatingButtonNavigation = FloatingButtonNavigation(
-                            route = Screen.SearchList.route,
+                            route = Screen.SearchEventDetail.route,
                             icon = Icons.Outlined.Search,
                             description = "Search"
                         )
 
-                    }
+                    }*/
                     Screen.DetailEventHome.route + "/{idEvent}" -> {
                         floatingButtonNavigation = FloatingButtonNavigation(
                             route = Screen.Chat.route,
