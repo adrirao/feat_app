@@ -90,16 +90,13 @@ interface FeatRepository {
 
     //</editor-fold desc="Addresses">
     //</editor-fold desc="EventApplies">
-    fun setAcceptedApply(req: RequestInvitationEventApply): Flow<Result<String>> //@POST("/eventApplies/setAcceptedApply")
-    fun setDeniedApply(req: RequestInvitationEventApply): Flow<Result<String>> //@POST("/eventApplies/setDeniedApply")
-    fun create(req: RequestCreateInvitation): Flow<Result<String>> //@POST("/eventApplies/create")
+    fun setAcceptedApply(req: RequestEventApply): Flow<Result<String>> //@PUT("/eventApplies/setAcceptedApply")
+    fun setDeniedApply(req: RequestEventApply): Flow<Result<String>> //@PUT("/eventApplies/setDeniedApply")
+    fun createInvitation(req: RequestCreateInvitation): Flow<Result<String>> //@POST("/eventApplies/createInvitation")
     //</editor-fold desc="EventApplies">
     //</editor-fold desc="Multiple EndPoints">
     fun getDataDetailEvent(idEvent: Int): Flow<Result<ResponseDetailEvent>>
     fun getDataSportScreen(uId: String, sportGenericId: Int): Flow<Result<ResponseDataSport>>
-//    fun getDataDetailEvent(idEvent:Int): Flow<Result<ResponseDetailEvent>>
-//    fun getDataSportScreen(uId: String,sportGenericId:Int): Flow<Result<ResponseDataSport>>
-//    fun postEventApply(request: RequestSearchEventApply): Flow<Result<String>>
     //</editor-fold desc="Multiple EndPoints">
 
 

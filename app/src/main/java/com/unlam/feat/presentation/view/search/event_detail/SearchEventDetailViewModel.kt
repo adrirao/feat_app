@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlam.feat.common.Result
 import com.unlam.feat.di.ResourcesProvider
-import com.unlam.feat.model.request.RequestSearchEventApply
+import com.unlam.feat.model.request.RequestCreateInvitation
 import com.unlam.feat.repository.FeatRepositoryImp
 import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -59,17 +59,17 @@ constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun applyEvent() {
+    private fun applyEvent() {
 
         val uid=firebaseRepository.getUserId()
 
-        val request = RequestSearchEventApply(
+        val request = RequestCreateInvitation(
             userUid = uid,
             eventId = _state.value.event!!.id,
-            origin  = "P"
+            origin = "P"
         )
 
-        featRepository.postEventApply(request).onEach { result ->
+        featRepository.createInvitation(request).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value = _state.value.copy(

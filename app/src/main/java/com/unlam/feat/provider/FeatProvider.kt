@@ -182,18 +182,17 @@ interface FeatProvider {
     //<editor-fold desc="EventApplies">
     @Headers("Content-type: application/json")
     @POST("/eventApplies/setAcceptedApply")
-    suspend fun setAcceptedApply(@Body requestInvitationEventApply: RequestInvitationEventApply): Response<String>
+    suspend fun setAcceptedApply(@Body requestEventApply: RequestEventApply): Response<String>
 
     @Headers("Content-type: application/json")
     @POST("/eventApplies/setDeniedApply")
-    suspend fun setDeniedApply (@Body requestInvitationEventApply: RequestInvitationEventApply): Response<String>
+    suspend fun setDeniedApply (@Body requestEventApply: RequestEventApply): Response<String>
 
     @Headers("Content-type: application/json")
     @POST("/eventApplies/create")
-    suspend fun create(@Body requestCreateInvitation: RequestCreateInvitation): Response<String>
+    suspend fun createInvitation(@Body requestCreateInvitation: RequestCreateInvitation): Response<String>
 
-//    suspend fun setDeniedApply (@Body requestEventApply: RequestEventApply): Response<String>
-//
+
 //    @Headers("Content-type: application/json")
 //    @POST("/eventApplies/create")
 //    suspend fun postEventApply(@Body requestSearchEventApply: RequestSearchEventApply): Response<String>

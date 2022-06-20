@@ -1,6 +1,6 @@
 package com.unlam.feat.model.request
 
-data class RequestInvitationEventApply(
+data class RequestEventApply(
     val userUid: String,
     val eventId: Int
 )

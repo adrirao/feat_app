@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlam.feat.common.Result
 import com.unlam.feat.model.request.RequestCreateInvitation
-import com.unlam.feat.model.request.RequestInvitationEventApply
+import com.unlam.feat.model.request.RequestEventApply
 import com.unlam.feat.model.request.RequestEventState
 import com.unlam.feat.repository.FeatRepositoryImp
 import com.unlam.feat.repository.FirebaseAuthRepositoryImp
@@ -68,10 +68,11 @@ constructor(
 
         val requestCreateInvitation = RequestCreateInvitation(
             userUid = uid,
-            eventId = _state.value.event!!.id
+            eventId = _state.value.event!!.id,
+            origin = "O"
         )
 
-        featRepository.create(requestCreateInvitation).onEach { result ->
+        featRepository.createInvitation(requestCreateInvitation).onEach { result ->
             when (result) {
                 is Result.Success -> {
                     _state.value = _state.value.copy(
@@ -97,12 +98,12 @@ constructor(
 
     private fun rejectPlayer() {
         val uid = firebaseAuthRepository.getUserId()
-        val requestInvitationEventApply = RequestInvitationEventApply(
+        val requestEventApply = RequestEventApply(
             userUid = uid,
             eventId = state.value.event!!.id
         )
 
-        featRepository.setDeniedApply(requestInvitationEventApply).onEach { result ->
+        featRepository.setDeniedApply(requestEventApply).onEach { result ->
             when (result) {
                 is Result.Success -> {
                     _state.value = _state.value.copy(
@@ -128,12 +129,12 @@ constructor(
 
    private fun acceptPlayer() {
         val uid = firebaseAuthRepository.getUserId()
-        val requestInvitationEventApply = RequestInvitationEventApply(
+        val requestEventApply = RequestEventApply(
             userUid = uid,
             eventId = state.value.event!!.id
         )
 
-        featRepository.setAcceptedApply(requestInvitationEventApply).onEach { result ->
+        featRepository.setAcceptedApply(requestEventApply).onEach { result ->
             when (result) {
                 is Result.Success -> {
                     _state.value = _state.value.copy(

@@ -572,7 +572,7 @@ constructor(
     }
     //<editor-fold desc="Addresses">
     //<editor-fold desc="EventApplies">
-    override fun setAcceptedApply(req: RequestInvitationEventApply): Flow<Result<String>> = flow {
+    override fun setAcceptedApply(req: RequestEventApply): Flow<Result<String>> = flow {
         try {
             emit(Result.Loading())
             val response = featProvider.setAcceptedApply(req).code()
@@ -583,7 +583,7 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
-    override fun setDeniedApply(req: RequestInvitationEventApply): Flow<Result<String>> = flow {
+    override fun setDeniedApply(req: RequestEventApply): Flow<Result<String>> = flow {
         try {
             emit(Result.Loading())
             val response = featProvider.setDeniedApply(req).code()
@@ -594,10 +594,10 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
-    override fun create(req: RequestCreateInvitation): Flow<Result<String>> = flow {
+    override fun createInvitation(req: RequestCreateInvitation): Flow<Result<String>> = flow {
         try {
             emit(Result.Loading())
-            val response = featProvider.create(req).code()
+            val response = featProvider.createInvitation(req).code()
             if (response in 200..299) emit(Result.Success(data = "Creado con exito")) else emit(
                 Result.Error("Algo malo ocurrio.")
             )
@@ -662,16 +662,5 @@ constructor(
         }
     }
 //<editor-fold desc="Multiple EndPoints">
-    override fun postEventApply(request: RequestSearchEventApply): Flow<Result<String>> = flow {
-        try {
-            emit(Result.Loading())
-            val response = featProvider.postEventApply(request).code()
-            if (response in 200..299) emit(Result.Success(data = "Solicitud enviada con exito")) else emit(
-                Result.Error("Algo malo ocurrio.")
-            )
-        } catch (e: Exception) {
-            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
-        }
-    }
 }
 

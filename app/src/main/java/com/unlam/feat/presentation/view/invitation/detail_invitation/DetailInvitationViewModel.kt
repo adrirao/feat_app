@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlam.feat.common.Result
-import com.unlam.feat.model.request.RequestInvitationEventApply
+import com.unlam.feat.model.request.RequestEventApply
 import com.unlam.feat.repository.FeatRepositoryImp
 import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,12 +45,12 @@ constructor(
 
   private  fun confirmInvitation() {
         val uid = firebaseAuthRepository.getUserId()
-        val requestInvitationEventApply = RequestInvitationEventApply(
+        val requestEventApply = RequestEventApply(
             userUid = uid,
             eventId = state.value.event!!.id
         )
 
-        featRepository.setAcceptedApply(requestInvitationEventApply).onEach { result ->
+        featRepository.setAcceptedApply(requestEventApply).onEach { result ->
             when (result) {
                 is Result.Success -> {
                     _state.value = _state.value.copy(
@@ -77,12 +77,12 @@ constructor(
 
     private fun cancelInvitation() {
         val uid = firebaseAuthRepository.getUserId()
-        val requestInvitationEventApply = RequestInvitationEventApply(
+        val requestEventApply = RequestEventApply(
             userUid = uid,
             eventId = state.value.event!!.id
         )
 
-        featRepository.setDeniedApply(requestInvitationEventApply).onEach { result ->
+        featRepository.setDeniedApply(requestEventApply).onEach { result ->
             when (result) {
                 is Result.Success -> {
                     _state.value = _state.value.copy(
