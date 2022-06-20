@@ -662,5 +662,16 @@ constructor(
         }
     }
 //<editor-fold desc="Multiple EndPoints">
+    override fun postEventApply(request: RequestSearchEventApply): Flow<Result<String>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.postEventApply(request).code()
+            if (response in 200..299) emit(Result.Success(data = "Solicitud enviada con exito")) else emit(
+                Result.Error("Algo malo ocurrio.")
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
 }
 

@@ -1,4 +1,8 @@
 package com.unlam.feat.presentation.view.search.event_detail
 
-class SearchEventDetailEvent {
+
+sealed class SearchEventDetailEvent {
+    object DismissDialog: SearchEventDetailEvent()
+
+    object ApplyEvent: SearchEventDetailEvent()
 }

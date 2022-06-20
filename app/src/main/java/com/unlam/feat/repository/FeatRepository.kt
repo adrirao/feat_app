@@ -6,7 +6,7 @@ import com.unlam.feat.model.request.*
 import com.unlam.feat.model.response.ResponseDataSport
 import com.unlam.feat.model.response.ResponseDetailEvent
 import kotlinx.coroutines.flow.Flow
-import retrofit2.http.POST
+
 
 
 interface FeatRepository {
@@ -42,15 +42,14 @@ interface FeatRepository {
     fun getPeriodicity(id: Int): Flow<Result<Periodicity>> // @GET("/periodicities/{id}")
     fun getAllLevelsBySportGeneric(id: Int): Flow<Result<List<Level>>>// @GET("/levels/getAllBySportGeneric/{id}")
     fun createPeriodicity(req: RequestPeriodicity): Flow<Result<String>> // @GET("/periodicities/create")
-
     //</editor-fold desc="Periodicities">
     //<editor-fold desc="Players">
     fun getPlayers(): Flow<Result<List<Player>>> // @GET("/players/")
     fun getPlayer(id: Int): Flow<Result<Player>> // @GET("/players/{id}")
     fun getAllByPerson(personId: Int): Flow<Result<List<Player>>> // @GET("/players/getAllByPerson/{personId}")
     fun getAllPlayersSuggestedForEvent(eventId: Int): Flow<Result<List<Player>>> // @GET("/players/getAllPlayersSuggestedForEvent/{eventId}")
-    fun getAllPlayersConfirmedByEvent(eventId: Int): Flow<Result<List<Player>>> // @GET("/players/getAllConfirmedByEvent/{eventId}")
-    fun getAllPlayersAppliedByEvent(eventId: Int): Flow<Result<List<Player>>> // @GET("/players/getAllAppliedByEvent/{eventId}")
+    fun getAllPlayersConfirmedByEvent(eventId: Int) : Flow<Result<List<Player>>> // @GET("/players/getAllConfirmedByEvent/{eventId}")
+    fun getAllPlayersAppliedByEvent(eventId: Int) : Flow<Result<List<Player>>> // @GET("/players/getAllAppliedByEvent/{eventId}")
     fun createPlayer(req: RequestPlayer): Flow<Result<String>> // @POST("/players/create")
 
     //</editor-fold desc="Players">
@@ -69,13 +68,12 @@ interface FeatRepository {
     //<editor-fold desc="Users">
     fun getUsers(): Flow<Result<List<User>>> // @GET("/users/")
     fun getUser(id: Int): Flow<Result<User>> // @GET("/users/{id}")
-    fun createUser(req: RequestUser): Flow<Result<String>> // @POST("/users/create")
-
+    fun createUser(req:RequestUser): Flow<Result<String>> // @POST("/users/create")
     //</editor-fold desc="Users">
     //<editor-fold desc="Persons">
     fun getPerson(uId: String): Flow<Result<Person>> // @GET("/persons/getPersonById/{id}")
-    fun createPerson(req: RequestPerson): Flow<Result<String>> // @POST("/persons/create")
-    fun updatePerson(req: RequestUpdatePerson): Flow<Result<String>> // @PUT("/persons/update")
+    fun createPerson(req:RequestPerson): Flow<Result<String>> // @POST("/persons/create")
+    fun updatePerson(req:RequestUpdatePerson): Flow<Result<String>> // @PUT("/persons/update")
     //</editor-fold desc="Persons">
 
     //<editor-fold desc="SportsGenerics">
@@ -99,6 +97,9 @@ interface FeatRepository {
     //</editor-fold desc="Multiple EndPoints">
     fun getDataDetailEvent(idEvent: Int): Flow<Result<ResponseDetailEvent>>
     fun getDataSportScreen(uId: String, sportGenericId: Int): Flow<Result<ResponseDataSport>>
+//    fun getDataDetailEvent(idEvent:Int): Flow<Result<ResponseDetailEvent>>
+//    fun getDataSportScreen(uId: String,sportGenericId:Int): Flow<Result<ResponseDataSport>>
+//    fun postEventApply(request: RequestSearchEventApply): Flow<Result<String>>
     //</editor-fold desc="Multiple EndPoints">
 
 

@@ -471,4 +471,3 @@ private fun NavGraphBuilder.detailEventHome(
         }
     }
 }
-
