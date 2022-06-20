@@ -5,9 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlam.feat.common.Result
-import com.unlam.feat.model.request.RequestEventApply
+import com.unlam.feat.model.request.RequestInvitationEventApply
 import com.unlam.feat.repository.FeatRepositoryImp
-import com.unlam.feat.repository.FirebaseAuthRepository
 import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -44,20 +43,20 @@ constructor(
     }
 
 
-    fun confirmInvitation() {
+  private  fun confirmInvitation() {
         val uid = firebaseAuthRepository.getUserId()
-        val requestEventApply = RequestEventApply(
+        val requestInvitationEventApply = RequestInvitationEventApply(
             userUid = uid,
             eventId = state.value.event!!.id
         )
 
-        featRepository.setAcceptedApply(requestEventApply).onEach { result ->
+        featRepository.setAcceptedApply(requestInvitationEventApply).onEach { result ->
             when (result) {
                 is Result.Success -> {
                     _state.value = _state.value.copy(
                         success = true,
                         successTitle = "Invitacion aceptada",
-                        successDescription = "La invitacion se ha aceptado con exito"
+                        successDescription = "La invitacion se ha aceptado con exito",
                     )
                 }
                 is Result.Loading -> {
@@ -76,14 +75,14 @@ constructor(
     }
 
 
-    fun cancelInvitation() {
+    private fun cancelInvitation() {
         val uid = firebaseAuthRepository.getUserId()
-        val requestEventApply = RequestEventApply(
+        val requestInvitationEventApply = RequestInvitationEventApply(
             userUid = uid,
             eventId = state.value.event!!.id
         )
 
-        featRepository.setDeniedApply(requestEventApply).onEach { result ->
+        featRepository.setDeniedApply(requestInvitationEventApply).onEach { result ->
             when (result) {
                 is Result.Success -> {
                     _state.value = _state.value.copy(
@@ -108,7 +107,7 @@ constructor(
 
     }
 
-    fun getDataDetailEvent(idEvent: Int) {
+     fun getDataDetailEvent(idEvent: Int) {
         featRepository.getDataDetailEvent(idEvent).onEach { result ->
             when (result) {
                 is Result.Error -> {

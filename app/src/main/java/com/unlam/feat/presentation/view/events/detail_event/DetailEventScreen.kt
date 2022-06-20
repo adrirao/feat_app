@@ -1,35 +1,23 @@
 package com.unlam.feat.presentation.view.events.detail_event
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.unlam.feat.R
-import com.unlam.feat.model.Event
 import com.unlam.feat.model.Player
 import com.unlam.feat.presentation.component.*
-import com.unlam.feat.presentation.ui.theme.Shapes
-import com.unlam.feat.presentation.ui.theme.card
-import com.unlam.feat.presentation.view.invitation.detail_invitation.DetailInvitationEvent
-import com.unlam.feat.presentation.view.search.event_detail.PlayersConfirmed
+
 
 @Composable
 fun DetailEventScreen(
     state: DetailEventState,
-    onEvent: (DetailEventEvent) -> Unit
+    onEvent: (DetailEventEvent) -> Unit,
+    refreshData: () -> Unit,
+    navigateToEvents: () -> Unit
 ) {
 
     var tabIndex by remember { mutableStateOf(0) } // 1.
@@ -40,24 +28,45 @@ fun DetailEventScreen(
     val playersConfirmed = state.playersConfirmed
 
 
-//    if (state.error.isNotBlank()) {
-//        FeatAlertDialog(
-//            title = "Ocurrio un error",
-//            descriptionContent = "No se pudo procesar la solicitud, por favor, vuelva a intentarlo",
-//            onDismiss = {
-//                onEvent(DetailInvitationEvent.DismissDialog)
-//            }
-//        )
-//    }
-//    if (state.success) {
-//        FeatAlertDialog(
-//            title = state.successTitle,
-//            descriptionContent = state.successDescription,
-//            onDismiss = {
-//                navigateToInvitation()
-//            }
-//        )
-//    }
+    if (state.error.isNotBlank()) {
+        FeatAlertDialog(
+            title = "Ocurrio un error",
+            descriptionContent = "No se pudo procesar la solicitud, por favor, vuelva a intentarlo",
+            onDismiss = {
+                onEvent(DetailEventEvent.DismissDialog)
+            }
+        )
+    }
+    if (state.successPlayer) {
+        FeatAlertDialog(
+            title = state.successTitle,
+            descriptionContent = state.successDescription,
+            onDismiss = {
+                refreshData()
+                onEvent(DetailEventEvent.DismissDialog)
+            }
+        )
+    }
+    if (state.successCancelEvent) {
+        FeatAlertDialog(
+            title = state.successTitle,
+            descriptionContent = state.successDescription,
+            onDismiss = {
+                navigateToEvents()
+                onEvent(DetailEventEvent.DismissDialog)
+            }
+        )
+    }
+    if (state.successConfirmEvent) {
+        FeatAlertDialog(
+            title = state.successTitle,
+            descriptionContent = state.successDescription,
+            onDismiss = {
+                refreshData()
+                onEvent(DetailEventEvent.DismissDialog)
+            }
+        )
+    }
 
 
     Column {
@@ -102,21 +111,26 @@ fun DetailEventScreen(
                             .height(60.dp),
                         textButton = "Cancelar",
                         colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
-                        onClick = { onEvent(DetailEventEvent.DismissDialog) },
+                        onClick = {
+                            onEvent(DetailEventEvent.CancelEvent)
+                        },
                     )
 
-                    FeatButton(
-                        textButton = "Confirmar",
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                        onClick = { onEvent(DetailEventEvent.DismissDialog) },
-                    )
+                    if (state.event.state.id != 3) {
+                        FeatButton(
+                            textButton = "Confirmar",
+                            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                            onClick = { onEvent(DetailEventEvent.ConfirmEvent) },
+                        )
+                    }
                 }
             }
             1 -> ParticipantsDetail(
                 playerSuggested!!,
                 playersApplied!!,
                 playersConfirmed!!,
-                onEvent
+                onEvent,
+                state.isLoading
             )
         }
     }
@@ -129,10 +143,11 @@ fun ParticipantsDetail(
     playerSuggested: List<Player>,
     playerApplied: List<Player>,
     playerConfirmed: List<Player>,
-    onEvent: (DetailEventEvent) -> Unit
+    onEvent: (DetailEventEvent) -> Unit,
+    isLoading: Boolean
 ) {
     var tabIndex by remember { mutableStateOf(0) } // 1.
-    val tabTitles = listOf("Confirmados", "Postulados" ,"Sugeridos")
+    val tabTitles = listOf("Confirmados", "Postulados", "Sugeridos")
 
     Column {
         Box(
@@ -158,121 +173,55 @@ fun ParticipantsDetail(
             }
 
         }
-        when (tabIndex) {
-            0 -> FeatCardListPLayer(playerConfirmed){
-                Column(
-                    modifier = Modifier.weight(.5f)
-                ) {
-                    FeatButton(
-                        textButton = "Expulsar",
-                        colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
-                        onClick = { onEvent(DetailEventEvent.DismissDialog) }
-                    )
+        if (isLoading) {
+            FeatCircularProgress()
+        }else{
+            when (tabIndex) {
+                0 -> FeatCardListPLayer(playerConfirmed) {
+                    Column(
+                        modifier = Modifier.weight(.5f)
+                    ) {
+                        FeatButton(
+                            textButton = "Expulsar",
+                            colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
+                            onClick = { onEvent(DetailEventEvent.KickPlayer) }
+                        )
+                    }
                 }
-            }
-            1 -> FeatCardListPLayer(playerApplied){
-                Column(
-                    modifier = Modifier.weight(.5f)
-                ) {
-                    FeatButton(
-                        textButton = "Rechazar",
-                        colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
-                        onClick = { onEvent(DetailEventEvent.DismissDialog) }
-                    )
+                1 -> FeatCardListPLayer(playerApplied) {
+                    Column(
+                        modifier = Modifier.weight(.5f)
+                    ) {
+                        FeatButton(
+                            textButton = "Rechazar",
+                            colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
+                            onClick = { onEvent(DetailEventEvent.RejectPlayer) }
+                        )
+                    }
+                    Column(
+                        modifier = Modifier.weight(.5f)
+                    ) {
+                        FeatButton(
+                            textButton = "Aceptar",
+                            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                            onClick = { onEvent(DetailEventEvent.AcceptPlayer) }
+                        )
+                    }
                 }
-                Column(
-                    modifier = Modifier.weight(.5f)
-                ) {
+                2 -> FeatCardListPLayer(playerSuggested) {
                     FeatButton(
-                        textButton = "Aceptar",
+                        modifier = Modifier.padding(
+                            top = 10.dp,
+                            end = 40.dp,
+                            start = 40.dp,
+                            bottom = 10.dp
+                        ),
+                        textButton = "Invitar",
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                        onClick = { onEvent(DetailEventEvent.DismissDialog) }
+                        onClick = { onEvent(DetailEventEvent.InvitePlayer) }
                     )
                 }
-            }
-            2 -> FeatCardListPLayer(playerSuggested){
-                FeatButton(
-                    modifier = Modifier.padding(
-                        top = 10.dp,
-                        end = 40.dp,
-                        start = 40.dp,
-                        bottom = 10.dp
-                    ),
-                    textButton = "Invitar",
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                    onClick = { onEvent(DetailEventEvent.DismissDialog) }
-                )
             }
         }
     }
 }
-
-//
-//@Composable
-//fun PlayersAppliedAndSuggested(
-//    playerApplied: List<Player>,
-//    playerSuggested: List<Player>,
-//    onEvent: (DetailEventEvent) -> Unit
-//) {
-//    Box() {
-//
-//        Column() {
-//
-//
-//            Row(
-//                modifier = Modifier
-//                    .weight(1f)
-//                    .fillMaxWidth()
-//            ) {
-//
-//
-//                FeatCardListPLayer(players = playerApplied) {
-//                    Column(
-//                        modifier = Modifier.weight(.5f)
-//                    ) {
-//                        FeatButton(
-//                            textButton = "Rechazar",
-//                            colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
-//                            onClick = { onEvent(DetailEventEvent.DismissDialog) }
-//                        )
-//                    }
-//                    Column(
-//                        modifier = Modifier.weight(.5f)
-//                    ) {
-//                        FeatButton(
-//                            textButton = "Aceptar",
-//                            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-//                            onClick = { onEvent(DetailEventEvent.DismissDialog) }
-//                        )
-//                    }
-//                }
-//            }
-//            Divider(
-//                modifier = Modifier.padding(vertical = 0.dp),
-//                color = MaterialTheme.colors.primary
-//            )
-//            Row(modifier = Modifier
-//                .weight(1f)
-//                .fillMaxWidth()) {
-//                FeatCardListPLayer(players = playerSuggested) {
-//
-//                    FeatButton(
-//                        modifier = Modifier.padding(
-//                            top = 10.dp,
-//                            end = 40.dp,
-//                            start = 40.dp,
-//                            bottom = 10.dp
-//                        ),
-//                        textButton = "Invitar",
-//                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-//                        onClick = { onEvent(DetailEventEvent.DismissDialog) }
-//                    )
-//
-//                }
-//
-//
-//            }
-//        }
-//    }
-//
-//}

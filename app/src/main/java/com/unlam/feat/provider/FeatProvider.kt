@@ -37,6 +37,15 @@ interface FeatProvider {
 
     @GET("/events/getAllInvitationsForUser/{uid}")
     suspend fun getAllInvitationsForUser(@Path("uid") uid: String): Response<List<Event>>
+
+    @Headers("Content-type: application/json")
+    @PUT("/events/setConfirmed")
+    suspend fun setConfirmed(@Body requestEventState: RequestEventState): Response<String>
+
+    @Headers("Content-type: application/json")
+    @PUT("/events/setCanceled")
+    suspend fun setCanceled(@Body requestEventState: RequestEventState): Response<String>
+
     //</editor-fold>
     //<editor-fold desc="Availabilities">
     @GET("/availabilities/")
@@ -173,11 +182,16 @@ interface FeatProvider {
     //<editor-fold desc="EventApplies">
     @Headers("Content-type: application/json")
     @POST("/eventApplies/setAcceptedApply")
-    suspend fun setAcceptedApply(@Body requestEventApply: RequestEventApply): Response<String>
+    suspend fun setAcceptedApply(@Body requestInvitationEventApply: RequestInvitationEventApply): Response<String>
 
     @Headers("Content-type: application/json")
     @POST("/eventApplies/setDeniedApply")
-    suspend fun setDeniedApply (@Body requestEventApply: RequestEventApply): Response<String>
+    suspend fun setDeniedApply (@Body requestInvitationEventApply: RequestInvitationEventApply): Response<String>
+
+    @Headers("Content-type: application/json")
+    @POST("/eventApplies/create")
+    suspend fun create(@Body requestCreateInvitation: RequestCreateInvitation): Response<String>
+
     //</editor-fold>
 
 }

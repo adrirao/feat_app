@@ -243,7 +243,6 @@ private fun NavGraphBuilder.profile(navController: NavHostController) {
 }
 
 
-
 private fun NavGraphBuilder.home(
     navController: NavHostController,
 ) {
@@ -413,7 +412,11 @@ private fun NavGraphBuilder.detailEvent(
         }
 
         if (state.event != null && state.playersApplied != null && state.playersConfirmed != null && state.playersSuggested != null) {
-                DetailEventScreen(state = state, onEvent = detailEventViewModel::onEvent)
+            DetailEventScreen(
+                state = state,
+                onEvent = detailEventViewModel::onEvent,
+                refreshData = detailEventViewModel::refreshData,
+                navigateToEvents = { navController.navigate(Screen.Events.route) })
         }
     }
 }
