@@ -374,6 +374,7 @@ private fun NavGraphBuilder.addEvent(navController: NavHostController) {
         val addEventViewModel: AddEventViewModel = hiltViewModel()
         val state = addEventViewModel.state.value
 
+
         AddNewEventScreen(
             state = state,
             createEvent = addEventViewModel::createEvent,

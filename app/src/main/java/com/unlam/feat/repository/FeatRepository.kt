@@ -3,6 +3,7 @@ package com.unlam.feat.repository
 import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
+import com.unlam.feat.model.response.ResponseDataAddEvent
 import com.unlam.feat.model.response.ResponseDataSport
 import com.unlam.feat.model.response.ResponseDetailEvent
 import kotlinx.coroutines.flow.Flow
@@ -35,12 +36,11 @@ interface FeatRepository {
     fun getLevels(): Flow<Result<List<Level>>> // @GET("/levels/")
     fun getLevel(id: Int): Flow<Result<Level>> // @GET("/levels/{id}")
     fun createLevel(req: RequestLevel): Flow<Result<String>> // @POST("/levels/create")
-
+    fun getAllLevelsBySportGeneric(id: Int): Flow<Result<List<Level>>>// @GET("/levels/getAllBySportGeneric/{id}")
     //</editor-fold desc="Levels">
     //<editor-fold desc="Periodicities">
     fun getPeriodicities(): Flow<Result<List<Periodicity>>> // @GET("/periodicities/")
     fun getPeriodicity(id: Int): Flow<Result<Periodicity>> // @GET("/periodicities/{id}")
-    fun getAllLevelsBySportGeneric(id: Int): Flow<Result<List<Level>>>// @GET("/levels/getAllBySportGeneric/{id}")
     fun createPeriodicity(req: RequestPeriodicity): Flow<Result<String>> // @GET("/periodicities/create")
     //</editor-fold desc="Periodicities">
     //<editor-fold desc="Players">
@@ -97,6 +97,7 @@ interface FeatRepository {
     //</editor-fold desc="Multiple EndPoints">
     fun getDataDetailEvent(idEvent: Int): Flow<Result<ResponseDetailEvent>>
     fun getDataSportScreen(uId: String, sportGenericId: Int): Flow<Result<ResponseDataSport>>
+    fun getDataAddEvent(uId:String): Flow<Result<ResponseDataAddEvent>>
     //</editor-fold desc="Multiple EndPoints">
 
 

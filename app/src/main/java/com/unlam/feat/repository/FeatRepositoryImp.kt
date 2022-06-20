@@ -4,6 +4,7 @@ import android.util.Log
 import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
+import com.unlam.feat.model.response.ResponseDataAddEvent
 import com.unlam.feat.model.response.ResponseDataSport
 import com.unlam.feat.model.response.ResponseDetailEvent
 import com.unlam.feat.provider.FeatProvider
@@ -653,6 +654,35 @@ constructor(
                                         valuationList = responseValuations
                                 )
                         )
+                )
+            } else {
+                emit(Result.Error(message = "Unknown Error"))
+            }
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+    override fun getDataAddEvent(uId: String): Flow<Result<ResponseDataAddEvent>> = flow {
+        try {
+            emit(Result.Loading())
+            val responsePerson = featProvider.getPerson(uId).body()
+            val responsePeriodicity = featProvider.getPeriodicities().body()
+            val responseSportGeneric = featProvider.getGenericsSports().body()
+            val responseSport = featProvider.getSports().body()
+
+
+            if (responsePerson != null && responsePeriodicity != null && responseSportGeneric != null && responseSport != null) {
+                emit(
+                    Result.Success(
+                        data = ResponseDataAddEvent(
+                            person = responsePerson,
+                            periodicityList = responsePeriodicity,
+                            sportList = responseSport,
+                            sportGenericList = responseSportGeneric
+
+                        )
+                    )
                 )
             } else {
                 emit(Result.Error(message = "Unknown Error"))

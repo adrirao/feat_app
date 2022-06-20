@@ -11,6 +11,7 @@ import com.unlam.feat.model.Periodicity
 import com.unlam.feat.model.request.RequestEvent
 import com.unlam.feat.presentation.view.events.EventState
 import com.unlam.feat.repository.FeatRepositoryImp
+import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -21,14 +22,15 @@ class AddEventViewModel
 @Inject
 constructor(
     private val resourcesProvider: ResourcesProvider,
-    private val featRepository: FeatRepositoryImp
+    private val featRepository: FeatRepositoryImp,
+    private val firebaseAuthRepository: FirebaseAuthRepositoryImp
 ) : ViewModel() {
 
     private val _state = mutableStateOf(AddEventState())
     val state: State<AddEventState> = _state
 
     init {
-        getPeriodicities()
+        getDataAddEvent()
     }
 
     fun onEvent(event: AddEventEvent) {
@@ -74,9 +76,14 @@ constructor(
                     longitude = event.long
                 )
             }
-            is AddEventEvent.EnteredOrganizer -> {
+            is AddEventEvent.EnteredSportGeneric -> {
                 _state.value = _state.value.copy(
-                    organizer = event.value
+                    sportGeneric = event.value
+                )
+            }
+            is AddEventEvent.EnteredSport -> {
+                _state.value = _state.value.copy(
+                    sport = event.value
                 )
             }
             is AddEventEvent.DismissDialog -> {
@@ -97,10 +104,10 @@ constructor(
             description = _state.value.description,
             latitude = _state.value.latitude,
             longitude = _state.value.longitude,
-            sport = "2",
+            sport = _state.value.sport,
             state = _state.value.state,
             periodicity = _state.value.periodicity,
-            organizer = _state.value.organizer,
+            organizer = _state.value.person!!.id,
         )
 
         featRepository.postEvent(request).onEach { result ->
@@ -122,8 +129,11 @@ constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun getPeriodicities() {
-        featRepository.getPeriodicities().onEach { result ->
+
+    private fun getDataAddEvent() {
+        val uId:String = firebaseAuthRepository.getUserId()
+
+        featRepository.getDataAddEvent(uId).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value = AddEventState(
@@ -136,7 +146,12 @@ constructor(
                     _state.value = AddEventState(isLoading = true)
                 }
                 is Result.Success -> {
-                    _state.value = AddEventState(periodicityList = result.data ?: emptyList())
+                    _state.value = AddEventState(
+                        periodicityList = result.data!!.periodicityList,
+                        person = result.data!!.person,
+                        sportGenericList = result.data!!.sportGenericList,
+                        sportList = result.data!!.sportList
+                        )
                 }
             }
         }.launchIn(viewModelScope)

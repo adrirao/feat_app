@@ -13,7 +13,8 @@ sealed class AddEventEvent {
     data class EnteredPeriodicity(val value: String) : AddEventEvent()
     data class EnteredAddress(val value: String) : AddEventEvent()
     data class EnteredLatLong(val lat: String,val long:String) : AddEventEvent()
-    data class EnteredOrganizer(val value:String) : AddEventEvent()
+    data class EnteredSportGeneric(val value:String) : AddEventEvent()
+    data class EnteredSport(val value:String) : AddEventEvent()
     object DismissDialog : AddEventEvent()
 
 
