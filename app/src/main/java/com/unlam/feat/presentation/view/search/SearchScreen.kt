@@ -24,56 +24,60 @@ fun Search(
     refreshData: () -> Unit,
     onClickCard: (Event) -> Unit
 ) {
+
+
+
+    if (state.error.isNotBlank()) {
+        FeatAlertDialog(
+            title = "Error Eventos",
+            descriptionContent = "No se pudo cargar los eventos.",
+            onDismiss = {
+                onEvent(SearchEvent.DismissDialog)
+            }
+        )
+    }
     Column() {
         FeatHeader(text = "Buscar Evento")
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            SwipeRefresh(
-                state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
-                onRefresh = refreshData
+        if (state.isLoading) {
+            FeatCircularProgress()
+        }else {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
             ) {
-                LazyColumn(
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                SwipeRefresh(
+                    state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+                    onRefresh = refreshData
                 ) {
-                    items(
-                        items = state.events,
-                        itemContent = { event ->
-                            val date = LocalDate.parse(event.date.substring(0, 10)).format(
-                                DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                            )
-                            FeatCard(
-                                textNameEvent = event.name,
-                                textDay = "$date ${
-                                    event.startTime.substring(
-                                        0,
-                                        5
-                                    )
-                                } - ${event.endTime.substring(0, 5)}",
-                                textState = event.state.description,
-                                sport = event.sport.description,
-                                onClickCard = {
-                                    onClickCard(event)
-                                }
-                            )
-                        }
-                    )
+                    LazyColumn(
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        items(
+                            items = state.events,
+                            itemContent = { event ->
+                                val date = LocalDate.parse(event.date.substring(0, 10)).format(
+                                    DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                                )
+                                FeatCard(
+                                    textNameEvent = event.name,
+                                    textDay = "$date ${
+                                        event.startTime.substring(
+                                            0,
+                                            5
+                                        )
+                                    } - ${event.endTime.substring(0, 5)}",
+                                    textState = event.state.description,
+                                    sport = event.sport.description,
+                                    onClickCard = {
+                                        onClickCard(event)
+                                    }
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
-        if (state.isLoading) {
-            FeatCircularProgress()
-        }
-        if (state.error.isNotBlank()) {
-            FeatAlertDialog(
-                title = "Error Eventos",
-                descriptionContent = "No se pudo cargar los eventos.",
-                onDismiss = {
-                    onEvent(SearchEvent.DismissDialog)
-                }
-            )
-        }
+
     }
 }

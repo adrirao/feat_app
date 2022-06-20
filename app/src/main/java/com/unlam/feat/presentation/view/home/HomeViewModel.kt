@@ -29,7 +29,7 @@ constructor(
     val isRefreshing: StateFlow<Boolean> = _isRefreshing
 
     init {
-        getEventsByUser()
+        getEventsForUser()
     }
 
     fun onEvent(event: HomeEvent) {
@@ -42,9 +42,9 @@ constructor(
         }
     }
 
-    fun getEventsByUser() {
+     fun getEventsForUser() {
         val uId = firebaseAuthRepository.getUserId()
-        featRepository.getEventsCreatedByUser(uId).onEach { result ->
+        featRepository.getDataHomeEvent(uId).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value = HomeState(error = result.message ?: "Error Inesperado")
@@ -53,7 +53,10 @@ constructor(
                     _state.value = HomeState(isLoading = true)
                 }
                 is Result.Success -> {
-                    _state.value = HomeState(events = (result.data ?: emptyList()))
+                    _state.value = HomeState(
+                        eventOfTheWeek = result.data!!.eventOfTheWeek,
+                        eventConfirmedOrApplied = result.data!!.eventConfirmedOrApplied
+                    )
                 }
             }
         }.launchIn(viewModelScope)

@@ -35,10 +35,24 @@ fun InvitationScreen(
     navigateToDetail: (Event) -> Unit,
     refreshData: () -> Unit
 ){
+
+
+    if (state.error.isNotBlank()) {
+        FeatAlertDialog(
+            title = stringResource(R.string.error_home),
+            descriptionContent = stringResource(R.string.error_load_events),
+            onDismiss = {
+                onEvent(InvitationEvent.DismissDialog)
+            }
+        )
+    }
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         FeatHeader(text = "Invitaciones")
+        if (state.isLoading) {
+            FeatCircularProgress()
+        }else{
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -79,19 +93,9 @@ fun InvitationScreen(
                 }
             }
         }
+        }
     }
-    if (state.isLoading) {
-        FeatCircularProgress()
-    }
-    if (state.error.isNotBlank()) {
-        FeatAlertDialog(
-            title = stringResource(R.string.error_home),
-            descriptionContent = stringResource(R.string.error_load_events),
-            onDismiss = {
-                onEvent(InvitationEvent.DismissDialog)
-            }
-        )
-    }
+
 }
 
 private fun getAddress(latLng: LatLng, context: Context): Address {

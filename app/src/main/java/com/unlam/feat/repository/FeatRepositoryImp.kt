@@ -5,6 +5,7 @@ import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
 import com.unlam.feat.model.response.ResponseDataAddEvent
+import com.unlam.feat.model.response.ResponseDataHomeEvent
 import com.unlam.feat.model.response.ResponseDataSport
 import com.unlam.feat.model.response.ResponseDetailEvent
 import com.unlam.feat.provider.FeatProvider
@@ -157,6 +158,36 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+
+    override fun getAllEventsOfTheWeek(uId: String): Flow<Result<List<Event>>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.getAllEventsOfTheWeek(uId).body() ?: listOf()
+            if (response != null) emit(Result.Success(data = response)) else emit(
+                Result.Error(
+                    message = "Unknown Error"
+                )
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+    override fun getAllConfirmedOrAppliedByUser(uId: String): Flow<Result<List<Event>>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.getAllConfirmedOrAppliedByUser(uId).body() ?: listOf()
+            if (response != null) emit(Result.Success(data = response)) else emit(
+                Result.Error(
+                    message = "Unknown Error"
+                )
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+
 
     //</editor-fold desc="Events">
     //<editor-fold desc="Availabilities">
@@ -691,6 +722,32 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+
+    override fun getDataHomeEvent(uId: String): Flow<Result<ResponseDataHomeEvent>> = flow {
+        try {
+            emit(Result.Loading())
+            val responseEventOfTheWeek = featProvider.getAllEventsOfTheWeek(uId).body()
+            val responseEventConfirmedOrApplied = featProvider.getAllConfirmedOrAppliedByUser(uId).body()
+
+
+            if (responseEventOfTheWeek != null && responseEventConfirmedOrApplied != null ) {
+                emit(
+                    Result.Success(
+                        data = ResponseDataHomeEvent(
+                            eventOfTheWeek = responseEventOfTheWeek,
+                            eventConfirmedOrApplied = responseEventConfirmedOrApplied,
+                        )
+                    )
+                )
+            } else {
+                emit(Result.Error(message = "Unknown Error"))
+            }
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+
 //<editor-fold desc="Multiple EndPoints">
 }
 

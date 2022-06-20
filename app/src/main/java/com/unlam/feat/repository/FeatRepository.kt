@@ -4,6 +4,7 @@ import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
 import com.unlam.feat.model.response.ResponseDataAddEvent
+import com.unlam.feat.model.response.ResponseDataHomeEvent
 import com.unlam.feat.model.response.ResponseDataSport
 import com.unlam.feat.model.response.ResponseDetailEvent
 import kotlinx.coroutines.flow.Flow
@@ -24,6 +25,9 @@ interface FeatRepository {
     fun getAllInvitationsForUser(uId: String): Flow<Result<List<Event>>> //@GET("/events/getAllInvitationsForUser/{uid}")
     fun setConfirmed(req:RequestEventState): Flow<Result<String>>// @POST("/events/setConfirmed")
     fun setCanceled(req:RequestEventState): Flow<Result<String>>// @POST("/events/setCanceled")
+    fun getAllEventsOfTheWeek(uId: String): Flow<Result<List<Event>>>//  @GET("/events/getAllEventsOfTheWeek/{uid}")
+    fun getAllConfirmedOrAppliedByUser(uId: String): Flow<Result<List<Event>>>//  @GET("/events/getAllConfirmedOrAppliedByUser/{uid}")
+
 
     //</editor-fold">
     //<editor-fold desc="Availabilities">
@@ -98,6 +102,7 @@ interface FeatRepository {
     fun getDataDetailEvent(idEvent: Int): Flow<Result<ResponseDetailEvent>>
     fun getDataSportScreen(uId: String, sportGenericId: Int): Flow<Result<ResponseDataSport>>
     fun getDataAddEvent(uId:String): Flow<Result<ResponseDataAddEvent>>
+    fun getDataHomeEvent(uId: String): Flow<Result<ResponseDataHomeEvent>>
     //</editor-fold desc="Multiple EndPoints">
 
 

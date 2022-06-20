@@ -255,7 +255,7 @@ private fun NavGraphBuilder.home(
             state = state,
             onEvent = homeViewModel::onEvent,
             isRefreshing = isRefreshing.value,
-            refreshData = homeViewModel::getEventsByUser,
+            refreshData = homeViewModel::getEventsForUser,
             navigateToDetail = {
                 navController.navigate(
                     Screen.DetailEventHome.route + "/${it.id}"

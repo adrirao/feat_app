@@ -14,8 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -31,7 +29,6 @@ import com.unlam.feat.model.Event
 import com.unlam.feat.presentation.ui.theme.Shapes
 import com.unlam.feat.presentation.ui.theme.card
 import com.unlam.feat.presentation.ui.theme.text
-import com.unlam.feat.presentation.view.invitation.detail_invitation.DetailInvitationEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -96,7 +93,7 @@ fun FeatCardEventDetail(
                         )
                     } else if (event.sport.description.contains("Actividad Recreativa")) {
                         Image(
-                            painter = painterResource(id = R.drawable.recreational_event),
+                            painter = painterResource(id = R.drawable.recreational_activity),
                             contentDescription = "",
                             contentScale = ContentScale.Fit,
                             modifier = Modifier.size(70.dp)

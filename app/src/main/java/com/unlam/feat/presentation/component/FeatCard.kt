@@ -38,21 +38,21 @@ fun FeatCard(
     corner: CornerSize = CornerSize(16.dp),
     shape: RoundedCornerShape = RoundedCornerShape(corner),
     onClickCard: () -> Unit = {},
-    sport: String = "soccer",
-    sportDescription: String = "Soccer",
-    textNameEvent: String = "Por la coca",
+    sport: String = "",
+    sportDescription: String = "",
+    textNameEvent: String = "",
     colorTextNameEvent: Color = MaterialTheme.colors.textVariant,
     fontSizeNameEvent: TextUnit = 25.sp,
     fontWeightNameEvent: FontWeight = FontWeight.Bold,
-    textDay: String = "Sabado 18:30 Hs.",
+    textDay: String = "",
     colorTextDay: Color = MaterialTheme.colors.text,
     fontSizeTextDay: TextUnit = 15.sp,
     fontWeightTextDay: FontWeight = FontWeight.Medium,
-    textLocation: String = "Mansilla, 6940.",
+    textLocation: String = "",
     colorTextLocation: Color = MaterialTheme.colors.text,
     fontSizeTextLocation: TextUnit = 15.sp,
     fontWeightTextLocation: FontWeight = FontWeight.Medium,
-    textState: String = "Evento Confirmado",
+    textState: String = "",
     colorTextState: Color = Color(0xFF019C50),
     fontSizeTextState: TextUnit = 20.sp,
     fontWeightTextState: FontWeight = FontWeight.Black,
@@ -68,7 +68,8 @@ fun FeatCard(
     ) {
         Row {
             when (sport) {
-                Constants.Sports.SOCCER, Constants.Sports.SOCCER_6 ->  Image(
+                Constants.Sports.SOCCER_5, Constants.Sports.SOCCER_6,
+                Constants.Sports.SOCCER_7,Constants.Sports.SOCCER_9,Constants.Sports.SOCCER_11->  Image(
                     painter = painterResource(id = R.drawable.soccer),
                     contentDescription = sportDescription,
                     contentScale = ContentScale.Fit,
@@ -90,7 +91,7 @@ fun FeatCard(
                         .align(Alignment.CenterVertically)
                         .weight(5.0f)
                 )
-                Constants.Sports.TENNIS ->  Image(
+                Constants.Sports.TENNIS_SINGLE,Constants.Sports.TENNIS_DOUBLES ->  Image(
                     painter = painterResource(id = R.drawable.tennis),
                     contentDescription = sportDescription,
                     contentScale = ContentScale.Fit,
@@ -101,7 +102,7 @@ fun FeatCard(
                         .align(Alignment.CenterVertically)
                         .weight(5.0f)
                 )
-                Constants.Sports.PADDLE ->  Image(
+                Constants.Sports.PADDLE_SINGLE,Constants.Sports.PADDLE_DOUBLE ->  Image(
                     painter = painterResource(id = R.drawable.padel),
                     contentDescription = sportDescription,
                     contentScale = ContentScale.Fit,
@@ -112,6 +113,21 @@ fun FeatCard(
                         .align(Alignment.CenterVertically)
                         .weight(5.0f)
                 )
+                Constants.Sports.RECREATIONAL_ACTIVITY ->{
+                    if (!isSystemInDarkTheme()){
+                        val id = R.drawable.recreational_activity
+                    }
+                    Image(
+                    painter = painterResource(id = R.drawable.recreational_activity_white),
+                    contentDescription = sportDescription,
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .size(100.dp)
+                        .clip(shape)
+                        .align(Alignment.CenterVertically)
+                        .weight(5.0f)
+                )}
             }
             Column(
                 modifier = Modifier
