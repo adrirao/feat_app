@@ -9,8 +9,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,27 +18,44 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.unlam.feat.R
-import com.unlam.feat.common.Screen
 import com.unlam.feat.model.Event
 import com.unlam.feat.model.Player
 import com.unlam.feat.presentation.component.*
 import com.unlam.feat.presentation.ui.theme.Shapes
 import com.unlam.feat.presentation.ui.theme.card
 
+
 @Composable
 fun SearchEventDetailScreen(
-    navController: NavHostController,
     state: SearchEventDetailState,
-    onEvent: (SearchEventDetailEvent) -> Unit
+    onEvent: (SearchEventDetailEvent) -> Unit,
+    navigateToSearch: () -> Unit
+
 ) {
     var tabIndex by remember { mutableStateOf(0) } // 1.
     val tabTitles = listOf("Descripcion", "Participantes")
     val event = state.event
     val playersConfirmed = state.playersConfirmed
 
-
+    if (state.error.isNotBlank()) {
+        FeatAlertDialog(
+            title = "Ocurrio un error",
+            descriptionContent = "No se pudo procesar la solicitud",
+            onDismiss = {
+                onEvent(SearchEventDetailEvent.DismissDialog)
+            }
+        )
+    }
+    if (state.success) {
+        FeatAlertDialog(
+            title = "Enhorabuena",
+            descriptionContent = "Solicitud Enviada Correctamente!!",
+            onDismiss = {
+                navigateToSearch()
+            }
+        )
+    }
     if (state.loading) {
         FeatCircularProgress()
     }else{
@@ -71,12 +86,33 @@ fun SearchEventDetailScreen(
 
             }
             when (tabIndex) {
-                0 -> SearchEventDetail(navController!!,event!!,onEvent,state)
-                1 -> ParticipantsDetail(playersConfirmed!!)
+                0 -> FeatCardEventDetail(event!!) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 20.dp),
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                    ) {
+
+                        FeatButton(
+                            textButton = "Quiero Participar",
+                            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                            onClick = { onEvent(SearchEventDetailEvent.ApplyEvent) }
+                        )
+                    }
+                }
+                1 -> ParticipantsDetail(
+                    playersConfirmed!!,
+                    onEvent
+                )
             }
         }
+
     }
 
+}
+/*
     if (state.error.isNotBlank()) {
         FeatAlertDialog(
             title = "Ocurrio un error",
@@ -96,13 +132,12 @@ fun SearchEventDetailScreen(
         )
     }
 }
+*/
 
 @Composable
 fun SearchEventDetail(
-    navController: NavHostController,
     event: Event,
-    onEvent: (SearchEventDetailEvent) ->Unit,
-    state: SearchEventDetailState
+    onEvent: (SearchEventDetailEvent) ->Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -178,10 +213,11 @@ fun SearchEventDetail(
 
 @Composable
 fun ParticipantsDetail(
-    playerConfirmed: List<Player>
+    playerConfirmed: List<Player>,
+    onEvent: (SearchEventDetailEvent) -> Unit
 ) {
     var tabIndex by remember { mutableStateOf(0) } // 1.
-    val tabTitles = listOf("Jugadores")
+    val tabTitles = listOf("Confirmados")
 
     Column {
         Box(
@@ -208,9 +244,28 @@ fun ParticipantsDetail(
 
         }
         when (tabIndex) {
-            0 -> FeatCardListPLayer(playerConfirmed)
+            0 -> FeatCardListPLayer(playerConfirmed)/*{
+                Column(
+                    modifier = Modifier.weight(.5f)
+                ) {
+                    FeatButton(
+                        textButton = "Expulsar",
+                        colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
+                        onClick = { onEvent(SearchEventDetailEvent.DismissDialog) }
+                    )
+                }
+            }*/
+
         }
     }
 }
-
-
+/*
+if (state.success) {
+    FeatAlertDialog(
+        title = "Enhorabuena",
+        descriptionContent = "Solicitud Enviada Correctamente!!",
+        onDismiss = {
+            navController.navigate(Screen.Search.route)
+        }
+    )
+}*/

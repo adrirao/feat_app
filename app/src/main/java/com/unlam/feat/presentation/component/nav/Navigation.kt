@@ -277,7 +277,7 @@ private fun NavGraphBuilder.search(navController: NavHostController) {
             isRefreshing = isRefreshing.value,
             refreshData = searchViewModel::getEventsSuggestedForUser,
             onClickCard = {
-                navController.navigate(Screen.SearchEventDetail.route)
+                navController.navigate(Screen.SearchEventDetail.route + "/${it.id}")
             }
         )
 
@@ -438,12 +438,13 @@ private fun NavGraphBuilder.searchEventDetail(
         }
 
         if (state.event != null && state.playersConfirmed != null) {
-            SearchEventDetailScreen(state)
+            SearchEventDetailScreen(state = state, onEvent = searchEventDetailViewModel::onEvent, navigateToSearch = {
+                navController.navigate(Screen.Search.route)
+            })
         }
     }
+
 }
-
-
 private fun NavGraphBuilder.detailEventHome(
     navController: NavHostController,
 ) {

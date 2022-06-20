@@ -24,7 +24,6 @@ import com.unlam.feat.presentation.component.*
 import com.unlam.feat.presentation.ui.theme.Shapes
 import com.unlam.feat.presentation.ui.theme.card
 import com.unlam.feat.presentation.view.invitation.detail_invitation.DetailInvitationEvent
-import com.unlam.feat.presentation.view.search.event_detail.PlayersConfirmed
 
 @Composable
 fun DetailEventScreen(

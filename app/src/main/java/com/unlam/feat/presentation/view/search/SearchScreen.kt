@@ -9,6 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.unlam.feat.model.Event
 import com.unlam.feat.presentation.component.FeatAlertDialog
 import com.unlam.feat.presentation.component.FeatCard
 import com.unlam.feat.presentation.component.FeatCircularProgress
@@ -25,7 +26,7 @@ fun Search(
     onEvent: (SearchEvent) -> Unit,
     isRefreshing: Boolean,
     refreshData: () -> Unit,
-    onClickCard: () -> Unit
+    onClickCard: (Event) -> Unit
 ) {
     Column() {
         FeatHeader(text = "Buscar Evento")
@@ -58,7 +59,7 @@ fun Search(
                                 textState = event.state.description,
                                 sport = event.sport.description,
                                 onClickCard = {
-                                    onClickCard()
+                                    onClickCard(event)
                                 }
                             )
                         }
