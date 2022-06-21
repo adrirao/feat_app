@@ -1,4 +1,4 @@
-package com.unlam.feat.presentation.view.config_profile.address
+package com.unlam.feat.presentation.view.edit_profile.address
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlam.feat.common.Result
 import com.unlam.feat.model.request.RequestAddress
-import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataEvent
-import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataState
+import com.unlam.feat.presentation.view.config_profile.address.ConfigProfileAddressEvent
+import com.unlam.feat.presentation.view.config_profile.address.ConfigProfileAddressState
 import com.unlam.feat.repository.FeatRepositoryImp
 import com.unlam.feat.repository.FirebaseAuthRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,14 +16,14 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class ConfigProfileAddressViewModel @Inject
+class EditProfileAddressViewModel @Inject
 constructor(
     private val firebaseAuthRepository: FirebaseAuthRepositoryImp,
     private val featRepository: FeatRepositoryImp
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(ConfigProfileAddressState())
-    val state: State<ConfigProfileAddressState> = _state
+    private val _state = mutableStateOf(EditProfileAddressState())
+    val state: State<EditProfileAddressState> = _state
 
     init {
         val uId = firebaseAuthRepository.getUserId()
@@ -31,51 +31,51 @@ constructor(
     }
 
 
-    fun onEvent(event: ConfigProfileAddressEvent) {
+    fun onEvent(event: EditProfileAddressEvent) {
         when (event) {
-            is ConfigProfileAddressEvent.EnteredAddressAlias -> {
+            is EditProfileAddressEvent.EnteredAddressAlias -> {
                 _state.value = _state.value.copy(
                     addressAlias = event.value
                 )
             }
-            is ConfigProfileAddressEvent.EnteredAddressStreet -> {
+            is EditProfileAddressEvent.EnteredAddressStreet -> {
                 _state.value = _state.value.copy(
                     addressStreet = event.value
                 )
             }
-            is ConfigProfileAddressEvent.EnteredAddressNumber -> {
+            is EditProfileAddressEvent.EnteredAddressNumber -> {
                 _state.value = _state.value.copy(
                     addressNumber = event.value
                 )
             }
-            is ConfigProfileAddressEvent.EnteredAddressTown -> {
+            is EditProfileAddressEvent.EnteredAddressTown -> {
                 _state.value = _state.value.copy(
                     addressTown = event.value
                 )
             }
-            is ConfigProfileAddressEvent.EnteredAddressZipCode -> {
+            is EditProfileAddressEvent.EnteredAddressZipCode -> {
                 _state.value = _state.value.copy(
                     addressZipCode = event.value
                 )
             }
-            is ConfigProfileAddressEvent.EnteredAddressLatitude -> {
+            is EditProfileAddressEvent.EnteredAddressLatitude -> {
                 _state.value = _state.value.copy(
                     addressLatitude = event.value
                 )
             }
-            is ConfigProfileAddressEvent.EnteredAddressLongitude -> {
+            is EditProfileAddressEvent.EnteredAddressLongitude -> {
                 _state.value = _state.value.copy(
                     addressLongitude = event.value
                 )
             }
-            is ConfigProfileAddressEvent.ShowAlertPermission -> {
+            is EditProfileAddressEvent.ShowAlertPermission -> {
                 _state.value = _state.value.copy(
                     showAlertPermission = event.value,
                     titleAlert = event.title,
                     descriptionAlert = event.description
                 )
             }
-            is ConfigProfileAddressEvent.DismissDialog -> {
+            is EditProfileAddressEvent.DismissDialog -> {
                 _state.value = _state.value.copy(
                     showAlertPermission = false,
                     addressStreetError = null,
@@ -85,10 +85,10 @@ constructor(
                     fieldEmpty = ""
                 )
             }
-            is ConfigProfileAddressEvent.SingOutUser -> {
+            is EditProfileAddressEvent.SingOutUser -> {
                 firebaseAuthRepository.signOut()
             }
-            is ConfigProfileAddressEvent.SubmitData -> {
+            is EditProfileAddressEvent.SubmitData -> {
                 validateStreetIsNotNUll(state.value.addressStreet)
                 validateNumberIsNotNUll(state.value.addressNumber)
                 validateTownIsNotNUll(state.value.addressTown)
@@ -105,15 +105,15 @@ constructor(
         featRepository.getPerson(uId).onEach { result ->
             when (result) {
                 is Result.Success -> {
-                    _state.value = ConfigProfileAddressState(personId = result.data?.id)
+                    _state.value = EditProfileAddressState(personId = result.data?.id)
 
                 }
                 is Result.Loading -> {
-                    _state.value = ConfigProfileAddressState(isLoading = true)
+                    _state.value = EditProfileAddressState(isLoading = true)
 
                 }
                 is Result.Error -> {
-                    _state.value = ConfigProfileAddressState(
+                    _state.value = EditProfileAddressState(
                         personError = result.message ?: "Error Inesperado"
                     )
                 }
@@ -171,10 +171,10 @@ constructor(
 
         var fieldError: String = ""
 
-        if (state.value.addressStreetError == ConfigProfileAddressState.AddressStreetError.FieldEmpty) fieldError += "Calle, "
-        if (state.value.addressNumberError == ConfigProfileAddressState.AddressNumberError.FieldEmpty) fieldError += "Numero, "
-        if (state.value.addressTownError == ConfigProfileAddressState.AddressTownError.FieldEmpty) fieldError += "Ciudad, "
-        if (state.value.addressZipCodeError == ConfigProfileAddressState.AddressZipCodeError.FieldEmpty) fieldError += "Codigo postal"
+        if (state.value.addressStreetError == EditProfileAddressState.AddressStreetError.FieldEmpty) fieldError += "Calle, "
+        if (state.value.addressNumberError == EditProfileAddressState.AddressNumberError.FieldEmpty) fieldError += "Numero, "
+        if (state.value.addressTownError == EditProfileAddressState.AddressTownError.FieldEmpty) fieldError += "Ciudad, "
+        if (state.value.addressZipCodeError == EditProfileAddressState.AddressZipCodeError.FieldEmpty) fieldError += "Codigo postal"
 
         if (fieldError != "") {
             _state.value = _state.value.copy(
@@ -188,7 +188,7 @@ constructor(
         val trimmedLastName = street.trim()
         if (trimmedLastName.isBlank()) {
             _state.value = _state.value.copy(
-                addressStreetError = ConfigProfileAddressState.AddressStreetError.FieldEmpty
+                addressStreetError = EditProfileAddressState.AddressStreetError.FieldEmpty
             )
             return
         }
@@ -200,7 +200,7 @@ constructor(
         val trimmedLastName = number.trim()
         if (trimmedLastName.isBlank()) {
             _state.value = _state.value.copy(
-                addressNumberError = ConfigProfileAddressState.AddressNumberError.FieldEmpty
+                addressNumberError = EditProfileAddressState.AddressNumberError.FieldEmpty
             )
             return
         }
@@ -212,7 +212,7 @@ constructor(
         val trimmedLastName = town.trim()
         if (trimmedLastName.isBlank()) {
             _state.value = _state.value.copy(
-                addressTownError = ConfigProfileAddressState.AddressTownError.FieldEmpty
+                addressTownError = EditProfileAddressState.AddressTownError.FieldEmpty
             )
             return
         }
@@ -224,7 +224,7 @@ constructor(
         val trimmedLastName = zipCode.trim()
         if (trimmedLastName.isBlank()) {
             _state.value = _state.value.copy(
-                addressZipCodeError = ConfigProfileAddressState.AddressZipCodeError.FieldEmpty
+                addressZipCodeError = EditProfileAddressState.AddressZipCodeError.FieldEmpty
             )
             return
         }

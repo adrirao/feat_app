@@ -15,12 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.unlam.feat.R
 import com.unlam.feat.model.Person
 import com.unlam.feat.presentation.component.*
 import com.unlam.feat.presentation.ui.theme.card
+import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationEvent
 import com.unlam.feat.presentation.view.events.add_event.AddEventEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -32,7 +35,8 @@ fun Profile(
     onValueChange: (ProfileEvent) -> Unit,
     isRefreshing: Boolean,
     refreshData: () -> Unit,
-    updatePerson: () -> Unit
+    updatePerson: () -> Unit,
+    navigateToAddress: () -> Unit
 ) {
 
     Column(
@@ -193,11 +197,11 @@ fun Profile(
                     }
                     FeatButtonRounded(
                         modifier = Modifier
-                            .size(60.dp)
+                            .size(45.dp)
                             .fillMaxWidth(),
-                        drawable = R.drawable.check,
+                        drawable = R.drawable.add,
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                        onClick = {refreshData()},
+                        onClick = {navigateToAddress()},
                         colorFilter = ColorFilter.tint(Color.White)
                     )
                 }

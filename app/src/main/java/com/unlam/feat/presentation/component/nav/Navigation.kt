@@ -44,6 +44,8 @@ import com.unlam.feat.presentation.view.config_profile.sport.sport_data.SportDat
 import com.unlam.feat.presentation.view.config_profile.sport.sport_data.SportDataViewModel
 import com.unlam.feat.presentation.view.edit_profile.Profile
 import com.unlam.feat.presentation.view.edit_profile.ProfileViewModel
+import com.unlam.feat.presentation.view.edit_profile.address.EditProfileAddressScreen
+import com.unlam.feat.presentation.view.edit_profile.address.EditProfileAddressViewModel
 import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddEventViewModel
@@ -84,6 +86,8 @@ fun Navigation(navController: NavHostController) {
         register(navController)
 
         profile(navController)
+        editProfileAddress(navController)
+
         events(navController)
         home(navController)
         search(navController)
@@ -258,8 +262,29 @@ private fun NavGraphBuilder.profile(navController: NavHostController) {
             onValueChange = {
                 profileViewModel.onEvent(it)
             },
-            updatePerson = profileViewModel::updatePerson
+            updatePerson = profileViewModel::updatePerson,
+            navigateToAddress = {
+                navController.navigate(
+                    Screen.EditProfileAddress.route
+                )
+            }
         )
+    }
+}
+
+private fun NavGraphBuilder.editProfileAddress(
+    navController: NavHostController,
+) {
+    composable(
+        route = Screen.EditProfileAddress.route,
+    ) {
+        val editProfileAddressViewModel: EditProfileAddressViewModel = hiltViewModel()
+        val state = editProfileAddressViewModel.state.value
+
+        EditProfileAddressScreen(
+            navController,
+            state,
+            onValueChange = { editProfileAddressViewModel.onEvent(it) })
     }
 }
 

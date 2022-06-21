@@ -565,6 +565,7 @@ constructor(
 
     override fun addAddress(req: RequestAddress): Flow<Result<String>> = flow {
         try {
+            Log.d("DIRECCION", req.toString())
             emit(Result.Loading())
             val response = featProvider.addAddress(req).code()
             if (response in 200..299) emit(Result.Success(data = "Agregada con exito")) else emit(
