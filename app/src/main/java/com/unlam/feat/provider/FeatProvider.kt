@@ -103,6 +103,9 @@ interface FeatProvider {
     @GET("/players/{id}")
     suspend fun getPlayer(@Path("id") id: Int): Response<Player>
 
+    @GET("/players/getAllByUser/{userUid}")
+    suspend fun getPlayersByUser(@Path("userUid") userUid: String): Response<List<Player>>
+
     @GET("/players/getAllByPerson/{personId}")
     suspend fun getAllByPerson(@Path("personId") personId: Int): Response<List<Player>>
 
@@ -170,12 +173,17 @@ interface FeatProvider {
     @Headers("Content-type: application/json")
     @PUT("/persons/update")
     suspend fun updatePerson(@Body requestUpdatePerson: RequestUpdatePerson): Response<String>
+
+    @Headers("Content-type: application/json")
+    @PUT("/persons/update_personal_information")
+    suspend fun updatePersonPersonalInformation(@Body requestUpdatePersonPersonalInformation: RequestUpdatePersonPersonalInformation): Response<String>
     //</editor-fold>
 
     //<editor-fold desc="Valuations">
     @GET("/valuations/")
     suspend fun getValuations(): Response<List<Valuation>>
     //</editor-fold>
+    //<editor-fold desc="Sports">
 
     //<editor-fold desc="Addresses">
     @GET("/addresses/{id}")
@@ -193,6 +201,18 @@ interface FeatProvider {
     @Headers("Content-type: application/json")
     @POST("/eventApplies/setDeniedApply")
     suspend fun setDeniedApply (@Body requestEventApply: RequestEventApply): Response<String>
+    //<editor-fold desc="Addresses">
+    @GET("/addresses/{id}")
+    suspend fun getAddressesByUser(@Path("id") id: String): Response<List<Address>>
+
+    @Headers("Content-type: application/json")
+    @PUT("/addresses/update")
+    suspend fun updateAddress(@Body requestAddress: RequestAddress): Response<String>
+
+    @Headers("Content-type: application/json")
+    @POST("/addresses/create")
+    suspend fun createAddress(@Body requestAddress: RequestAddress): Response<String>
+    //</editor-fold>
 
     @Headers("Content-type: application/json")
     @POST("/eventApplies/create")

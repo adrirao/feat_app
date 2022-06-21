@@ -3,6 +3,9 @@ package com.unlam.feat.repository
 import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
+import com.unlam.feat.model.response.ResponseDataSport
+import com.unlam.feat.model.response.ResponseDetailEvent
+import com.unlam.feat.model.response.ResponseDetailProfile
 import com.unlam.feat.model.response.*
 import kotlinx.coroutines.flow.Flow
 
@@ -47,6 +50,7 @@ interface FeatRepository {
     //<editor-fold desc="Players">
     fun getPlayers(): Flow<Result<List<Player>>> // @GET("/players/")
     fun getPlayer(id: Int): Flow<Result<Player>> // @GET("/players/{id}")
+    fun getPlayersByUser(userUid: String): Flow<Result<List<Player>>> // @GET("/players/getAllByUser/{userUid}")
     fun getAllByPerson(personId: Int): Flow<Result<List<Player>>> // @GET("/players/getAllByPerson/{personId}")
     fun getAllPlayersSuggestedForEvent(eventId: Int): Flow<Result<List<Player>>> // @GET("/players/getAllPlayersSuggestedForEvent/{eventId}")
     fun getAllPlayersConfirmedByEvent(eventId: Int) : Flow<Result<List<Player>>> // @GET("/players/getAllConfirmedByEvent/{eventId}")
@@ -71,10 +75,12 @@ interface FeatRepository {
     fun getUser(id: Int): Flow<Result<User>> // @GET("/users/{id}")
     fun createUser(req:RequestUser): Flow<Result<String>> // @POST("/users/create")
     //</editor-fold desc="Users">
+
     //<editor-fold desc="Persons">
     fun getPerson(uId: String): Flow<Result<Person>> // @GET("/persons/getPersonById/{id}")
     fun createPerson(req:RequestPerson): Flow<Result<String>> // @POST("/persons/create")
     fun updatePerson(req:RequestUpdatePerson): Flow<Result<String>> // @PUT("/persons/update")
+    fun updatePersonPersonalInformation(req:RequestUpdatePersonPersonalInformation) : Flow<Result<String>>
     //</editor-fold desc="Persons">
 
     //<editor-fold desc="SportsGenerics">
@@ -104,5 +110,15 @@ interface FeatRepository {
     //</editor-fold desc="Multiple EndPoints">
 
 
+
+    //<editor-fold desc="Address">
+    fun getAddressesByUser(uId: String): Flow<Result<List<Address>>> // @GET("/persons/getPersonById{id}")
+    fun updateAddress(req:RequestAddress): Flow<Result<String>>
+    fun createAddress(req: RequestAddress): Flow<Result<String>>
+    //</editor-fold desc="Address">
+
+    //<editor-fold desc="Profile">
+    fun getDetailProfile(uId: String): Flow<Result<ResponseDetailProfile>>
+    //</editor-fold desc="Profile">
 }
 
