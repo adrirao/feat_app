@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,6 +51,7 @@ fun Home(
 ) {
     val pagerState = rememberPagerState()
 
+    if(state.eventOfTheWeek.isNotEmpty()){
     LaunchedEffect(Unit) {
         while (true) {
             yield()
@@ -60,7 +62,7 @@ fun Home(
             )
         }
     }
-
+    }
     if (state.error.isNotBlank()) {
         FeatAlertDialog(
             title = stringResource(R.string.error_home),
@@ -76,102 +78,62 @@ fun Home(
         FeatHeader(text = stringResource(R.string.text_home), dividerOn = false)
         if (state.isLoading) {
             FeatCircularProgress()
-        }else{
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            SwipeRefresh(
-                state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
-                onRefresh = refreshData
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
             ) {
-                Column {
+                SwipeRefresh(
+                    state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+                    onRefresh = refreshData
+                ) {
                     Column {
-                        Row(
-                            Modifier
-                                .background(MaterialTheme.colors.primaryVariant)
-                                .fillMaxWidth()
-                        ){
-                            Text(
-                                text = "Eventos de la semana:",
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp)
-                                    .background(MaterialTheme.colors.primaryVariant),
-                                fontSize = 18.sp,
-                            )
-                        }
-                        Divider(
-                            thickness = 3.dp,
-                            modifier = Modifier.padding(vertical = 0.dp),
-                            color = MaterialTheme.colors.secondary
-                        )
-
-                        HorizontalPager(
-                            state = pagerState,
-                            modifier = Modifier
-                                .padding(0.dp, 5.dp, 0.dp, 20.dp),
-                            count = state.eventOfTheWeek.size
-                        ) { page ->
-                            val event = state.eventOfTheWeek[page]
-
-                            val date = LocalDate.parse(event.date.substring(0, 10)).format(
-                                DateTimeFormatter.ofPattern(stringResource(R.string.format_date))
-                            )
-                            val context = LocalContext.current
-                            val location =
-                                LatLng(
-                                    event.latitude.toDouble(),
-                                    event.longitude.toDouble()
+                        Column {
+                            Row(
+                                Modifier
+                                    .background(MaterialTheme.colors.primaryVariant)
+                                    .fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = "Eventos de la semana:",
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = 20.dp,
+                                            vertical = 10.dp
+                                        )
+                                        .background(MaterialTheme.colors.primaryVariant),
+                                    fontSize = 18.sp,
                                 )
-                            FeatCard(
-                                textNameEvent = event.name,
-                                textDay = "$date ${
-                                    event.startTime.substring(
-                                        0,
-                                        5
+                            }
+                            Divider(
+                                thickness = 3.dp,
+                                modifier = Modifier.padding(vertical = 0.dp),
+                                color = MaterialTheme.colors.secondary
+                            )
+
+                            if (state.eventOfTheWeek.isEmpty()) {
+                                Box(
+                                    Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        modifier = Modifier.padding(vertical = 70.dp),
+                                        text = "No hay ningun evento organizado esta semana.",
+                                        style = TextStyle(Color.Gray, fontSize = 18.sp)
                                     )
-                                } - ${event.endTime.substring(0, 5)}",
-                                textLocation = getAddress(location, context).getAddressLine(
-                                    0
-                                ),
-                                textState = event.state.description,
-                                sport = event.sport.description,
-                                onClickCard = {
-                                    navigateToDetail(event)
-                                },
+                                }
 
-                                )
+                            } else {
+                                HorizontalPager(
+                                    state = pagerState,
+                                    modifier = Modifier
+                                        .padding(0.dp, 5.dp, 0.dp, 20.dp),
+                                    count = state.eventOfTheWeek.size
+                                ) { page ->
+                                    val event = state.eventOfTheWeek[page]
 
-                        }
-                    }
-
-                    Column {
-
-                        Row(
-                            Modifier
-                                .background(MaterialTheme.colors.primaryVariant)
-                                .fillMaxWidth()
-                        ){
-                        Text(
-                            text = "Eventos confirmados:",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp)
-                                .background(MaterialTheme.colors.primary),
-                            fontSize = 18.sp
-                        )}
-                        Divider(
-                            thickness = 3.dp,
-                            modifier = Modifier.padding(vertical = 0.dp),
-                            color = MaterialTheme.colors.secondary
-                        )
-                        LazyColumn(
-                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-                        ) {
-                            items(
-                                items = state.eventConfirmedOrApplied,
-                                itemContent = { event ->
                                     val date = LocalDate.parse(event.date.substring(0, 10)).format(
                                         DateTimeFormatter.ofPattern(stringResource(R.string.format_date))
                                     )
@@ -199,20 +161,99 @@ fun Home(
                                         },
 
                                         )
+
                                 }
+                            }
+                        }
+
+                        Column {
+
+                            Row(
+                                Modifier
+                                    .background(MaterialTheme.colors.primaryVariant)
+                                    .fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = "Eventos confirmados:",
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = 20.dp,
+                                            vertical = 10.dp
+                                        )
+                                        .background(MaterialTheme.colors.primary),
+                                    fontSize = 18.sp
+                                )
+                            }
+                            Divider(
+                                thickness = 3.dp,
+                                modifier = Modifier.padding(vertical = 0.dp),
+                                color = MaterialTheme.colors.secondary
                             )
+                            if (state.eventConfirmedOrApplied.isEmpty()) {
+                                Box(
+                                    Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(modifier = Modifier.padding(vertical = 70.dp),
+                                        text = "Aun no esta confirmado, ni postulado en algun evento",
+                                        style = TextStyle(Color.Gray, fontSize = 18.sp)
+                                    )
+                                }
+
+                            } else {
+                                LazyColumn(
+                                    contentPadding = PaddingValues(
+                                        horizontal = 16.dp,
+                                        vertical = 8.dp
+                                    )
+                                ) {
+                                    items(
+                                        items = state.eventConfirmedOrApplied,
+                                        itemContent = { event ->
+                                            val date =
+                                                LocalDate.parse(event.date.substring(0, 10)).format(
+                                                    DateTimeFormatter.ofPattern(stringResource(R.string.format_date))
+                                                )
+                                            val context = LocalContext.current
+                                            val location =
+                                                LatLng(
+                                                    event.latitude.toDouble(),
+                                                    event.longitude.toDouble()
+                                                )
+                                            FeatCard(
+                                                textNameEvent = event.name,
+                                                textDay = "$date ${
+                                                    event.startTime.substring(
+                                                        0,
+                                                        5
+                                                    )
+                                                } - ${event.endTime.substring(0, 5)}",
+                                                textLocation = getAddress(
+                                                    location,
+                                                    context
+                                                ).getAddressLine(
+                                                    0
+                                                ),
+                                                textState = event.state.description,
+                                                sport = event.sport.description,
+                                                onClickCard = {
+                                                    navigateToDetail(event)
+                                                },
+
+                                                )
+                                        }
+                                    )
+                                }
+                            }
                         }
                     }
                 }
             }
+
+
         }
-
-
-
-
-
-
-    }
     }
 }
 

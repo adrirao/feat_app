@@ -231,7 +231,7 @@ fun AddNewEventScreen(
             descriptionContent = description,
             onDismiss = {
                 onValueChange(AddEventEvent.DismissDialog)
-                navigateToHome()
+                navigateToEvents()
             }
         )
     } else if (state.error.isNotBlank()) {
@@ -243,7 +243,7 @@ fun AddNewEventScreen(
             descriptionContent = description,
             onDismiss = {
                 onValueChange(AddEventEvent.DismissDialog)
-                navigateToHome()
+                navigateToEvents()
             }
         )
     }
