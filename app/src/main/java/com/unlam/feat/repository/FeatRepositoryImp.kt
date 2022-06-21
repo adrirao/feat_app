@@ -635,7 +635,9 @@ constructor(
         }
     }
     //<editor-fold desc="EventApplies">
+
     //<editor-fold desc="Multiple EndPoints">
+
     override fun getDataDetailEvent(idEvent: Int): Flow<Result<ResponseDetailEvent>> = flow {
         try {
             emit(Result.Loading())
@@ -771,6 +773,6 @@ constructor(
 
 
 
-//<editor-fold desc="Multiple EndPoints">
+//</editor-fold desc="Multiple EndPoints">
 }
 

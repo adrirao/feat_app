@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.google.accompanist.insets.navigationBarsWithImePadding
+import com.google.accompanist.insets.statusBarsPadding
 import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.nav.BottomNavigationItem
 import com.unlam.feat.presentation.component.nav.FloatingButtonNavigation
@@ -129,8 +131,27 @@ fun FeatApp(
             }
         ) {
             Box(
-                modifier = Modifier
-                    .padding(bottom = it.calculateBottomPadding())
+                modifier = if (navController.currentDestination?.route in listOf(
+                        Screen.Profile.route,
+                        Screen.Events.route,
+                        Screen.Search.route,
+                        Screen.Invitation.route,
+                        Screen.Home.route,
+                    )
+                ) {
+                    Modifier
+                        .statusBarsPadding()
+                        .padding(
+                            bottom = it.calculateBottomPadding()
+                        )
+                } else {
+                    Modifier
+                        .statusBarsPadding()
+                        .navigationBarsWithImePadding()
+                        .padding(
+                            bottom = it.calculateBottomPadding()
+                        )
+                },
             ) {
                 Navigation(
                     navController = navController,

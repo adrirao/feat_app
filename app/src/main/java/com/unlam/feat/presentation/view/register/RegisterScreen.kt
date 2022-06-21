@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.insets.navigationBarsWithImePadding
+import com.google.accompanist.insets.statusBarsPadding
 import com.unlam.feat.R
 import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.FeatAlertDialog
@@ -49,19 +51,21 @@ private fun Content(viewModel: RegisterViewModel, navigateToLogin: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.primary)
-            .padding(20.dp)
-            .verticalScroll(rememberScrollState())
+            .padding(20.dp),
+        contentAlignment = Alignment.Center
+//            .verticalScroll(rememberScrollState())
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                modifier = Modifier.size(200.dp),
-                painter = painterResource(R.drawable.logotipo),
-                contentDescription = stringResource(R.string.feat_logo)
-            )
+//            Image(
+//                modifier = Modifier.size(200.dp),
+//                painter = painterResource(R.drawable.logotipo),
+//                contentDescription = stringResource(R.string.feat_logo)
+//            )
             FeatText(
                 text = "A continuacion te pedimos algunos datos para que formes parte de nuetro equipo.",
                 fontSize = 20.sp,

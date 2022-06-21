@@ -3,6 +3,7 @@ package com.unlam.feat.presentation.view.events.add_event
 import android.location.Geocoder
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,6 +23,8 @@ import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.navigationBarsWithImePadding
+import com.google.accompanist.insets.statusBarsPadding
 import com.unlam.feat.R
 import com.unlam.feat.model.Periodicity
 import com.unlam.feat.presentation.component.*
@@ -41,7 +44,7 @@ fun AddNewEventScreen(
         mutableStateOf(false)
     }
 
-    Column {
+    Column{
         FeatHeader("Creacion Evento")
         Box(
             modifier = Modifier
