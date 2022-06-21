@@ -1,6 +1,5 @@
 package com.unlam.feat.presentation.view.edit_profile
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
@@ -16,21 +15,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.unlam.feat.R
-import com.unlam.feat.presentation.component.FeatButtonRounded
-import com.unlam.feat.presentation.component.FeatHeader
-import com.unlam.feat.presentation.component.FeatSportCard
+import com.unlam.feat.model.Person
+import com.unlam.feat.presentation.component.*
 import com.unlam.feat.presentation.ui.theme.card
+import com.unlam.feat.presentation.view.events.add_event.AddEventEvent
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun Profile(
     state: ProfileState,
     onEvent: (ProfileEvent) -> Unit,
+    onValueChange: (ProfileEvent) -> Unit,
     isRefreshing: Boolean,
-    refreshData: () -> Unit
+    refreshData: () -> Unit,
+    updatePerson: () -> Unit
 ) {
-    var person = state.person;
 
     Column(
         modifier = Modifier
@@ -75,50 +78,65 @@ fun Profile(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        if (person != null) {
-                            Text(
-                                text = person.names,
-                                style = MaterialTheme.typography.h6
+                            FeatTextField(
+                                text = state.names,
+                                textLabel = "Nombres",
+                                onValueChange = { onValueChange(ProfileEvent.EnteredNames(it))}
                             )
-                        }
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        if (person != null) {
-                            Text(
-                                text = person.lastname,
-                                style = MaterialTheme.typography.h6
+                            FeatTextField(
+                                text = state.lastname,
+                                textLabel = "Apellido",
+                                onValueChange = { onValueChange(ProfileEvent.EnteredLastNames(it))}
                             )
-                        }
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        if (person != null) {
-                            Text(
-                                text = "(" + person.nickname + ")",
-                                style = MaterialTheme.typography.h6
+                            FeatTextField(
+                                text = state.nickname,
+                                textLabel = "Apodo",
+                                onValueChange = { onValueChange(ProfileEvent.EnteredNickname(it))}
                             )
-                        }
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        if (person != null) {
-                            Text(
-                                text = person.sex,
-                                style = MaterialTheme.typography.h6
+                            FeatTextField(
+                                text = state.sex,
+                                textLabel = "Sexo",
+                                onValueChange = { onValueChange(ProfileEvent.EnteredSex(it))}
                             )
-                        }
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        if (person != null) {
-                            Text(
-                                text = person.birthDate,
-                                style = MaterialTheme.typography.h6
+                            FeatDatePicker(
+                                date = state.birth_date,
+                                label = "Fecha de nacimiento",
+                                onValueChange = { onValueChange(ProfileEvent.EnteredBirthDate(it))},
+                                titlePicker = stringResource(R.string.text_select_date)
+                            )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        if (state.buttonUpdatePersonalInformation) {
+                            FeatButton(
+                                modifier = Modifier
+                                    .padding(10.dp)
+                                    .height(60.dp),
+                                textButton = "Modificar datos",
+                                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                                colorText = MaterialTheme.colors.primary,
+                                textAlign = TextAlign.Center,
+                                colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
+                                onClick = {
+                                    updatePerson()
+                                }
                             )
                         }
                     }
@@ -154,15 +172,6 @@ fun Profile(
                             style = MaterialTheme.typography.h5
                         )
                     }
-                    FeatButtonRounded(
-                        modifier = Modifier
-                            .size(60.dp)
-                            .fillMaxWidth(),
-                        drawable = R.drawable.check,
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                        onClick = {refreshData()},
-                        colorFilter = ColorFilter.tint(Color.White)
-                    )
 
                     state.addresses?.forEachIndexed { index, address ->
                         Row(
@@ -182,7 +191,15 @@ fun Profile(
                             )
                         }
                     }
-
+                    FeatButtonRounded(
+                        modifier = Modifier
+                            .size(60.dp)
+                            .fillMaxWidth(),
+                        drawable = R.drawable.check,
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                        onClick = {refreshData()},
+                        colorFilter = ColorFilter.tint(Color.White)
+                    )
                 }
 
             }

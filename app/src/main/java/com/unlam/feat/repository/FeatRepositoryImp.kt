@@ -525,6 +525,20 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+
+    override fun updatePersonPersonalInformation(req: RequestUpdatePersonPersonalInformation): Flow<Result<String>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.updatePersonPersonalInformation(req).code()
+            if (response in 200..299) emit(Result.Success(data = "Actualizado con exito")) else emit(
+                Result.Error("Algo malo ocurrio.")
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+
     //</editor-fold desc="Persons">
     //<editor-fold desc="Valuations">
     override fun getValuations(): Flow<Result<List<Valuation>>> = flow {
@@ -685,9 +699,8 @@ constructor(
         try {
             emit(Result.Loading())
             var person = featProvider.getPerson(uId).body()
-            var addresses = featProvider.getAddressesByUser(uId).body() ?: emptyList()
             var players = featProvider.getPlayersByUser(uId).body() ?: emptyList()
-
+            var addresses = featProvider.getAddressesByUser(uId).body() ?: emptyList()
             if (person != null && addresses != null && players != null) {
                 emit(
                     Result.Success(
