@@ -86,7 +86,6 @@ fun Profile(
                             FeatTextField(
                                 text = state.names,
                                 textLabel = "Nombres",
-                                enabled = false,
                                 onValueChange = { onValueChange(ProfileEvent.EnteredNames(it))}
                             )
                     }
@@ -96,7 +95,6 @@ fun Profile(
                             FeatTextField(
                                 text = state.lastname,
                                 textLabel = "Apellido",
-                                enabled = false,
                                 onValueChange = { onValueChange(ProfileEvent.EnteredLastNames(it))}
                             )
                     }
@@ -106,7 +104,6 @@ fun Profile(
                             FeatTextField(
                                 text = state.nickname,
                                 textLabel = "Apodo",
-                                enabled = false,
                                 onValueChange = { onValueChange(ProfileEvent.EnteredNickname(it))}
                             )
                     }
@@ -116,7 +113,6 @@ fun Profile(
                             FeatTextField(
                                 text = state.sex,
                                 textLabel = "Sexo",
-                                enabled = false,
                                 onValueChange = { onValueChange(ProfileEvent.EnteredSex(it))}
                             )
                     }
