@@ -4,10 +4,7 @@ import android.util.Log
 import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
-import com.unlam.feat.model.response.ResponseDataAddEvent
-import com.unlam.feat.model.response.ResponseDataHomeEvent
-import com.unlam.feat.model.response.ResponseDataSport
-import com.unlam.feat.model.response.ResponseDetailEvent
+import com.unlam.feat.model.response.*
 import com.unlam.feat.provider.FeatProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -666,6 +663,30 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+
+    override fun getDataSearchEvent(idEvent: Int): Flow<Result<ResponseDataSearchEvent>> = flow {
+        try {
+            emit(Result.Loading())
+
+            val responseEvent = featProvider.getEventById(idEvent).body()
+            val playersConfirmed = featProvider.getAllPlayersConfirmedByEvent(idEvent).body()
+
+            if (responseEvent != null  && playersConfirmed != null) {
+                emit(
+                    Result.Success(
+                        data = ResponseDataSearchEvent(
+                            event = responseEvent,
+                            playersConfirmed = playersConfirmed
+                        )
+                    )
+                )
+            } else {
+                emit(Result.Error(message = "Unknown Error"))
+            }
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
     override fun getDataSportScreen(uId:String,sportGenericId:Int): Flow<Result<ResponseDataSport>> = flow {
         try {
             emit(Result.Loading())
@@ -746,6 +767,8 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+
+
 
 
 //<editor-fold desc="Multiple EndPoints">

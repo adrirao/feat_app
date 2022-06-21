@@ -3,10 +3,7 @@ package com.unlam.feat.repository
 import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
-import com.unlam.feat.model.response.ResponseDataAddEvent
-import com.unlam.feat.model.response.ResponseDataHomeEvent
-import com.unlam.feat.model.response.ResponseDataSport
-import com.unlam.feat.model.response.ResponseDetailEvent
+import com.unlam.feat.model.response.*
 import kotlinx.coroutines.flow.Flow
 
 
@@ -103,6 +100,7 @@ interface FeatRepository {
     fun getDataSportScreen(uId: String, sportGenericId: Int): Flow<Result<ResponseDataSport>>
     fun getDataAddEvent(uId:String): Flow<Result<ResponseDataAddEvent>>
     fun getDataHomeEvent(uId: String): Flow<Result<ResponseDataHomeEvent>>
+    fun getDataSearchEvent(idEvent: Int): Flow<Result<ResponseDataSearchEvent>>
     //</editor-fold desc="Multiple EndPoints">
 
 

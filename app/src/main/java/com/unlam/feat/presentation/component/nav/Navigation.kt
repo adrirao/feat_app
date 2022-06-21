@@ -264,6 +264,30 @@ private fun NavGraphBuilder.home(
         )
     }
 }
+private fun NavGraphBuilder.detailEventHome(
+    navController: NavHostController,
+) {
+    composable(
+        route = Screen.DetailEventHome.route + "/{idEvent}",
+        arguments = Screen.DetailEventHome.arguments ?: listOf()
+    ) {
+        val idEvent = it.arguments?.getString("idEvent") ?: ""
+        val detailEventHomeViewModel: DetailEventViewModel = hiltViewModel()
+        val state = detailEventHomeViewModel.state.value
+
+        LaunchedEffect(key1 = true) {
+            detailEventHomeViewModel.getDataDetailEvent(idEvent.toInt())
+        }
+
+        if (state.loading) {
+            FeatCircularProgress()
+        }
+
+        if (state.event != null && state.playersApplied != null && state.playersConfirmed != null && state.playersSuggested != null) {
+//            DetailEventScreen(state)
+        }
+    }
+}
 
 private fun NavGraphBuilder.search(navController: NavHostController) {
     composable(Screen.Search.route) {
@@ -279,17 +303,6 @@ private fun NavGraphBuilder.search(navController: NavHostController) {
                 navController.navigate(Screen.SearchEventDetail.route + "/${it.id}")
             }
         )
-
-//        val searchViewModel : SearchViewModel = hiltViewModel()
-//        var marker  = searchViewModel.marker.value
-//
-//        FeatMapWhitMaker(onClick = {
-//        })
-//
-//        if(marker.position != null){
-//            Log.e("RAO","click")
-//
-//        }
     }
 }
 
@@ -450,27 +463,4 @@ private fun NavGraphBuilder.searchEventDetail(
 }
 
 
-private fun NavGraphBuilder.detailEventHome(
-    navController: NavHostController,
-) {
-    composable(
-        route = Screen.DetailEventHome.route + "/{idEvent}",
-        arguments = Screen.DetailEventHome.arguments ?: listOf()
-    ) {
-        val idEvent = it.arguments?.getString("idEvent") ?: ""
-        val detailEventHomeViewModel: DetailEventViewModel = hiltViewModel()
-        val state = detailEventHomeViewModel.state.value
 
-        LaunchedEffect(key1 = true) {
-            detailEventHomeViewModel.getDataDetailEvent(idEvent.toInt())
-        }
-
-        if (state.loading) {
-            FeatCircularProgress()
-        }
-
-        if (state.event != null && state.playersApplied != null && state.playersConfirmed != null && state.playersSuggested != null) {
-//            DetailEventScreen(state)
-        }
-    }
-}

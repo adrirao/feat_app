@@ -112,27 +112,6 @@ fun SearchEventDetailScreen(
     }
 
 }
-/*
-    if (state.error.isNotBlank()) {
-        FeatAlertDialog(
-            title = "Ocurrio un error",
-            descriptionContent = "No se pudo procesar la solicitud",
-            onDismiss = {
-                onEvent(SearchEventDetailEvent.DismissDialog)
-            }
-        )
-    }
-    if (state.success) {
-        FeatAlertDialog(
-            title = "Enhorabuena",
-            descriptionContent = "Solicitud Enviada Correctamente!!",
-            onDismiss = {
-                navController.navigate(Screen.Search.route)
-            }
-        )
-    }
-}
-*/
 
 @Composable
 fun SearchEventDetail(

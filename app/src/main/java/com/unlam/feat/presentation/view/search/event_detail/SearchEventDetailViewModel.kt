@@ -40,7 +40,7 @@ constructor(
     }
 
     fun getDataDetailEvent(idEvent: Int) {
-        featRepository.getDataDetailEvent(idEvent).onEach { result ->
+        featRepository.getDataSearchEvent(idEvent).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value =
