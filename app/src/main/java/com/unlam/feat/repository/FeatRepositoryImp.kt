@@ -4,6 +4,7 @@ import android.util.Log
 import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
+import com.unlam.feat.model.response.*
 import com.unlam.feat.model.response.ResponseDataSport
 import com.unlam.feat.model.response.ResponseDetailEvent
 import com.unlam.feat.model.response.ResponseDetailProfile
@@ -135,6 +136,58 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+    override fun setConfirmed(request:RequestEventState): Flow<Result<String>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.setConfirmed(request).code()
+            if (response in 200..299) emit(Result.Success(data = "Creado con exito")) else emit(
+                Result.Error("Algo malo ocurrio.")
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+    override fun setCanceled(request:RequestEventState): Flow<Result<String>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.setCanceled(request).code()
+            if (response in 200..299) emit(Result.Success(data = "Creado con exito")) else emit(
+                Result.Error("Algo malo ocurrio.")
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+    override fun getAllEventsOfTheWeek(uId: String): Flow<Result<List<Event>>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.getAllEventsOfTheWeek(uId).body() ?: listOf()
+            if (response != null) emit(Result.Success(data = response)) else emit(
+                Result.Error(
+                    message = "Unknown Error"
+                )
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+    override fun getAllConfirmedOrAppliedByUser(uId: String): Flow<Result<List<HomeEvent>>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.getAllConfirmedOrAppliedByUser(uId).body() ?: listOf()
+            if (response != null) emit(Result.Success(data = response)) else emit(
+                Result.Error(
+                    message = "Unknown Error"
+                )
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+
 
     //</editor-fold desc="Events">
     //<editor-fold desc="Availabilities">
@@ -599,8 +652,21 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+    override fun createInvitation(req: RequestCreateInvitation): Flow<Result<String>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.createInvitation(req).code()
+            if (response in 200..299) emit(Result.Success(data = "Creado con exito")) else emit(
+                Result.Error("Algo malo ocurrio.")
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
     //<editor-fold desc="EventApplies">
+
     //<editor-fold desc="Multiple EndPoints">
+
     override fun getDataDetailEvent(idEvent: Int): Flow<Result<ResponseDetailEvent>> = flow {
         try {
             emit(Result.Loading())
@@ -629,6 +695,30 @@ constructor(
         }
     }
 
+
+    override fun getDataSearchEvent(idEvent: Int): Flow<Result<ResponseDataSearchEvent>> = flow {
+        try {
+            emit(Result.Loading())
+
+            val responseEvent = featProvider.getEventById(idEvent).body()
+            val playersConfirmed = featProvider.getAllPlayersConfirmedByEvent(idEvent).body()
+
+            if (responseEvent != null  && playersConfirmed != null) {
+                emit(
+                    Result.Success(
+                        data = ResponseDataSearchEvent(
+                            event = responseEvent,
+                            playersConfirmed = playersConfirmed
+                        )
+                    )
+                )
+            } else {
+                emit(Result.Error(message = "Unknown Error"))
+            }
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
     override fun getDataSportScreen(uId:String,sportGenericId:Int): Flow<Result<ResponseDataSport>> = flow {
         try {
             emit(Result.Loading())
@@ -723,5 +813,63 @@ constructor(
 
     //</editor-fold desc="Addresses">
 
+
+    override fun getDataAddEvent(uId: String): Flow<Result<ResponseDataAddEvent>> = flow {
+        try {
+            emit(Result.Loading())
+            val responsePerson = featProvider.getPerson(uId).body()
+            val responsePeriodicity = featProvider.getPeriodicities().body()
+            val responseSportGeneric = featProvider.getGenericsSports().body()
+            val responseSport = featProvider.getSports().body()
+
+
+            if (responsePerson != null && responsePeriodicity != null && responseSportGeneric != null && responseSport != null) {
+                emit(
+                    Result.Success(
+                        data = ResponseDataAddEvent(
+                            person = responsePerson,
+                            periodicityList = responsePeriodicity,
+                            sportList = responseSport,
+                            sportGenericList = responseSportGeneric
+
+                        )
+                    )
+                )
+            } else {
+                emit(Result.Error(message = "Unknown Error"))
+            }
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+    override fun getDataHomeEvent(uId: String): Flow<Result<ResponseDataHomeEvent>> = flow {
+        try {
+            emit(Result.Loading())
+            val responseEventOfTheWeek = featProvider.getAllEventsOfTheWeek(uId).body()
+            val responseEventConfirmedOrApplied = featProvider.getAllConfirmedOrAppliedByUser(uId).body()
+
+
+            if (responseEventOfTheWeek != null && responseEventConfirmedOrApplied != null ) {
+                emit(
+                    Result.Success(
+                        data = ResponseDataHomeEvent(
+                            eventOfTheWeek = responseEventOfTheWeek,
+                            eventConfirmedOrApplied = responseEventConfirmedOrApplied,
+                        )
+                    )
+                )
+            } else {
+                emit(Result.Error(message = "Unknown Error"))
+            }
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+
+
+
+//</editor-fold desc="Multiple EndPoints">
 }
 

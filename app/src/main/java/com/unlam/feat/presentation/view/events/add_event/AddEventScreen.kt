@@ -3,6 +3,7 @@ package com.unlam.feat.presentation.view.events.add_event
 import android.location.Geocoder
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,6 +23,8 @@ import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.navigationBarsWithImePadding
+import com.google.accompanist.insets.statusBarsPadding
 import com.unlam.feat.R
 import com.unlam.feat.model.Periodicity
 import com.unlam.feat.presentation.component.*
@@ -40,18 +43,71 @@ fun AddNewEventScreen(
     var openMap by remember {
         mutableStateOf(false)
     }
-    Box(modifier = Modifier.fillMaxWidth()) {
 
-    Column {
+    Column{
         FeatHeader("Creacion Evento")
         Box(
             modifier = Modifier
-                .padding(10.dp)
-                .background(MaterialTheme.colors.card)
+                .background(MaterialTheme.colors.primary)
+                .fillMaxSize()
         ) {
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
+
+                val sportGenericList = mutableListOf<String>()
+                state.sportGenericList.map {
+                    sportGenericList.add(it.description)
+                }
+
+                FeatDropDown(
+                    label = "Deporte",
+                    options = sportGenericList,
+                    selectedText = { value ->
+                        state.sportGenericList.forEach {
+                            if (it.description == value) onValueChange(
+                                AddEventEvent.EnteredSportGeneric(
+                                    it.id.toString()
+                                )
+
+                            )
+                        }
+                    }
+                )
+
+
+                if (state.sportGeneric.isNotBlank()) {
+                    val sportList = mutableListOf<String>()
+                    state.sportList.map {
+                        if (it.sportGeneric.id == state.sportGeneric.toInt())
+                            sportList.add(it.description)
+                    }
+                    if (sportList.size > 1) {
+                        FeatDropDown(
+                            label = "Cantidad de jugadores",
+                            options = sportList,
+                            selectedText = { value ->
+                                state.sportList.forEach {
+                                    if (it.description == value) onValueChange(
+                                        AddEventEvent.EnteredSport(
+                                            it.id.toString()
+                                        )
+
+                                    )
+                                }
+                            }
+                        )
+                    } else {
+                        state.sportList.forEach {
+                            if (it.sportGeneric.id == state.sportGeneric.toInt()) {
+                                onValueChange(AddEventEvent.EnteredSport(it.id.toString()))
+                            }
+                        }
+
+                    }
+                }
+
+
                 FeatTextField(
                     text = state.name,
                     textLabel = stringResource(R.string.input_name_event),
@@ -119,10 +175,6 @@ fun AddNewEventScreen(
                     text = state.description,
                     textLabel = stringResource(R.string.text_description),
                     onValueChange = { onValueChange(AddEventEvent.EnteredDescription(it)) })
-                FeatTextField(
-                    text = state.organizer,
-                    textLabel = stringResource(R.string.text_organizer),
-                    onValueChange = { onValueChange(AddEventEvent.EnteredOrganizer(it)) })
                 Row {
                     FeatButton(
                         textButton = stringResource(R.string.text_cancel),
@@ -130,14 +182,14 @@ fun AddNewEventScreen(
                             .fillMaxWidth(0.5f)
                             .padding(10.dp)
                             .height(60.dp),
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                        colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
                         onClick = {
                             navigateToEvents()
                         }
                     )
                     FeatButton(
                         textButton = stringResource(R.string.text_create),
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.primary),
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
                         onClick = {
                             createEvent()
                         }
@@ -182,7 +234,7 @@ fun AddNewEventScreen(
             descriptionContent = description,
             onDismiss = {
                 onValueChange(AddEventEvent.DismissDialog)
-                navigateToHome()
+                navigateToEvents()
             }
         )
     } else if (state.error.isNotBlank()) {
@@ -194,10 +246,10 @@ fun AddNewEventScreen(
             descriptionContent = description,
             onDismiss = {
                 onValueChange(AddEventEvent.DismissDialog)
-                navigateToHome()
+                navigateToEvents()
             }
         )
     }
-}
+
 
 }

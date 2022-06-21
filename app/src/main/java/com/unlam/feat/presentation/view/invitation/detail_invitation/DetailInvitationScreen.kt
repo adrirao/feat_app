@@ -99,13 +99,48 @@ fun DetailInvitationScreen(
 
             }
             when (tabIndex) {
-                0 -> FeatCardEventDetail(event!!, onEvent)
+                0 -> FeatCardEventDetail(event!!){
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 20.dp),
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                    ) {
+                        Column(
+
+                        ) {
+                            FeatButtonRounded(
+                                modifier = Modifier
+                                    .size(60.dp)
+                                    .fillMaxWidth(),
+                                drawable = R.drawable.cancel,
+                                colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
+                                onClick = { onEvent(DetailInvitationEvent.CancelInvitation) },
+                                colorFilter = ColorFilter.tint(Color.White)
+                            )
+
+                        }
+                        Column(
+                        ) {
+                            FeatButtonRounded(
+                                modifier = Modifier
+                                    .size(60.dp)
+                                    .fillMaxWidth(),
+                                drawable = R.drawable.check,
+                                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                                onClick = { onEvent(DetailInvitationEvent.ConfirmInvitation) },
+                                colorFilter = ColorFilter.tint(Color.White)
+                            )
+                        }
+
+                    }
+                }
                 1 -> FeatCardListPLayer(playersConfirmed!!)
             }
         }
     }
 }
-
 
 
 

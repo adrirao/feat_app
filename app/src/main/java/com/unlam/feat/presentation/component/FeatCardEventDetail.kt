@@ -9,15 +9,11 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -33,7 +29,6 @@ import com.unlam.feat.model.Event
 import com.unlam.feat.presentation.ui.theme.Shapes
 import com.unlam.feat.presentation.ui.theme.card
 import com.unlam.feat.presentation.ui.theme.text
-import com.unlam.feat.presentation.view.invitation.detail_invitation.DetailInvitationEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -42,7 +37,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun FeatCardEventDetail(
     event: Event,
-    onClick: (DetailInvitationEvent) -> Unit
+    content :@Composable (RowScope.() -> Unit)? = null
 ) {
 
     val context = LocalContext.current
@@ -98,7 +93,7 @@ fun FeatCardEventDetail(
                         )
                     } else if (event.sport.description.contains("Actividad Recreativa")) {
                         Image(
-                            painter = painterResource(id = R.drawable.recreational_event),
+                            painter = painterResource(id = R.drawable.recreational_activity),
                             contentDescription = "",
                             contentScale = ContentScale.Fit,
                             modifier = Modifier.size(70.dp)
@@ -229,43 +224,16 @@ fun FeatCardEventDetail(
             }
         }
 
-
-        Row(
-            modifier = Modifier
-                .align(Alignment.End)
-                .fillMaxSize()
-                .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 20.dp),
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        ) {
-            Column(
-
-            ) {
-                FeatButtonRounded(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .fillMaxWidth(),
-                    drawable = R.drawable.cancel,
-                    colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
-                    onClick = { onClick(DetailInvitationEvent.CancelInvitation)},
-                    colorFilter = ColorFilter.tint(Color.White)
-                )
-
-            }
-            Column(
-            ) {
-                FeatButtonRounded(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .fillMaxWidth(),
-                    drawable = R.drawable.check,
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                    onClick = {onClick(DetailInvitationEvent.ConfirmInvitation)},
-                    colorFilter = ColorFilter.tint(Color.White)
-                )
+            Row(
+                modifier = Modifier
+                    .align(Alignment.End)
+            ){
+                if (content != null) {
+                    content()
+                }
             }
 
-        }
+
 
     }
 }

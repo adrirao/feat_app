@@ -178,7 +178,7 @@ private fun ConfigProfileAdditionalInformationContent(
                         Row() {
                             Slider(
                                 value = state.willingDistance.toFloat(),
-                                valueRange = 1f..50f,
+                                valueRange = 1f..15f,
                                 onValueChange = {
                                     onValueChange(
                                         ConfigProfileAdditionalInformationEvent.EnteredWillingDistance(
@@ -198,7 +198,6 @@ private fun ConfigProfileAdditionalInformationContent(
                         }
                         Row() {
                             Text(state.willingDistance + " Km.")
-
                         }
 
                     }

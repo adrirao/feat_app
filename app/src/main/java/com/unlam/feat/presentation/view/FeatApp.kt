@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.google.accompanist.insets.navigationBarsWithImePadding
+import com.google.accompanist.insets.statusBarsPadding
 import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.nav.BottomNavigationItem
 import com.unlam.feat.presentation.component.nav.FloatingButtonNavigation
@@ -45,9 +47,9 @@ fun FeatApp(
         ),
         NavigationItem(
             route = Screen.Invitation.route,
-            icon = Icons.Outlined.Sms,
+            icon = Icons.Outlined.Mail,
             contentDescription = "Invite",
-            alertCount = 99
+            alertCount = null
         ),
     )
 ) {
@@ -91,14 +93,14 @@ fun FeatApp(
                             description = "Add Event"
                         )
                     }
-                    Screen.Search.route -> {
+                    /*Screen.Search.route -> {
                         floatingButtonNavigation = FloatingButtonNavigation(
-                            route = Screen.SearchList.route,
+                            route = Screen.SearchEventDetail.route,
                             icon = Icons.Outlined.Search,
                             description = "Search"
                         )
 
-                    }
+                    }*/
                     Screen.DetailEventHome.route + "/{idEvent}" -> {
                         floatingButtonNavigation = FloatingButtonNavigation(
                             route = Screen.Chat.route,
@@ -129,8 +131,27 @@ fun FeatApp(
             }
         ) {
             Box(
-                modifier = Modifier
-                    .padding(bottom = it.calculateBottomPadding())
+                modifier = if (navController.currentDestination?.route in listOf(
+                        Screen.Profile.route,
+                        Screen.Events.route,
+                        Screen.Search.route,
+                        Screen.Invitation.route,
+                        Screen.Home.route,
+                    )
+                ) {
+                    Modifier
+                        .statusBarsPadding()
+                        .padding(
+                            bottom = it.calculateBottomPadding()
+                        )
+                } else {
+                    Modifier
+                        .statusBarsPadding()
+                        .navigationBarsWithImePadding()
+                        .padding(
+                            bottom = it.calculateBottomPadding()
+                        )
+                },
             ) {
                 Navigation(
                     navController = navController,
