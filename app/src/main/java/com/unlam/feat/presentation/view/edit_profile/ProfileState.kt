@@ -20,6 +20,13 @@ data class ProfileState (
     val lastname: String = "",
     val nickname: String = "",
     val birth_date: LocalDate? = null,
-    val sex: String= ""
+    val sex: String= "",
+
+    val minAge: String = "",
+    val maxAge: String = "",
+    val notifications: Boolean = false,
+    val willingDistance: String = "1"
+
+
 
 )

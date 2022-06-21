@@ -5,11 +5,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +26,7 @@ import com.unlam.feat.presentation.view.config_profile.additional_information.Co
 import com.unlam.feat.presentation.view.events.add_event.AddEventEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.math.roundToInt
 
 @Composable
 fun Profile(
@@ -36,6 +36,7 @@ fun Profile(
     isRefreshing: Boolean,
     refreshData: () -> Unit,
     updatePerson: () -> Unit,
+    updatePersonPreferences: () -> Unit,
     navigateToAddress: () -> Unit
 ) {
 
@@ -85,6 +86,7 @@ fun Profile(
                             FeatTextField(
                                 text = state.names,
                                 textLabel = "Nombres",
+                                enabled = false,
                                 onValueChange = { onValueChange(ProfileEvent.EnteredNames(it))}
                             )
                     }
@@ -94,6 +96,7 @@ fun Profile(
                             FeatTextField(
                                 text = state.lastname,
                                 textLabel = "Apellido",
+                                enabled = false,
                                 onValueChange = { onValueChange(ProfileEvent.EnteredLastNames(it))}
                             )
                     }
@@ -103,6 +106,7 @@ fun Profile(
                             FeatTextField(
                                 text = state.nickname,
                                 textLabel = "Apodo",
+                                enabled = false,
                                 onValueChange = { onValueChange(ProfileEvent.EnteredNickname(it))}
                             )
                     }
@@ -112,6 +116,7 @@ fun Profile(
                             FeatTextField(
                                 text = state.sex,
                                 textLabel = "Sexo",
+                                enabled = false,
                                 onValueChange = { onValueChange(ProfileEvent.EnteredSex(it))}
                             )
                     }
@@ -147,6 +152,161 @@ fun Profile(
                 }
 
             }
+
+            // Preferencias
+                Card(
+                    shape = RoundedCornerShape(CornerSize(16.dp)),
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp, vertical = 16.dp)
+                        .fillMaxWidth(),
+                    elevation = 6.dp,
+                    backgroundColor = MaterialTheme.colors.card,
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 12.dp, bottom = 12.dp, start = 8.dp, end = 8.dp)
+                    )
+                    {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Mis preferencias",
+                                style = MaterialTheme.typography.h5
+                            )
+                        }
+
+
+                        FeatText(
+                            modifier = Modifier.padding(top = 10.dp),
+                            text = "Rango de edad",
+                            fontSize = 18.sp,
+                            textAlign = TextAlign.Center
+                        )
+                        Row(
+
+                        ) {
+                            FeatTextField(
+                                textLabel = "Minima",
+                                text = state.minAge,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(0.5f),
+                                keyboardType = KeyboardType.Number,
+                                onValueChange = { age ->
+                                    if (age.length <= 3 && ((age.toIntOrNull()) ?: 0) <= 150) {
+                                        onValueChange(
+                                            ProfileEvent.EnteredMinAge(
+                                                age.filter { it.isDigit() })
+                                        )
+                                    }
+
+                                }
+                            )
+                            FeatTextField(
+                                textLabel = "Maxima",
+                                text = state.maxAge,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(0.5f),
+                                keyboardType = KeyboardType.Number,
+                                onValueChange = { age ->
+                                    if (age.length <= 3 && ((age.toIntOrNull()) ?: 0) <= 150) {
+                                        onValueChange(
+                                            ProfileEvent.EnteredMaxAge(
+                                                age.filter { it.isDigit() })
+                                        )
+                                    }
+                                }
+                            )
+                        }
+
+                        FeatText(
+                            modifier = Modifier.padding(top = 10.dp),
+                            text = "Rango de cercanía",
+                            fontSize = 18.sp,
+                            textAlign = TextAlign.Center
+                        )
+
+                        Row(
+
+                        ) {
+
+                            Column(
+
+                            ) {
+
+                                Row() {
+                                    Slider(
+                                        value = state.willingDistance.toFloat(),
+                                        valueRange = 1f..50f,
+                                        onValueChange = {
+                                            onValueChange(
+                                                ProfileEvent.EnteredWillingDistance(
+                                                    it.roundToInt().toString()
+                                                )
+                                            )
+                                        },
+                                        steps = 0,
+                                        colors = SliderDefaults.colors(
+                                            thumbColor = MaterialTheme.colors.secondary,
+                                            activeTrackColor = MaterialTheme.colors.secondary,
+                                            inactiveTrackColor = Color.White.copy(alpha = 1.0f),
+                                            activeTickColor = MaterialTheme.colors.secondary,
+                                            inactiveTickColor = Color.White
+                                        )
+                                    )
+                                }
+                                Row() {
+                                    Text(state.willingDistance + " Km.")
+
+                                }
+
+                            }
+
+
+                        }
+                        Row(
+
+                        ) {
+
+                            val isChecker = remember { mutableStateOf(false) }
+                            FeatLabelledCheckbox(
+                                checked = isChecker.value,
+                                onCheckedChange = {
+                                    isChecker.value = it
+                                    ProfileEvent.EnteredNotifications(it)
+                                },
+                                label = "Recibir notificaciones"
+                            )
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            if (state.buttonUpdatePersonalInformation) {
+                                FeatButton(
+                                    modifier = Modifier
+                                        .padding(10.dp)
+                                        .height(60.dp),
+                                    textButton = "Modificar preferencias",
+                                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                                    colorText = MaterialTheme.colors.primary,
+                                    textAlign = TextAlign.Center,
+                                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
+                                    onClick = {
+                                        updatePersonPreferences()
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                }
 
 
             // Direcciones
@@ -198,7 +358,8 @@ fun Profile(
                     FeatButtonRounded(
                         modifier = Modifier
                             .size(45.dp)
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .align(Alignment.End),
                         drawable = R.drawable.add,
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
                         onClick = {navigateToAddress()},

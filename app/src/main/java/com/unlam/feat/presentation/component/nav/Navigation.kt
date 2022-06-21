@@ -267,7 +267,7 @@ private fun NavGraphBuilder.profile(navController: NavHostController) {
                 navController.navigate(
                     Screen.EditProfileAddress.route
                 )
-            }
+            }, updatePersonPreferences = profileViewModel::updatePersonPreferences
         )
     }
 }

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlam.feat.common.Result
 import com.unlam.feat.di.ResourcesProvider
+import com.unlam.feat.model.request.RequestUpdatePerson
 import com.unlam.feat.model.request.RequestUpdatePersonPersonalInformation
 import com.unlam.feat.presentation.view.events.add_event.AddEventEvent
 import com.unlam.feat.repository.FeatRepositoryImp
@@ -66,6 +67,26 @@ constructor(
                     nickname = event.value
                 )
             }
+            is ProfileEvent.EnteredMinAge -> {
+                _state.value = _state.value.copy(
+                    minAge = event.value
+                )
+            }
+            is ProfileEvent.EnteredMaxAge -> {
+                _state.value = _state.value.copy(
+                    maxAge = event.value
+                )
+            }
+            is ProfileEvent.EnteredWillingDistance -> {
+                _state.value = _state.value.copy(
+                    willingDistance = event.value
+                )
+            }
+            is ProfileEvent.EnteredNotifications -> {
+                _state.value = _state.value.copy(
+                    notifications = event.value
+                )
+            }
             is ProfileEvent.DismissDialog -> {
                 _state.value = _state.value.copy(
                     error = ""
@@ -111,6 +132,10 @@ constructor(
                         nickname = result.data.person.nickname,
                         birth_date = LocalDate.parse(result.data.person.birthDate, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")),
                         sex = result.data.person.sex,
+                        minAge = result.data.person.minAge.toString(),
+                        maxAge = result.data.person.maxAge.toString(),
+                        willingDistance = result.data.person.willingDistance.toString(),
+                        notifications = result.data.person.notifications.toBoolean()
                     )
                 }
             }
@@ -128,6 +153,35 @@ constructor(
         )
 
         featRepository.updatePersonPersonalInformation(request).onEach { result ->
+            when (result) {
+                is Result.Error -> {
+                    _state.value = ProfileState(error = result.message ?: "Error Inesperado")
+                }
+                is Result.Loading -> {
+                    _state.value = ProfileState(isLoading = true)
+                }
+                is Result.Success -> {
+                    _state.value = ProfileState(isUpdatedMessage = result.data)
+                }
+            }
+        }.launchIn(viewModelScope)
+        getDetailProfile()
+    }
+
+    fun updatePersonPreferences(){
+        var notification = 0
+        if(_state.value.notifications){
+            notification = 1
+        }
+        val request = RequestUpdatePerson(
+            id= _state.value.person!!.id,
+            minAge = _state.value.minAge.toInt(),
+            maxAge = _state.value.maxAge.toInt(),
+            willingDistance = _state.value.willingDistance.toInt(),
+            notifications =  notification,
+        )
+
+        featRepository.updatePerson(request).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value = ProfileState(error = result.message ?: "Error Inesperado")

@@ -316,7 +316,7 @@ private fun EditProfileAddressScreenContent(
                 FeatButton(
                     modifier = Modifier
                         .padding(10.dp)
-                        .height(60.dp),
+                        .height(100.dp),
                     textButton = "Agregar dirección",
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
                     onClick = {
