@@ -18,10 +18,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+//        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            ProvideWindowInsets {
+//            ProvideWindowInsets {
                 FeatTheme {
                     val navController  = rememberNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                         ),
                     )
                 }
-            }
+//            }
         }
     }
 }

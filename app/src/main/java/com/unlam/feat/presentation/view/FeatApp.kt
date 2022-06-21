@@ -131,27 +131,10 @@ fun FeatApp(
             }
         ) {
             Box(
-                modifier = if (navController.currentDestination?.route in listOf(
-                        Screen.Profile.route,
-                        Screen.Events.route,
-                        Screen.Search.route,
-                        Screen.Invitation.route,
-                        Screen.Home.route,
+                modifier = Modifier
+                    .padding(
+                        bottom = it.calculateBottomPadding()
                     )
-                ) {
-                    Modifier
-                        .statusBarsPadding()
-                        .padding(
-                            bottom = it.calculateBottomPadding()
-                        )
-                } else {
-                    Modifier
-                        .statusBarsPadding()
-                        .navigationBarsWithImePadding()
-                        .padding(
-                            bottom = it.calculateBottomPadding()
-                        )
-                },
             ) {
                 Navigation(
                     navController = navController,
