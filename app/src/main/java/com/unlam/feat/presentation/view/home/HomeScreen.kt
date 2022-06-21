@@ -1,7 +1,6 @@
 package com.unlam.feat.presentation.view.home
 
 import android.content.Context
-import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
 import androidx.compose.animation.core.tween
@@ -29,7 +28,6 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.android.gms.maps.model.LatLng
 import com.unlam.feat.R
-import com.unlam.feat.model.Event
 import com.unlam.feat.presentation.component.FeatAlertDialog
 import com.unlam.feat.presentation.component.FeatCard
 import com.unlam.feat.presentation.component.FeatCircularProgress
@@ -46,7 +44,7 @@ fun Home(
     state: HomeState,
     onEvent: (HomeEvent) -> Unit,
     isRefreshing: Boolean,
-    navigateToDetail: (Event) -> Unit,
+    navigateToDetail: (Int) -> Unit,
     refreshData: () -> Unit
 ) {
     val pagerState = rememberPagerState()
@@ -157,8 +155,9 @@ fun Home(
                                         textState = event.state.description,
                                         sport = event.sport.description,
                                         onClickCard = {
-                                            navigateToDetail(event)
+                                            navigateToDetail(event.id)
                                         },
+                                        chatEnable = false
 
                                         )
 
@@ -174,7 +173,7 @@ fun Home(
                                     .fillMaxWidth()
                             ) {
                                 Text(
-                                    text = "Eventos confirmados:",
+                                    text = "Eventos confirmados y aplicados:",
                                     color = Color.White,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier
@@ -236,10 +235,10 @@ fun Home(
                                                 ).getAddressLine(
                                                     0
                                                 ),
-                                                textState = event.state.description,
-                                                sport = event.sport.description,
+                                                textState = event.stateDesc,
+                                                sport = event.sportDesc,
                                                 onClickCard = {
-                                                    navigateToDetail(event)
+                                                    navigateToDetail(event.id)
                                                 },
 
                                                 )

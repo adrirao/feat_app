@@ -170,7 +170,7 @@ constructor(
         }
     }
 
-    override fun getAllConfirmedOrAppliedByUser(uId: String): Flow<Result<List<Event>>> = flow {
+    override fun getAllConfirmedOrAppliedByUser(uId: String): Flow<Result<List<HomeEvent>>> = flow {
         try {
             emit(Result.Loading())
             val response = featProvider.getAllConfirmedOrAppliedByUser(uId).body() ?: listOf()
