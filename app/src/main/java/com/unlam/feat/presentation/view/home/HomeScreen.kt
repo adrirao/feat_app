@@ -49,17 +49,17 @@ fun Home(
 ) {
     val pagerState = rememberPagerState()
 
-    if(state.eventOfTheWeek.isNotEmpty()){
-    LaunchedEffect(Unit) {
-        while (true) {
-            yield()
-            delay(2000)
-            tween<Float>(600)
-            pagerState.animateScrollToPage(
-                page = (pagerState.currentPage + 1) % (pagerState.pageCount)
-            )
+    if (state.eventOfTheWeek.isNotEmpty()) {
+        LaunchedEffect(Unit) {
+            while (true) {
+                yield()
+                delay(2000)
+                tween<Float>(600)
+                pagerState.animateScrollToPage(
+                    page = (pagerState.currentPage + 1) % (pagerState.pageCount)
+                )
+            }
         }
-    }
     }
     if (state.error.isNotBlank()) {
         FeatAlertDialog(
@@ -113,7 +113,9 @@ fun Home(
 
                             if (state.eventOfTheWeek.isEmpty()) {
                                 Box(
-                                    Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 20.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
@@ -159,7 +161,7 @@ fun Home(
                                         },
                                         chatEnable = false
 
-                                        )
+                                    )
 
                                 }
                             }
@@ -192,10 +194,13 @@ fun Home(
                             )
                             if (state.eventConfirmedOrApplied.isEmpty()) {
                                 Box(
-                                    Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 20.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Text(modifier = Modifier.padding(vertical = 70.dp),
+                                    Text(
+                                        modifier = Modifier.padding(vertical = 70.dp),
                                         text = "Aun no esta confirmado, ni postulado en algun evento",
                                         style = TextStyle(Color.Gray, fontSize = 18.sp)
                                     )
@@ -240,8 +245,7 @@ fun Home(
                                                 onClickCard = {
                                                     navigateToDetail(event.id)
                                                 },
-
-                                                )
+                                            )
                                         }
                                     )
                                 }

@@ -154,27 +154,27 @@ private fun Content(
                     navigateToRegister()
                 }
             )
-            Divider(
-                color = Color.Gray,
-                modifier = Modifier
-                    .padding(horizontal = 10.dp, vertical = 50.dp)
-                    .fillMaxWidth()
-                    .height(1.dp)
-            )
-            Box {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    FeatButtonRounded(
-                        drawable = R.drawable.google,
-                        colors = ButtonDefaults.buttonColors(Color(0xFFD35451)),
-                    )
-                    FeatButtonRounded(
-                        drawable = R.drawable.facebook,
-                    )
-                }
-            }
+//            Divider(
+//                color = Color.Gray,
+//                modifier = Modifier
+//                    .padding(horizontal = 10.dp, vertical = 50.dp)
+//                    .fillMaxWidth()
+//                    .height(1.dp)
+//            )
+//            Box {
+//                Row(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    horizontalArrangement = Arrangement.Center
+//                ) {
+//                    FeatButtonRounded(
+//                        drawable = R.drawable.google,
+//                        colors = ButtonDefaults.buttonColors(Color(0xFFD35451)),
+//                    )
+//                    FeatButtonRounded(
+//                        drawable = R.drawable.facebook,
+//                    )
+//                }
+//            }
         }
     }
 }
