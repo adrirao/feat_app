@@ -305,51 +305,48 @@ private fun EditProfileAddressScreenContent(
                     },
                     textLabel = "Codigo Postal"
                 )
-
-            }
-            Row(
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .weight(0.1f, false),
-                verticalAlignment = Alignment.Bottom
-            ) {
-                FeatButton(
+                Row(
                     modifier = Modifier
-                        .padding(10.dp)
-                        .height(100.dp),
-                    textButton = "Agregar dirección",
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                    onClick = {
+                        .align(Alignment.End),
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    FeatButton(
+                        modifier = Modifier
+                            .padding(10.dp),
+                        textButton = "Agregar dirección",
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                        onClick = {
 
-                        val geocoder = Geocoder(context)
-                        val addresses: List<Address>?
-                        val addressText: String =
-                            state.addressStreet + " " + state.addressNumber + " " + state.addressTown + " " + state.addressZipCode
-                        try {
-                            addresses = geocoder.getFromLocationName(addressText, 1)
+                            val geocoder = Geocoder(context)
+                            val addresses: List<Address>?
+                            val addressText: String =
+                                state.addressStreet + " " + state.addressNumber + " " + state.addressTown + " " + state.addressZipCode
+                            try {
+                                addresses = geocoder.getFromLocationName(addressText, 1)
 
-                            if (addresses != null && addresses.isNotEmpty()) {
-                                onValueChange(
-                                    EditProfileAddressEvent.EnteredAddressLatitude(
-                                        addresses[0].latitude.toString()
+                                if (addresses != null && addresses.isNotEmpty()) {
+                                    onValueChange(
+                                        EditProfileAddressEvent.EnteredAddressLatitude(
+                                            addresses[0].latitude.toString()
+                                        )
                                     )
-                                )
-                                onValueChange(
-                                    EditProfileAddressEvent.EnteredAddressLongitude(
-                                        addresses[0].longitude.toString()
+                                    onValueChange(
+                                        EditProfileAddressEvent.EnteredAddressLongitude(
+                                            addresses[0].longitude.toString()
+                                        )
                                     )
-                                )
+                                }
+
+                                onValueChange(EditProfileAddressEvent.SubmitData)
+                            } catch (e: IOException) {
+                                Log.e("MapsActivity", e.localizedMessage)
                             }
 
-                            onValueChange(EditProfileAddressEvent.SubmitData)
-                        } catch (e: IOException) {
-                            Log.e("MapsActivity", e.localizedMessage)
-                        }
 
-
-                    },
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
-                )
+                        },
+                        colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
+                    )
+                }
             }
 
         }

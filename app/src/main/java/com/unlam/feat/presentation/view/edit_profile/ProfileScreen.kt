@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -80,71 +81,109 @@ fun Profile(
                             style = MaterialTheme.typography.h5
                         )
                     }
-                    Row(
+                    Column(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                            FeatTextField(
-                                text = state.names,
-                                textLabel = "Nombres",
-                                onValueChange = { onValueChange(ProfileEvent.EnteredNames(it))}
-                            )
+                        Text(
+                            text = "Nombres",
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            color = Color.Gray,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = state.names,
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            color = Color.Black,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Medium
+                        )
                     }
-                    Row(
+                    Column(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                            FeatTextField(
-                                text = state.lastname,
-                                textLabel = "Apellido",
-                                onValueChange = { onValueChange(ProfileEvent.EnteredLastNames(it))}
-                            )
+                        Text(
+                            text = "Apellido",
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            color = Color.Gray,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = state.lastname,
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            color = Color.Black,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Medium
+                        )
                     }
-                    Row(
+                    Column(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                            FeatTextField(
-                                text = state.nickname,
-                                textLabel = "Apodo",
-                                onValueChange = { onValueChange(ProfileEvent.EnteredNickname(it))}
-                            )
+                        Text(
+                            text = "Apodo",
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            color = Color.Gray,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = state.nickname,
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            color = Color.Black,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Medium
+                        )
                     }
-                    Row(
+                    Column(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                            FeatTextField(
-                                text = state.sex,
-                                textLabel = "Sexo",
-                                onValueChange = { onValueChange(ProfileEvent.EnteredSex(it))}
-                            )
+                        Text(
+                            text = "Sexo",
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            color = Color.Gray,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = state.sex,
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            color = Color.Black,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Medium
+                        )
                     }
-                    Row(
+
+                    Column(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                            FeatDatePicker(
-                                date = state.birth_date,
-                                label = "Fecha de nacimiento",
-                                onValueChange = { onValueChange(ProfileEvent.EnteredBirthDate(it))},
-                                titlePicker = stringResource(R.string.text_select_date)
+                        Text(
+                            text = "Fecha de nacimiento",
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            color = Color.Gray,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                            Text(
+                                text =  state.birth_date.toString(),
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = Color.Black,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
                             )
                     }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        if (state.buttonUpdatePersonalInformation) {
-                            FeatButton(
-                                modifier = Modifier
-                                    .padding(10.dp)
-                                    .height(60.dp),
-                                textButton = "Modificar datos",
-                                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                                colorText = MaterialTheme.colors.primary,
-                                textAlign = TextAlign.Center,
-                                colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
-                                onClick = {
-                                    updatePerson()
-                                }
-                            )
-                        }
-                    }
+                        FeatButtonRounded(
+                            modifier = Modifier
+                                .size(45.dp)
+                                .fillMaxWidth()
+                                .align(Alignment.End),
+                            drawable = R.drawable.edit,
+                            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                            colorFilter = ColorFilter.tint(Color.White),
+                            onClick = {
+                                updatePersonPreferences()
+                            }
+                        )
                 }
 
             }
@@ -281,25 +320,18 @@ fun Profile(
                                 label = "Recibir notificaciones"
                             )
                         }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            if (state.buttonUpdatePersonalInformation) {
-                                FeatButton(
-                                    modifier = Modifier
-                                        .padding(10.dp)
-                                        .height(60.dp),
-                                    textButton = "Modificar preferencias",
-                                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                                    colorText = MaterialTheme.colors.primary,
-                                    textAlign = TextAlign.Center,
-                                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
-                                    onClick = {
-                                        updatePersonPreferences()
-                                    }
-                                )
-                            }
-                        }
+                            FeatButtonRounded(
+                                modifier = Modifier
+                                    .size(45.dp)
+                                    .fillMaxWidth()
+                                    .align(Alignment.End),
+                                drawable = R.drawable.add,
+                                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                                colorFilter = ColorFilter.tint(Color.White),
+                                onClick = {
+                                    updatePersonPreferences()
+                                }
+                            )
                     }
 
                 }
