@@ -124,7 +124,7 @@ constructor(
 
                     players.forEach { player ->
                         if(player.sport.id == result.data.event.sport.sportGeneric.id){
-                            playerId = player.sport.id.toString()
+                            playerId = player.id.toString()
                         }
                     }
 

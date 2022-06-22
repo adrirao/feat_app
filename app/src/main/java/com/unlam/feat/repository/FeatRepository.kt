@@ -108,7 +108,7 @@ interface FeatRepository {
     fun getDataSportScreen(uId: String, sportGenericId: Int): Flow<Result<ResponseDataSport>>
     fun getDataAddEvent(uId:String): Flow<Result<ResponseDataAddEvent>>
     fun getDataHomeEvent(uId: String): Flow<Result<ResponseDataHomeEvent>>
-    fun getDataSearchEvent(idEvent: Int): Flow<Result<ResponseDataSearchEvent>>
+    fun getDataSearchEvent(idEvent: Int, uId:String): Flow<Result<ResponseDataSearchEvent>>
     //</editor-fold desc="Multiple EndPoints">
 
 

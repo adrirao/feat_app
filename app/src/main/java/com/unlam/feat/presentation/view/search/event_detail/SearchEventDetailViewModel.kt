@@ -40,7 +40,8 @@ constructor(
     }
 
     fun getDataDetailEvent(idEvent: Int) {
-        featRepository.getDataSearchEvent(idEvent).onEach { result ->
+        val uId =firebaseRepository.getUserId()
+        featRepository.getDataSearchEvent(idEvent,uId).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value =
@@ -50,9 +51,21 @@ constructor(
                     _state.value = SearchEventDetailState(loading = true)
                 }
                 is Result.Success -> {
+
+                    val players = result.data!!.playersUser
+                    var playerId : String = ""
+
+                    players.forEach { player ->
+                        if(player.sport.id == result.data.event.sport.sportGeneric.id){
+                            playerId = player.id.toString()
+                        }
+                    }
+
                     _state.value = SearchEventDetailState(
                         event = result.data!!.event,
-                        playersConfirmed = result.data.playersConfirmed
+                        playersConfirmed = result.data.playersConfirmed,
+                        idPlayer = playerId
+
                     )
                 }
             }
@@ -61,10 +74,10 @@ constructor(
 
     private fun applyEvent() {
 
-        val uid=firebaseRepository.getUserId()
+
 
         val request = RequestCreateInvitation(
-            playerId = uid,
+            playerId = _state.value.idPlayer!!,
             eventId = _state.value.event!!.id,
             origin = "P"
         )

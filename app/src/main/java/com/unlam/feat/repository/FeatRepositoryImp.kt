@@ -718,19 +718,21 @@ constructor(
     }
 
 
-    override fun getDataSearchEvent(idEvent: Int): Flow<Result<ResponseDataSearchEvent>> = flow {
+    override fun getDataSearchEvent(idEvent: Int, uId:String): Flow<Result<ResponseDataSearchEvent>> = flow {
         try {
             emit(Result.Loading())
 
             val responseEvent = featProvider.getEventById(idEvent).body()
             val playersConfirmed = featProvider.getAllPlayersConfirmedByEvent(idEvent).body()
+            val players = featProvider.getPlayersByUser(uId).body()
 
             if (responseEvent != null  && playersConfirmed != null) {
                 emit(
                     Result.Success(
                         data = ResponseDataSearchEvent(
                             event = responseEvent,
-                            playersConfirmed = playersConfirmed
+                            playersConfirmed = playersConfirmed,
+                            playersUser = players ?: listOf()
                         )
                     )
                 )
