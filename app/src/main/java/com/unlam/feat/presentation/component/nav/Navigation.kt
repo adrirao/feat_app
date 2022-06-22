@@ -41,6 +41,8 @@ import com.unlam.feat.presentation.view.edit_profile.Profile
 import com.unlam.feat.presentation.view.edit_profile.ProfileViewModel
 import com.unlam.feat.presentation.view.edit_profile.address.EditProfileAddressScreen
 import com.unlam.feat.presentation.view.edit_profile.address.EditProfileAddressViewModel
+import com.unlam.feat.presentation.view.edit_profile.personal_information.EditPersonalInformationViewModel
+import com.unlam.feat.presentation.view.edit_profile.personal_information.PersonalInformation
 import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddEventViewModel
@@ -81,6 +83,7 @@ fun Navigation(navController: NavHostController) {
 
         profile(navController)
         editProfileAddress(navController)
+        editPersonalInformation(navController)
 
         events(navController)
         home(navController)
@@ -257,12 +260,17 @@ private fun NavGraphBuilder.profile(navController: NavHostController) {
             onValueChange = {
                 profileViewModel.onEvent(it)
             },
-            updatePerson = profileViewModel::updatePerson,
             navigateToAddress = {
                 navController.navigate(
                     Screen.EditProfileAddress.route
                 )
-            }, updatePersonPreferences = profileViewModel::updatePersonPreferences
+            },
+            updatePersonPreferences = profileViewModel::updatePersonPreferences,
+            navigateToPersonalInformation = {
+                navController.navigate(
+                    Screen.EditProfilePersonalInformation.route
+                )
+            }
         )
     }
 }
@@ -280,6 +288,23 @@ private fun NavGraphBuilder.editProfileAddress(
             navController,
             state,
             onValueChange = { editProfileAddressViewModel.onEvent(it) })
+    }
+}
+
+private fun NavGraphBuilder.editPersonalInformation(
+    navController: NavHostController,
+) {
+    composable(
+        route = Screen.EditProfilePersonalInformation.route,
+    ) {
+        val editPersonalInformationViewModel: EditPersonalInformationViewModel = hiltViewModel()
+        val state = editPersonalInformationViewModel.state.value
+
+        PersonalInformation(
+            navController,
+            state,
+            onValueChange = { editPersonalInformationViewModel.onEvent(it) },
+            updatePerson = editPersonalInformationViewModel::updatePerson)
     }
 }
 

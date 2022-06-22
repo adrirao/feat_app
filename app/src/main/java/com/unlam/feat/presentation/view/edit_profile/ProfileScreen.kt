@@ -36,9 +36,9 @@ fun Profile(
     onValueChange: (ProfileEvent) -> Unit,
     isRefreshing: Boolean,
     refreshData: () -> Unit,
-    updatePerson: () -> Unit,
     updatePersonPreferences: () -> Unit,
-    navigateToAddress: () -> Unit
+    navigateToAddress: () -> Unit,
+    navigateToPersonalInformation: () -> Unit
 ) {
 
     Column(
@@ -91,13 +91,15 @@ fun Profile(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Medium
                         )
-                        Text(
-                            text = state.names,
-                            modifier = Modifier.padding(horizontal = 10.dp),
-                            color = Color.Black,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Medium
-                        )
+                        state.person?.let {
+                            Text(
+                                text = it.names,
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = Color.Black,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -109,13 +111,15 @@ fun Profile(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Medium
                         )
-                        Text(
-                            text = state.lastname,
-                            modifier = Modifier.padding(horizontal = 10.dp),
-                            color = Color.Black,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Medium
-                        )
+                        state.person?.let {
+                            Text(
+                                text = it.lastname,
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = Color.Black,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -127,13 +131,15 @@ fun Profile(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Medium
                         )
-                        Text(
-                            text = state.nickname,
-                            modifier = Modifier.padding(horizontal = 10.dp),
-                            color = Color.Black,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Medium
-                        )
+                        state.person?.let {
+                            Text(
+                                text = it.nickname,
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = Color.Black,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -145,13 +151,15 @@ fun Profile(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Medium
                         )
-                        Text(
-                            text = state.sex,
-                            modifier = Modifier.padding(horizontal = 10.dp),
-                            color = Color.Black,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Medium
-                        )
+                        state.person?.let {
+                            Text(
+                                text = it.sex,
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = Color.Black,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
 
                     Column(
@@ -165,7 +173,7 @@ fun Profile(
                             fontWeight = FontWeight.Medium
                         )
                             Text(
-                                text =  state.birth_date.toString(),
+                                text =  state.person?.birthDate.toString(),
                                 modifier = Modifier.padding(horizontal = 10.dp),
                                 color = Color.Black,
                                 fontSize = 15.sp,
@@ -181,7 +189,7 @@ fun Profile(
                             colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
                             colorFilter = ColorFilter.tint(Color.White),
                             onClick = {
-                                updatePersonPreferences()
+                                navigateToPersonalInformation()
                             }
                         )
                 }
@@ -325,7 +333,7 @@ fun Profile(
                                     .size(45.dp)
                                     .fillMaxWidth()
                                     .align(Alignment.End),
-                                drawable = R.drawable.add,
+                                drawable = R.drawable.edit,
                                 colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
                                 colorFilter = ColorFilter.tint(Color.White),
                                 onClick = {
@@ -369,16 +377,29 @@ fun Profile(
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                         ) {
+
                             Text(
                                 text = address.street,
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = Color.Black,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
                                 //style = MaterialTheme.typography.h6
                             )
                             Text(
                                 text = " " + address.number,
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = Color.Black,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
                                 //style = MaterialTheme.typography.h6
                             )
                             Text(
                                 text = ", " + address.town,
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = Color.Black,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
                                 //style = MaterialTheme.typography.h6
                             )
                         }

@@ -19,20 +19,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.unlam.feat.R
 import com.unlam.feat.presentation.component.*
 import com.unlam.feat.presentation.ui.theme.card
+import com.unlam.feat.presentation.view.config_profile.personal_data.ConfigProfilePersonalDataEvent
 import com.unlam.feat.presentation.view.edit_profile.ProfileEvent
 import com.unlam.feat.presentation.view.edit_profile.ProfileState
 import kotlin.math.roundToInt
 
 @Composable
 fun PersonalInformation(
-    state: ProfileState,
-    onEvent: (ProfileEvent) -> Unit,
-    onValueChange: (ProfileEvent) -> Unit,
-    isRefreshing: Boolean,
-    refreshData: () -> Unit,
+    navController: NavHostController,
+    state: EditPersonalInformationState,
+    onValueChange: (EditProfilePersonalInformationEvent) -> Unit,
     updatePerson: () -> Unit,
 ) {
 
@@ -82,7 +82,7 @@ fun PersonalInformation(
                             FeatTextField(
                                 text = state.names,
                                 textLabel = "Nombres",
-                                onValueChange = { onValueChange(ProfileEvent.EnteredNames(it))}
+                                onValueChange = { onValueChange(EditProfilePersonalInformationEvent.EnteredNames(it))}
                             )
                         }
                         Row(
@@ -91,7 +91,7 @@ fun PersonalInformation(
                             FeatTextField(
                                 text = state.lastname,
                                 textLabel = "Apellido",
-                                onValueChange = { onValueChange(ProfileEvent.EnteredLastNames(it))}
+                                onValueChange = { onValueChange(EditProfilePersonalInformationEvent.EnteredLastNames(it))}
                             )
                         }
                         Row(
@@ -100,26 +100,38 @@ fun PersonalInformation(
                             FeatTextField(
                                 text = state.nickname,
                                 textLabel = "Apodo",
-                                onValueChange = { onValueChange(ProfileEvent.EnteredNickname(it))}
+                                onValueChange = { onValueChange(EditProfilePersonalInformationEvent.EnteredNickname(it))}
                             )
                         }
                         Column(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(
-                                text = "Sexo",
-                                modifier = Modifier.padding(horizontal = 10.dp),
-                                color = Color.Gray,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Medium
+
+                            FeatText(
+                                modifier = Modifier
+                                    .padding(top = 10.dp, bottom = 10.dp)
+                                    .fillMaxWidth(), text = "Sexo"
                             )
-                            Text(
-                                text = "Masculino",
-                                modifier = Modifier.padding(horizontal = 10.dp),
-                                color = Color.Black,
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Medium
-                            )
+                            val sexs = listOf("", "Hombre", "Mujer", "Otro")
+                            val currentSelection = remember { mutableStateOf(sexs.first()) }
+                            Row {
+                                FeatRadioGroup(
+                                    modifier = Modifier
+                                        .padding(horizontal = 5.dp),
+                                    items = sexs,
+                                    selection = currentSelection.value,
+                                    onItemClick = { clickedItem ->
+                                        currentSelection.value = clickedItem
+                                        onValueChange(EditProfilePersonalInformationEvent.EnteredSex(clickedItem))
+                                    }
+                                )
+                            }
+
+
                         }
 
                         Row(
@@ -128,14 +140,13 @@ fun PersonalInformation(
                             FeatDatePicker(
                                 date = state.birth_date,
                                 label = "Fecha de nacimiento",
-                                onValueChange = { onValueChange(ProfileEvent.EnteredBirthDate(it))},
+                                onValueChange = { onValueChange(EditProfilePersonalInformationEvent.EnteredBirthDate(it))},
                                 titlePicker = stringResource(R.string.text_select_date)
                             )
                         }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                         ) {
-                            if (state.buttonUpdatePersonalInformation) {
                                 FeatButton(
                                     modifier = Modifier
                                         .padding(10.dp)
@@ -149,7 +160,6 @@ fun PersonalInformation(
                                         updatePerson()
                                     }
                                 )
-                            }
                         }
                     }
 
