@@ -5,6 +5,9 @@ import com.unlam.feat.common.Result
 import com.unlam.feat.model.*
 import com.unlam.feat.model.request.*
 import com.unlam.feat.model.response.*
+import com.unlam.feat.model.response.ResponseDataSport
+import com.unlam.feat.model.response.ResponseDetailEvent
+import com.unlam.feat.model.response.ResponseDetailProfile
 import com.unlam.feat.provider.FeatProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -342,6 +345,16 @@ constructor(
         }
     }
 
+    override fun getPlayersByUser(userUid: String): Flow<Result<List<Player>>> = flow{
+        try {
+            emit(Result.Loading())
+            val response = featProvider.getPlayersByUser(userUid).body() ?: listOf()
+            emit(Result.Success(data = response))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
     override fun getAllByPerson(personId: Int): Flow<Result<List<Player>>> = flow {
         try {
             emit(Result.Loading())
@@ -486,6 +499,7 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+
     //</editor-fold desc="Sports">
     //<editor-fold desc="Users">
 
@@ -564,6 +578,20 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+
+    override fun updatePersonPersonalInformation(req: RequestUpdatePersonPersonalInformation): Flow<Result<String>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.updatePersonPersonalInformation(req).code()
+            if (response in 200..299) emit(Result.Success(data = "Actualizado con exito")) else emit(
+                Result.Error("Algo malo ocurrio.")
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+
     //</editor-fold desc="Persons">
     //<editor-fold desc="Valuations">
     override fun getValuations(): Flow<Result<List<Valuation>>> = flow {
@@ -590,6 +618,7 @@ constructor(
 
     override fun addAddress(req: RequestAddress): Flow<Result<String>> = flow {
         try {
+            Log.d("DIRECCION", req.toString())
             emit(Result.Loading())
             val response = featProvider.addAddress(req).code()
             if (response in 200..299) emit(Result.Success(data = "Agregada con exito")) else emit(
@@ -635,7 +664,9 @@ constructor(
         }
     }
     //<editor-fold desc="EventApplies">
+
     //<editor-fold desc="Multiple EndPoints">
+
     override fun getDataDetailEvent(idEvent: Int): Flow<Result<ResponseDetailEvent>> = flow {
         try {
             emit(Result.Loading())
@@ -663,6 +694,7 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+
 
     override fun getDataSearchEvent(idEvent: Int): Flow<Result<ResponseDataSearchEvent>> = flow {
         try {
@@ -714,6 +746,73 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+//<editor-fold desc="Multiple EndPoints">
+
+
+
+    //<editor-fold desc="Addresses">
+    override fun getAddressesByUser(uId: String): Flow<Result<List<Address>>> = flow{
+        try {
+            emit(Result.Loading())
+            val response = featProvider.getAddressesByUser(uId)
+            Log.e("rao", response.toString())
+            emit(Result.Success(data = response.body() ?: listOf()))
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+    override fun updateAddress(req: RequestAddress): Flow<Result<String>> = flow{
+        try {
+            emit(Result.Loading())
+            val response = featProvider.updateAddress(req).code()
+            if (response in 200..299) emit(Result.Success(data = "Actualizado con exito")) else emit(
+                Result.Error("Algo malo ocurrio.")
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+    override fun createAddress(req: RequestAddress): Flow<Result<String>> = flow{
+        try {
+            emit(Result.Loading())
+            val response = featProvider.createAddress(req).code()
+            if (response in 200..299) emit(Result.Success(data = "Creado con exito")) else emit(
+                Result.Error("Algo malo ocurrio.")
+            )
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+    override fun getDetailProfile(uId: String): Flow<Result<ResponseDetailProfile>> = flow{
+        try {
+            emit(Result.Loading())
+            var person = featProvider.getPerson(uId).body()
+            var players = featProvider.getPlayersByUser(uId).body() ?: emptyList()
+            var addresses = featProvider.getAddressesByUser(uId).body() ?: emptyList()
+            if (person != null && addresses != null && players != null) {
+                emit(
+                    Result.Success(
+                        data = ResponseDetailProfile(
+                            person = person,
+                            addresses = addresses,
+                            players = players
+                        )
+                    )
+                )
+            } else {
+                emit(Result.Error(message = "Unknown Error"))
+            }
+
+        }catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
+    //</editor-fold desc="Addresses">
+
 
     override fun getDataAddEvent(uId: String): Flow<Result<ResponseDataAddEvent>> = flow {
         try {
@@ -771,6 +870,6 @@ constructor(
 
 
 
-//<editor-fold desc="Multiple EndPoints">
+//</editor-fold desc="Multiple EndPoints">
 }
 

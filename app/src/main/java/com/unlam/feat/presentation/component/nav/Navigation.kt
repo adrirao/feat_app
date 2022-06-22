@@ -37,6 +37,10 @@ import com.unlam.feat.presentation.view.config_profile.sport.ConfigSportViewMode
 import com.unlam.feat.presentation.view.config_profile.sport.sport_data.SportDataEvent
 import com.unlam.feat.presentation.view.config_profile.sport.sport_data.SportDataScreen
 import com.unlam.feat.presentation.view.config_profile.sport.sport_data.SportDataViewModel
+import com.unlam.feat.presentation.view.edit_profile.Profile
+import com.unlam.feat.presentation.view.edit_profile.ProfileViewModel
+import com.unlam.feat.presentation.view.edit_profile.address.EditProfileAddressScreen
+import com.unlam.feat.presentation.view.edit_profile.address.EditProfileAddressViewModel
 import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddEventViewModel
@@ -76,6 +80,8 @@ fun Navigation(navController: NavHostController) {
         register(navController)
 
         profile(navController)
+        editProfileAddress(navController)
+
         events(navController)
         home(navController)
         search(navController)
@@ -239,6 +245,41 @@ private fun NavGraphBuilder.profile(navController: NavHostController) {
         }) {
 
         }
+        val profileViewModel: ProfileViewModel = hiltViewModel()
+        val state = profileViewModel.state.value
+        val isRefreshing = profileViewModel.isRefreshing.collectAsState()
+
+        Profile(
+            state = state,
+            onEvent = profileViewModel::onEvent,
+            isRefreshing = isRefreshing.value,
+            refreshData = profileViewModel::getDetailProfile,
+            onValueChange = {
+                profileViewModel.onEvent(it)
+            },
+            updatePerson = profileViewModel::updatePerson,
+            navigateToAddress = {
+                navController.navigate(
+                    Screen.EditProfileAddress.route
+                )
+            }
+        )
+    }
+}
+
+private fun NavGraphBuilder.editProfileAddress(
+    navController: NavHostController,
+) {
+    composable(
+        route = Screen.EditProfileAddress.route,
+    ) {
+        val editProfileAddressViewModel: EditProfileAddressViewModel = hiltViewModel()
+        val state = editProfileAddressViewModel.state.value
+
+        EditProfileAddressScreen(
+            navController,
+            state,
+            onValueChange = { editProfileAddressViewModel.onEvent(it) })
     }
 }
 

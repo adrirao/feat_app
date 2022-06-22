@@ -50,17 +50,17 @@ fun Home(
 ) {
     val pagerState = rememberPagerState()
 
-    if(state.eventOfTheWeek.isNotEmpty()){
-    LaunchedEffect(Unit) {
-        while (true) {
-            yield()
-            delay(2000)
-            tween<Float>(600)
-            pagerState.animateScrollToPage(
-                page = (pagerState.currentPage + 1) % (pagerState.pageCount)
-            )
+    if (state.eventOfTheWeek.isNotEmpty()) {
+        LaunchedEffect(Unit) {
+            while (true) {
+                yield()
+                delay(2000)
+                tween<Float>(600)
+                pagerState.animateScrollToPage(
+                    page = (pagerState.currentPage + 1) % (pagerState.pageCount)
+                )
+            }
         }
-    }
     }
     if (state.error.isNotBlank()) {
         FeatAlertDialog(

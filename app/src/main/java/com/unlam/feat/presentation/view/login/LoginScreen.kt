@@ -2,7 +2,10 @@ package com.unlam.feat.presentation.view.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
@@ -21,6 +24,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.insets.navigationBarsWithImePadding
+import com.google.accompanist.insets.statusBarsPadding
 import com.unlam.feat.R
 import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.*
@@ -75,6 +80,8 @@ private fun Content(
             .fillMaxSize()
             .background(MaterialTheme.colors.primary)
             .padding(20.dp)
+            .verticalScroll(rememberScrollState()),
+        contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -147,27 +154,27 @@ private fun Content(
                     navigateToRegister()
                 }
             )
-            Divider(
-                color = Color.Gray,
-                modifier = Modifier
-                    .padding(horizontal = 10.dp, vertical = 50.dp)
-                    .fillMaxWidth()
-                    .height(1.dp)
-            )
-            Box {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    FeatButtonRounded(
-                        drawable = R.drawable.google,
-                        colors = ButtonDefaults.buttonColors(Color(0xFFD35451)),
-                    )
-                    FeatButtonRounded(
-                        drawable = R.drawable.facebook,
-                    )
-                }
-            }
+//            Divider(
+//                color = Color.Gray,
+//                modifier = Modifier
+//                    .padding(horizontal = 10.dp, vertical = 50.dp)
+//                    .fillMaxWidth()
+//                    .height(1.dp)
+//            )
+//            Box {
+//                Row(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    horizontalArrangement = Arrangement.Center
+//                ) {
+//                    FeatButtonRounded(
+//                        drawable = R.drawable.google,
+//                        colors = ButtonDefaults.buttonColors(Color(0xFFD35451)),
+//                    )
+//                    FeatButtonRounded(
+//                        drawable = R.drawable.facebook,
+//                    )
+//                }
+//            }
         }
     }
 }

@@ -3,6 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Feat/feat_app/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+      </map>
+    </option>
+  </component>
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
         <entry key="..\:/Users/rivas/StudioProjects/feat_app/app/src/main/res/layout/activity_loginstatic.xml" value="0.12001811594202899" />
         <entry key="..\:/Users/rivas/StudioProjects/feat_app/app/src/main/res/layout/item_club.xml" value="0.1762917933130699" />
         <entry key="..\:/Users/rivas/StudioProjects/feat_app/app/src/main/res/xml/backup_rules.xml" value="0.22735507246376813" />
