@@ -7,6 +7,7 @@ data class EditPersonalInformationState (
     val isLoading: Boolean = false,
     val error: String = "",
     val isUpdatedMessage: String? = "",
+    val isSuccessSubmitData: Boolean = false,
 
     val person: Person? = null,
     val names: String = "",

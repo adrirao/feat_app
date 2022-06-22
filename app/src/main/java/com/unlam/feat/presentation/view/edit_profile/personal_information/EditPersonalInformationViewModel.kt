@@ -89,6 +89,9 @@ class EditPersonalInformationViewModel @Inject constructor(
                 }
                 is Result.Success -> {
                     _state.value = EditPersonalInformationState(isUpdatedMessage = result.data)
+                    _state.value = _state.value.copy(
+                        isSuccessSubmitData = true
+                    )
                 }
             }
         }.launchIn(viewModelScope)

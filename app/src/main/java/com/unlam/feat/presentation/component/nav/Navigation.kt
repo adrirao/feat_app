@@ -46,6 +46,8 @@ import com.unlam.feat.presentation.view.edit_profile.address.EditProfileAddressV
 import com.unlam.feat.presentation.view.edit_profile.personal_information.EditPersonalInformationViewModel
 import com.unlam.feat.presentation.view.edit_profile.personal_information.PersonalInformation
 import com.unlam.feat.presentation.view.edit_profile.player_information.PlayerInformationScreen
+import com.unlam.feat.presentation.view.edit_profile.preferences.EditProfilePreferencesViewModel
+import com.unlam.feat.presentation.view.edit_profile.preferences.Preferences
 import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddEventViewModel
@@ -89,6 +91,7 @@ fun Navigation(navController: NavHostController) {
         editPersonalInformation(navController)
         playerInformation(navController)
 
+        editPreferences(navController)
 
         events(navController)
         home(navController)
@@ -270,7 +273,6 @@ private fun NavGraphBuilder.profile(navController: NavHostController) {
                     Screen.EditProfileAddress.route
                 )
             },
-            updatePersonPreferences = profileViewModel::updatePersonPreferences,
             navigateToPersonalInformation = {
                 navController.navigate(
                     Screen.EditProfilePersonalInformation.route
@@ -279,6 +281,11 @@ private fun NavGraphBuilder.profile(navController: NavHostController) {
             navigateToPlayerInformation = {
                 navController.popBackStack()
                 navController.navigate(Screen.PlayerInformation.route + "/${it}")
+            },
+            navigateToPreferencies = {
+                navController.navigate(
+                    Screen.EditProfilePreferences.route
+                )
             }
         )
     }
@@ -313,8 +320,10 @@ private fun NavGraphBuilder.editPersonalInformation(
             navController,
             state,
             onValueChange = { editPersonalInformationViewModel.onEvent(it) },
-            updatePerson = editPersonalInformationViewModel::updatePerson
-        )
+            updatePerson = editPersonalInformationViewModel::updatePerson,
+            navigateToProfile = {navController.popBackStack()
+                navController.navigate(Screen.Profile.route)})
+
     }
 }
 
@@ -334,6 +343,26 @@ private fun NavGraphBuilder.playerInformation(navController: NavHostController) 
             player
         )
 
+
+    }
+}
+
+private fun NavGraphBuilder.editPreferences(
+    navController: NavHostController,
+) {
+    composable(
+        route = Screen.EditProfilePreferences.route,
+    ) {
+        val editProfilePreferencesViewModel: EditProfilePreferencesViewModel = hiltViewModel()
+        val state = editProfilePreferencesViewModel.state.value
+
+        Preferences(
+            navController,
+            state,
+            onValueChange = { editProfilePreferencesViewModel.onEvent(it) },
+            updatePersonPreferences = editProfilePreferencesViewModel::updatePersonPreferences,
+            navigateToProfile = {navController.popBackStack()
+                navController.navigate(Screen.Profile.route)})
     }
 }
 

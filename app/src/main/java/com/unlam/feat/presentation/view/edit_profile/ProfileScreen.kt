@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.substring
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.squareup.moshi.Moshi
@@ -43,11 +44,13 @@ fun Profile(
     onValueChange: (ProfileEvent) -> Unit,
     isRefreshing: Boolean,
     refreshData: () -> Unit,
-    updatePersonPreferences: () -> Unit,
     navigateToAddress: () -> Unit,
     navigateToPersonalInformation: () -> Unit,
     navigateToPlayerInformation: (String) -> Unit,
+    navigateToPreferencies: () -> Unit
 ) {
+
+    val date = state.person?.birthDate.toString()
 
     Column(
         modifier = Modifier
@@ -95,7 +98,7 @@ fun Profile(
                         Text(
                             text = "Nombres",
                             modifier = Modifier.padding(horizontal = 10.dp),
-                            color = Color.Gray,
+                            color = MaterialTheme.colors.text,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -115,7 +118,7 @@ fun Profile(
                         Text(
                             text = "Apellido",
                             modifier = Modifier.padding(horizontal = 10.dp),
-                            color = Color.Gray,
+                            color = MaterialTheme.colors.text,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -135,7 +138,7 @@ fun Profile(
                         Text(
                             text = "Apodo",
                             modifier = Modifier.padding(horizontal = 10.dp),
-                            color = Color.Gray,
+                            color = MaterialTheme.colors.text,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -155,7 +158,7 @@ fun Profile(
                         Text(
                             text = "Sexo",
                             modifier = Modifier.padding(horizontal = 10.dp),
-                            color = Color.Gray,
+                            color = MaterialTheme.colors.text,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -176,12 +179,12 @@ fun Profile(
                         Text(
                             text = "Fecha de nacimiento",
                             modifier = Modifier.padding(horizontal = 10.dp),
-                            color = Color.Gray,
+                            color = MaterialTheme.colors.text,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Medium
                         )
                             Text(
-                                text =  state.person?.birthDate.toString(),
+                                text =  date,
                                 modifier = Modifier.padding(horizontal = 10.dp),
                                 color = MaterialTheme.colors.text,
                                 fontSize = 15.sp,
@@ -203,6 +206,72 @@ fun Profile(
                 }
 
             }
+            // Availabilities
+                Card(
+                    shape = RoundedCornerShape(CornerSize(16.dp)),
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp, vertical = 16.dp)
+                        .fillMaxWidth(),
+                    elevation = 6.dp,
+                    backgroundColor = MaterialTheme.colors.card,
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 12.dp, bottom = 12.dp, start = 8.dp, end = 8.dp)
+                    )
+                    {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Mi disponibilidad",
+                                style = MaterialTheme.typography.h5
+                            )
+                        }
+
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            state.availabilities?.forEachIndexed { index, availability ->
+                                Text(
+                                    text = availability.day.description,
+                                    modifier = Modifier.padding(horizontal = 10.dp),
+                                    color = MaterialTheme.colors.text,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                ) {
+
+                                    Text(
+                                        text = availability.startTime,
+                                        modifier = Modifier.padding(horizontal = 10.dp),
+                                        color = MaterialTheme.colors.text,
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Medium
+                                        //style = MaterialTheme.typography.h6
+                                    )
+                                    Text(
+                                        text = availability.endTime,
+                                        //modifier = Modifier.padding(horizontal = 10.dp),
+                                        color = MaterialTheme.colors.text,
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Medium
+                                        //style = MaterialTheme.typography.h6
+                                    )
+                                }
+
+                            }
+                        }
+                    }
+
+                }
 
             // Preferencias
                 Card(
@@ -231,127 +300,87 @@ fun Profile(
                                 style = MaterialTheme.typography.h5
                             )
                         }
-
-
-                        FeatText(
-                            modifier = Modifier.padding(top = 10.dp),
-                            text = "Rango de edad",
-                            fontSize = 18.sp,
-                            textAlign = TextAlign.Center
-                        )
-                        Row(
-
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
                         ) {
-                            FeatTextField(
-                                textLabel = "Minima",
-                                text = state.minAge,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(0.5f),
-                                keyboardType = KeyboardType.Number,
-                                onValueChange = { age ->
-                                    if (age.length <= 3 && ((age.toIntOrNull()) ?: 0) <= 150) {
-                                        onValueChange(
-                                            ProfileEvent.EnteredMinAge(
-                                                age.filter { it.isDigit() })
-                                        )
-                                    }
-
-                                }
-                            )
-                            FeatTextField(
-                                textLabel = "Maxima",
-                                text = state.maxAge,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(0.5f),
-                                keyboardType = KeyboardType.Number,
-                                onValueChange = { age ->
-                                    if (age.length <= 3 && ((age.toIntOrNull()) ?: 0) <= 150) {
-                                        onValueChange(
-                                            ProfileEvent.EnteredMaxAge(
-                                                age.filter { it.isDigit() })
-                                        )
-                                    }
-                                }
+                            Text(
+                                text = "Rango de edad",
+                                style = MaterialTheme.typography.h6
                             )
                         }
 
-                        FeatText(
-                            modifier = Modifier.padding(top = 10.dp),
-                            text = "Rango de cercanía",
-                            fontSize = 18.sp,
-                            textAlign = TextAlign.Center
-                        )
-
-                        Row(
-
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
                         ) {
+                            Text(
+                                text = "Mínima",
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = MaterialTheme.colors.text,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Text(
+                                text =  state.person?.minAge.toString(),
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = MaterialTheme.colors.text,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
 
-                            Column(
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Text(
+                                text = "Máxima",
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = MaterialTheme.colors.text,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Text(
+                                text =  state.person?.maxAge.toString(),
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = MaterialTheme.colors.text,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
 
-                            ) {
-
-                                Row() {
-                                    Slider(
-                                        value = state.willingDistance.toFloat(),
-                                        valueRange = 1f..50f,
-                                        onValueChange = {
-                                            onValueChange(
-                                                ProfileEvent.EnteredWillingDistance(
-                                                    it.roundToInt().toString()
-                                                )
-                                            )
-                                        },
-                                        steps = 0,
-                                        colors = SliderDefaults.colors(
-                                            thumbColor = MaterialTheme.colors.secondary,
-                                            activeTrackColor = MaterialTheme.colors.secondary,
-                                            inactiveTrackColor = Color.White.copy(alpha = 1.0f),
-                                            activeTickColor = MaterialTheme.colors.secondary,
-                                            inactiveTickColor = Color.White
-                                        )
-                                    )
-                                }
-                                Row() {
-                                    Text(state.willingDistance + " Km.")
-
-                                }
-
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Text(
+                                text = "Rango de cercanía",
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = MaterialTheme.colors.text,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Text(
+                                text =  state.person?.willingDistance.toString() + " Km",
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = MaterialTheme.colors.text,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                        FeatButtonRounded(
+                            modifier = Modifier
+                                .size(45.dp)
+                                .fillMaxWidth()
+                                .align(Alignment.End),
+                            drawable = R.drawable.edit,
+                            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                            colorFilter = ColorFilter.tint(Color.White),
+                            onClick = {
+                                navigateToPreferencies()
                             }
+                        )
 
-
-                        }
-                        Row(
-
-                        ) {
-
-                            val isChecker = remember { mutableStateOf(false) }
-                            FeatLabelledCheckbox(
-                                checked = isChecker.value,
-                                onCheckedChange = {
-                                    isChecker.value = it
-                                    ProfileEvent.EnteredNotifications(it)
-                                },
-                                label = "Recibir notificaciones"
-                            )
-                        }
-                            FeatButtonRounded(
-                                modifier = Modifier
-                                    .size(45.dp)
-                                    .fillMaxWidth()
-                                    .align(Alignment.End),
-                                drawable = R.drawable.edit,
-                                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                                colorFilter = ColorFilter.tint(Color.White),
-                                onClick = {
-                                    updatePersonPreferences()
-                                }
-                            )
                     }
 
                 }
-
 
             // Direcciones
             Card(
@@ -381,10 +410,21 @@ fun Profile(
                         )
                     }
 
-                    state.addresses?.forEachIndexed { index, address ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        state.addresses?.forEachIndexed { index, address ->
+                            Text(
+                                text = address.alias,
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = MaterialTheme.colors.text,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Medium
+                                //style = MaterialTheme.typography.h6
+                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
 
                             Text(
                                 text = address.street,
@@ -410,8 +450,34 @@ fun Profile(
                                 fontWeight = FontWeight.Medium
                                 //style = MaterialTheme.typography.h6
                             )
+                                Text(
+                                    text = address.street,
+                                    modifier = Modifier.padding(horizontal = 10.dp),
+                                    color = MaterialTheme.colors.text,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Medium
+                                    //style = MaterialTheme.typography.h6
+                                )
+                                Text(
+                                    text = " " + address.number,
+                                    //modifier = Modifier.padding(horizontal = 10.dp),
+                                    color = MaterialTheme.colors.text,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Medium
+                                    //style = MaterialTheme.typography.h6
+                                )
+                                Text(
+                                    text = ", " + address.town,
+                                    //modifier = Modifier.padding(horizontal = 10.dp),
+                                    color = MaterialTheme.colors.text,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Medium
+                                    //style = MaterialTheme.typography.h6
+                                )
+                            }
                         }
                     }
+
                     FeatButtonRounded(
                         modifier = Modifier
                             .size(45.dp)
