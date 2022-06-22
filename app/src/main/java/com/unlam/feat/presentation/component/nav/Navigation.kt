@@ -20,6 +20,8 @@ import com.unlam.feat.common.Screen
 import com.unlam.feat.model.SportGeneric
 import com.unlam.feat.presentation.component.FeatCircularProgress
 import com.unlam.feat.model.ListSportId
+import com.unlam.feat.model.Player
+import com.unlam.feat.model.player_detail.PlayerDetail
 import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationScreen
 import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationViewModel
 import com.unlam.feat.presentation.view.config_profile.address.ConfigProfileAddressEvent
@@ -41,6 +43,11 @@ import com.unlam.feat.presentation.view.edit_profile.Profile
 import com.unlam.feat.presentation.view.edit_profile.ProfileViewModel
 import com.unlam.feat.presentation.view.edit_profile.address.EditProfileAddressScreen
 import com.unlam.feat.presentation.view.edit_profile.address.EditProfileAddressViewModel
+import com.unlam.feat.presentation.view.edit_profile.personal_information.EditPersonalInformationViewModel
+import com.unlam.feat.presentation.view.edit_profile.personal_information.PersonalInformation
+import com.unlam.feat.presentation.view.edit_profile.player_information.PlayerInformationScreen
+import com.unlam.feat.presentation.view.edit_profile.preferences.EditProfilePreferencesViewModel
+import com.unlam.feat.presentation.view.edit_profile.preferences.Preferences
 import com.unlam.feat.presentation.view.events.Event
 import com.unlam.feat.presentation.view.events.EventViewModel
 import com.unlam.feat.presentation.view.events.add_event.AddEventViewModel
@@ -81,6 +88,10 @@ fun Navigation(navController: NavHostController) {
 
         profile(navController)
         editProfileAddress(navController)
+        editPersonalInformation(navController)
+        playerInformation(navController)
+
+        editPreferences(navController)
 
         events(navController)
         home(navController)
@@ -257,10 +268,23 @@ private fun NavGraphBuilder.profile(navController: NavHostController) {
             onValueChange = {
                 profileViewModel.onEvent(it)
             },
-            updatePerson = profileViewModel::updatePerson,
             navigateToAddress = {
                 navController.navigate(
                     Screen.EditProfileAddress.route
+                )
+            },
+            navigateToPersonalInformation = {
+                navController.navigate(
+                    Screen.EditProfilePersonalInformation.route
+                )
+            },
+            navigateToPlayerInformation = {
+                navController.popBackStack()
+                navController.navigate(Screen.PlayerInformation.route + "/${it}")
+            },
+            navigateToPreferencies = {
+                navController.navigate(
+                    Screen.EditProfilePreferences.route
                 )
             }
         )
@@ -280,6 +304,65 @@ private fun NavGraphBuilder.editProfileAddress(
             navController,
             state,
             onValueChange = { editProfileAddressViewModel.onEvent(it) })
+    }
+}
+
+private fun NavGraphBuilder.editPersonalInformation(
+    navController: NavHostController,
+) {
+    composable(
+        route = Screen.EditProfilePersonalInformation.route,
+    ) {
+        val editPersonalInformationViewModel: EditPersonalInformationViewModel = hiltViewModel()
+        val state = editPersonalInformationViewModel.state.value
+
+        PersonalInformation(
+            navController,
+            state,
+            onValueChange = { editPersonalInformationViewModel.onEvent(it) },
+            updatePerson = editPersonalInformationViewModel::updatePerson,
+            navigateToProfile = {navController.popBackStack()
+                navController.navigate(Screen.Profile.route)})
+
+    }
+}
+
+private fun NavGraphBuilder.playerInformation(navController: NavHostController) {
+    composable(
+        Screen.PlayerInformation.route + "/{player}",
+        arguments = listOf(navArgument("player") { type = NavType.StringType })
+    ) { backStackEntry ->
+        val player: PlayerDetail
+
+        val playerJson = backStackEntry.arguments?.getString("player")
+        val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+        val jsonAdapter = moshi.adapter(PlayerDetail::class.java).lenient()
+        player = jsonAdapter.fromJson(requireNotNull(playerJson))!!
+
+        PlayerInformationScreen(
+            player
+        )
+
+
+    }
+}
+
+private fun NavGraphBuilder.editPreferences(
+    navController: NavHostController,
+) {
+    composable(
+        route = Screen.EditProfilePreferences.route,
+    ) {
+        val editProfilePreferencesViewModel: EditProfilePreferencesViewModel = hiltViewModel()
+        val state = editProfilePreferencesViewModel.state.value
+
+        Preferences(
+            navController,
+            state,
+            onValueChange = { editProfilePreferencesViewModel.onEvent(it) },
+            updatePersonPreferences = editProfilePreferencesViewModel::updatePersonPreferences,
+            navigateToProfile = {navController.popBackStack()
+                navController.navigate(Screen.Profile.route)})
     }
 }
 
@@ -310,6 +393,7 @@ private fun NavGraphBuilder.home(
         )
     }
 }
+
 private fun NavGraphBuilder.detailEventHome(
     navController: NavHostController,
 ) {
@@ -501,9 +585,12 @@ private fun NavGraphBuilder.searchEventDetail(
         }
 
         if (state.event != null && state.playersConfirmed != null) {
-            SearchEventDetailScreen(state = state, onEvent = searchEventDetailViewModel::onEvent, navigateToSearch = {
-                navController.navigate(Screen.Search.route)
-            })
+            SearchEventDetailScreen(
+                state = state,
+                onEvent = searchEventDetailViewModel::onEvent,
+                navigateToSearch = {
+                    navController.navigate(Screen.Search.route)
+                })
         }
     }
 }
