@@ -8,6 +8,7 @@ import android.location.Geocoder
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -92,12 +93,21 @@ fun FeatCardEventDetail(
                             modifier = Modifier.size(70.dp)
                         )
                     } else if (event.sport.description.contains("Actividad Recreativa")) {
+                        if(isSystemInDarkTheme()){
+                            Image(
+                                painter = painterResource(id = R.drawable.recreational_activity_white),
+                                contentDescription = "",
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier.size(70.dp)
+                            )
+                        }else{
                         Image(
                             painter = painterResource(id = R.drawable.recreational_activity),
                             contentDescription = "",
                             contentScale = ContentScale.Fit,
                             modifier = Modifier.size(70.dp)
                         )
+                        }
                     }
                 }
                 Row(
