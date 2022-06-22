@@ -260,6 +260,11 @@ private fun NavGraphBuilder.home(
                 navController.navigate(
                     Screen.DetailEventHome.route + "/${it}"
                 )
+            },
+            navigateToDetailApply = {
+                navController.navigate(
+                    Screen.SearchEventDetail.route + "/${it}"
+                )
             }
         )
     }
@@ -272,7 +277,7 @@ private fun NavGraphBuilder.detailEventHome(
         arguments = Screen.DetailEventHome.arguments ?: listOf()
     ) {
         val idEvent = it.arguments?.getString("idEvent") ?: ""
-        val detailEventHomeViewModel: DetailEventViewModel = hiltViewModel()
+        val detailEventHomeViewModel: DetailEventHomeViewModel = hiltViewModel()
         val state = detailEventHomeViewModel.state.value
 
         LaunchedEffect(key1 = true) {
@@ -283,8 +288,8 @@ private fun NavGraphBuilder.detailEventHome(
             FeatCircularProgress()
         }
 
-        if (state.event != null && state.playersApplied != null && state.playersConfirmed != null && state.playersSuggested != null) {
-//            DetailEventScreen(state)
+        if (state.event != null  && state.players != null) {
+            DetailEventHome(state,detailEventHomeViewModel::onEvent)
         }
     }
 }

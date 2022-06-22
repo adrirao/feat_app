@@ -99,13 +99,13 @@ fun FeatApp(
                         )
 
                     }*/
-                    Screen.DetailEventHome.route + "/{idEvent}" -> {
-                        floatingButtonNavigation = FloatingButtonNavigation(
-                            route = Screen.Chat.route,
-                            icon = Icons.Outlined.Chat,
-                            description = "Chat"
-                        )
-                    }
+//                    Screen.DetailEventHome.route + "/{idEvent}" -> {
+//                        floatingButtonNavigation = FloatingButtonNavigation(
+//                            route = Screen.Chat.route,
+//                            icon = Icons.Outlined.Chat,
+//                            description = "Chat"
+//                        )
+//                    }
 
                 }
 

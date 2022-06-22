@@ -56,8 +56,12 @@ fun FeatCard(
     colorTextState: Color = Color(0xFF019C50),
     fontSizeTextState: TextUnit = 20.sp,
     fontWeightTextState: FontWeight = FontWeight.Black,
+    textStatePlayer: String = "",
+    colorTextStatePlayer: Color = Color(0xFF019C50),
+    fontSizeTextStatePlayer: TextUnit = 18.sp,
+    fontWeightTextStatePlayer: FontWeight = FontWeight.Black,
     onClickChatButton: () -> Unit = {},
-    chatEnable:Boolean = true
+    chatEnable: Boolean = false
 ) {
     Card(
         modifier = modifier,
@@ -69,7 +73,7 @@ fun FeatCard(
         Row {
             when (sport) {
                 Constants.Sports.SOCCER_5, Constants.Sports.SOCCER_6,
-                Constants.Sports.SOCCER_7,Constants.Sports.SOCCER_9,Constants.Sports.SOCCER_11->  Image(
+                Constants.Sports.SOCCER_7, Constants.Sports.SOCCER_9, Constants.Sports.SOCCER_11 -> Image(
                     painter = painterResource(id = R.drawable.soccer),
                     contentDescription = sportDescription,
                     contentScale = ContentScale.Fit,
@@ -80,7 +84,7 @@ fun FeatCard(
                         .align(Alignment.CenterVertically)
                         .weight(5.0f)
                 )
-                Constants.Sports.BASKETBALL ->  Image(
+                Constants.Sports.BASKETBALL -> Image(
                     painter = painterResource(id = R.drawable.basketball),
                     contentDescription = sportDescription,
                     contentScale = ContentScale.Fit,
@@ -91,7 +95,7 @@ fun FeatCard(
                         .align(Alignment.CenterVertically)
                         .weight(5.0f)
                 )
-                Constants.Sports.TENNIS_SINGLE,Constants.Sports.TENNIS_DOUBLES ->  Image(
+                Constants.Sports.TENNIS_SINGLE, Constants.Sports.TENNIS_DOUBLES -> Image(
                     painter = painterResource(id = R.drawable.tennis),
                     contentDescription = sportDescription,
                     contentScale = ContentScale.Fit,
@@ -102,7 +106,7 @@ fun FeatCard(
                         .align(Alignment.CenterVertically)
                         .weight(5.0f)
                 )
-                Constants.Sports.PADDLE_SINGLE,Constants.Sports.PADDLE_DOUBLE ->  Image(
+                Constants.Sports.PADDLE_SINGLE, Constants.Sports.PADDLE_DOUBLE -> Image(
                     painter = painterResource(id = R.drawable.padel),
                     contentDescription = sportDescription,
                     contentScale = ContentScale.Fit,
@@ -113,21 +117,22 @@ fun FeatCard(
                         .align(Alignment.CenterVertically)
                         .weight(5.0f)
                 )
-                Constants.Sports.RECREATIONAL_ACTIVITY ->{
-                    if (!isSystemInDarkTheme()){
+                Constants.Sports.RECREATIONAL_ACTIVITY -> {
+                    if (!isSystemInDarkTheme()) {
                         val id = R.drawable.recreational_activity
                     }
                     Image(
-                    painter = painterResource(id = R.drawable.recreational_activity_white),
-                    contentDescription = sportDescription,
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .size(100.dp)
-                        .clip(shape)
-                        .align(Alignment.CenterVertically)
-                        .weight(5.0f)
-                )}
+                        painter = painterResource(id = R.drawable.recreational_activity_white),
+                        contentDescription = sportDescription,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .size(100.dp)
+                            .clip(shape)
+                            .align(Alignment.CenterVertically)
+                            .weight(5.0f)
+                    )
+                }
             }
             Column(
                 modifier = Modifier
@@ -201,47 +206,70 @@ fun FeatCard(
                         maxLines = 1
                     )
                 }
-                Row(modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 0.dp)) {
-                    Text(
-                        text = textState,
-                        color = colorTextState,
-                        fontSize = fontSizeTextState,
-                        fontWeight = fontWeightTextState,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
-                    )
-                }
-            }
-            if(chatEnable){
-            Column(
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .fillMaxWidth()
-                    .padding(0.dp, 0.dp, 20.dp, 0.dp)
-                    .weight(3.0f)
-            ) {
-                IconButton(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .align(Alignment.End),
-                    onClick = onClickChatButton
-                ) {
-                    if (isSystemInDarkTheme()){
-                        Icon(
-                            painterResource(id = R.drawable.chat_white),
-                            contentDescription = "chat button",
-                        )
-                    }else{
-                        Icon(
-                            painterResource(id = R.drawable.chat),
-                            contentDescription = "chat button",
+                var statePlayer = ""
+                var color: Color = Color(0xFF019C50)
+                if (textStatePlayer.isNotBlank()) {
+                    if (textStatePlayer == "Aplicado") {
+                        statePlayer = "Esperando aceptación"
+                        color = Color(0xFFDDAA0F)
+                    } else if (textStatePlayer == "Confirmado") {
+                        statePlayer = "Titular"
+                        color = Color(0xFF019C50)
+                    }
+                    Row(modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 0.dp)) {
+                        Text(
+                            text = statePlayer,
+                            color = color,
+                            fontSize = fontSizeTextStatePlayer,
+                            fontWeight = fontWeightTextState,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1
                         )
                     }
+                }
+                if (textState.isNotBlank()) {
+                    Row(modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 0.dp)) {
+                        Text(
+                            text = textState,
+                            color = colorTextState,
+                            fontSize = fontSizeTextState,
+                            fontWeight = fontWeightTextState,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1
+                        )
+                    }
+                }
+            }
+            if (chatEnable) {
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .fillMaxWidth()
+                        .padding(0.dp, 0.dp, 20.dp, 0.dp)
+                        .weight(3.0f)
+                ) {
+                    IconButton(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .align(Alignment.End),
+                        onClick = onClickChatButton
+                    ) {
+                        if (isSystemInDarkTheme()) {
+                            Icon(
+                                painterResource(id = R.drawable.chat_white),
+                                contentDescription = "chat button",
+                            )
+                        } else {
+                            Icon(
+                                painterResource(id = R.drawable.chat),
+                                contentDescription = "chat button",
+                            )
+                        }
+
+                    }
+
 
                 }
-
-
-            }
             }
         }
     }
