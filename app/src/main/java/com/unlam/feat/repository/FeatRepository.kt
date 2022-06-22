@@ -56,6 +56,7 @@ interface FeatRepository {
     fun getAllPlayersConfirmedByEvent(eventId: Int) : Flow<Result<List<Player>>> // @GET("/players/getAllConfirmedByEvent/{eventId}")
     fun getAllPlayersAppliedByEvent(eventId: Int) : Flow<Result<List<Player>>> // @GET("/players/getAllAppliedByEvent/{eventId}")
     fun createPlayer(req: RequestPlayer): Flow<Result<String>> // @POST("/players/create")
+    fun setKickApply(req: RequestEventApply): Flow<Result<String>> //@PUT("/players/setDismissedFromList")
 
     //</editor-fold desc="Players">
     //<editor-fold desc="Positions">
@@ -99,6 +100,7 @@ interface FeatRepository {
     //</editor-fold desc="EventApplies">
     fun setAcceptedApply(req: RequestEventApply): Flow<Result<String>> //@PUT("/eventApplies/setAcceptedApply")
     fun setDeniedApply(req: RequestEventApply): Flow<Result<String>> //@PUT("/eventApplies/setDeniedApply")
+
     fun createInvitation(req: RequestCreateInvitation): Flow<Result<String>> //@POST("/eventApplies/createInvitation")
     //</editor-fold desc="EventApplies">
     //</editor-fold desc="Multiple EndPoints">

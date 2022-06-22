@@ -652,6 +652,23 @@ constructor(
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }
     }
+
+    override fun setKickApply(req: RequestEventApply): Flow<Result<String>> = flow {
+        try {
+            emit(Result.Loading())
+            val response = featProvider.setKickApply(req) as retrofit2.Response
+            if (response.code() in 200..299) {
+                emit(Result.Success(data = "Creado con exito"))
+            } else {
+                emit(
+                    Result.Error(response.toString())
+                )
+            }
+        } catch (e: Exception) {
+            emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
+        }
+    }
+
     override fun createInvitation(req: RequestCreateInvitation): Flow<Result<String>> = flow {
         try {
             emit(Result.Loading())

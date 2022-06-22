@@ -9,7 +9,7 @@ import com.unlam.feat.model.Player
 @Composable
 fun FeatCardListPLayer(
     players: List<Player>,
-    content: @Composable (RowScope.() -> Unit)? = null
+    content: @Composable (RowScope.(Player) -> Unit)? = null,
 ) {
     LazyColumn() {
         items(
@@ -19,7 +19,11 @@ fun FeatCardListPLayer(
                     textNameUser = player.person.names + " " + player.person.lastname,
                     textPosition = player.position.description,
                     textLevel = player.level.description,
-                    content = content
+                    content = {
+                        if (content != null) {
+                            content(player)
+                        }
+                    }
                 )
             }
         )

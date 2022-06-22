@@ -46,7 +46,7 @@ constructor(
   private  fun confirmInvitation() {
         val uid = firebaseAuthRepository.getUserId()
         val requestEventApply = RequestEventApply(
-            userUid = uid,
+            playerId = uid,
             eventId = state.value.event!!.id
         )
 
@@ -78,7 +78,7 @@ constructor(
     private fun cancelInvitation() {
         val uid = firebaseAuthRepository.getUserId()
         val requestEventApply = RequestEventApply(
-            userUid = uid,
+            playerId = uid,
             eventId = state.value.event!!.id
         )
 

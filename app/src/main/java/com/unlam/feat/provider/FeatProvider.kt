@@ -121,6 +121,10 @@ interface FeatProvider {
     @POST("/players/create")
     suspend fun createPlayer(@Body req: RequestPlayer): Response<String>
 
+    @Headers("Content-type: application/json")
+    @POST("/players/setDismissedFromList")
+    suspend fun setKickApply (@Body requestEventApply: RequestEventApply): Response<String>
+
     //</editor-fold>
     //<editor-fold desc="Positions">
     @GET("/positions/")
@@ -201,6 +205,7 @@ interface FeatProvider {
     @Headers("Content-type: application/json")
     @POST("/eventApplies/setDeniedApply")
     suspend fun setDeniedApply (@Body requestEventApply: RequestEventApply): Response<String>
+
     //<editor-fold desc="Addresses">
     @GET("/addresses/{id}")
     suspend fun getAddressesByUser(@Path("id") id: String): Response<List<Address>>

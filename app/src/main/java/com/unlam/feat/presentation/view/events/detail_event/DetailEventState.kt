@@ -17,5 +17,6 @@ data class DetailEventState(
     val event: Event? = null,
     val playersSuggested: List<Player>? = null,
     val playersConfirmed: List<Player>? = null,
-    val playersApplied: List<Player>? = null
+    val playersApplied: List<Player>? = null,
+    val idPlayer : Int? = null
 )

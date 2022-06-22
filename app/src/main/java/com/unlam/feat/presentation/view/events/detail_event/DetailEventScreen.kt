@@ -2,6 +2,8 @@ package com.unlam.feat.presentation.view.events.detail_event
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -175,53 +177,119 @@ fun ParticipantsDetail(
         }
         if (isLoading) {
             FeatCircularProgress()
-        }else{
+        } else {
             when (tabIndex) {
-                0 -> FeatCardListPLayer(playerConfirmed) {
-                    Column(
-                        modifier = Modifier.weight(.5f)
-                    ) {
-                        FeatButton(
-                            textButton = "Expulsar",
-                            colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
-                            onClick = { onEvent(DetailEventEvent.KickPlayer) }
-                        )
-                    }
+                0 -> PlayersConfirmed(playerConfirmed) {
+                    onEvent(it)
                 }
-                1 -> FeatCardListPLayer(playerApplied) {
-                    Column(
-                        modifier = Modifier.weight(.5f)
-                    ) {
-                        FeatButton(
-                            textButton = "Rechazar",
-                            colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
-                            onClick = { onEvent(DetailEventEvent.RejectPlayer) }
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.weight(.5f)
-                    ) {
-                        FeatButton(
-                            textButton = "Aceptar",
-                            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                            onClick = { onEvent(DetailEventEvent.AcceptPlayer) }
-                        )
-                    }
+                1 -> PlayersApplied(playerApplied) {
+                    onEvent(it)
                 }
-                2 -> FeatCardListPLayer(playerSuggested) {
-                    FeatButton(
-                        modifier = Modifier.padding(
-                            top = 10.dp,
-                            end = 40.dp,
-                            start = 40.dp,
-                            bottom = 10.dp
-                        ),
-                        textButton = "Invitar",
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                        onClick = { onEvent(DetailEventEvent.InvitePlayer) }
-                    )
+                2 -> PlayersSuggested(playerSuggested) {
+                    onEvent(it)
                 }
             }
         }
+    }
+}
+
+@Composable
+fun PlayersConfirmed(
+    players: List<Player>,
+    onEvent: (DetailEventEvent) -> Unit
+) {
+    LazyColumn() {
+        items(
+            items = players,
+            itemContent = { player ->
+                FeatCardUser(
+                    textNameUser = player.person.names + " " + player.person.lastname,
+                    textPosition = player.position.description,
+                    textLevel = player.level.description,
+                    content = {
+                        Column(
+                            modifier = Modifier.weight(.5f)
+                        ) {
+                            FeatButton(
+                                textButton = "Expulsar",
+                                colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
+                                onClick = { onEvent(DetailEventEvent.KickPlayer(player.id)) }
+                            )
+                        }
+                    }
+                )
+            }
+        )
+    }
+}
+
+@Composable
+fun PlayersApplied(
+    players: List<Player>,
+    onEvent: (DetailEventEvent) -> Unit
+) {
+    LazyColumn() {
+        items(
+            items = players,
+            itemContent = { player ->
+                FeatCardUser(
+                    textNameUser = player.person.names + " " + player.person.lastname,
+                    textPosition = player.position.description,
+                    textLevel = player.level.description,
+                    content = {
+                        Column(
+                            modifier = Modifier.weight(.5f)
+                        ) {
+                            FeatButton(
+                                textButton = "Rechazar",
+                                colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
+                                onClick = { onEvent(DetailEventEvent.RejectPlayer(player.id)) }
+                            )
+                        }
+                        Column(
+                            modifier = Modifier.weight(.5f)
+                        ) {
+                            FeatButton(
+                                textButton = "Aceptar",
+                                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                                onClick = { onEvent(DetailEventEvent.AcceptPlayer(player.id)) }
+                            )
+                        }
+                    }
+                )
+            }
+        )
+    }
+}
+
+@Composable
+fun PlayersSuggested(
+    players: List<Player>,
+    onEvent: (DetailEventEvent) -> Unit
+) {
+    LazyColumn() {
+        items(
+            items = players,
+            itemContent = { player ->
+                FeatCardUser(
+                    textNameUser = player.person.names + " " + player.person.lastname,
+                    textPosition = player.position.description,
+                    textLevel = player.level.description,
+                    content = {
+                        FeatButton(
+                            modifier = Modifier.padding(
+                                top = 10.dp,
+                                end = 40.dp,
+                                start = 40.dp,
+                                bottom = 10.dp
+                            ),
+                            textButton = "Invitar",
+                            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                            onClick = { onEvent(DetailEventEvent.InvitePlayer(player.id)) }
+                        )
+                    }
+                )
+            }
+        )
     }
 }

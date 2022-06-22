@@ -1,10 +1,12 @@
 package com.unlam.feat.presentation.view.events.detail_event
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlam.feat.common.Result
+import com.unlam.feat.common.print
 import com.unlam.feat.model.request.RequestCreateInvitation
 import com.unlam.feat.model.request.RequestEventApply
 import com.unlam.feat.model.request.RequestEventState
@@ -43,15 +45,27 @@ constructor(
                 confirmEvent()
             }
             is DetailEventEvent.KickPlayer -> {
+                _state.value = _state.value.copy(
+                    idPlayer = event.userId
+                )
                 kickPlayer()
             }
             is DetailEventEvent.RejectPlayer -> {
+                _state.value = _state.value.copy(
+                    idPlayer = event.userId
+                )
                 rejectPlayer()
             }
             is DetailEventEvent.AcceptPlayer -> {
+                _state.value = _state.value.copy(
+                    idPlayer = event.userId
+                )
                 acceptPlayer()
             }
             is DetailEventEvent.InvitePlayer -> {
+                _state.value = _state.value.copy(
+                    idPlayer = event.userId
+                )
                 invitePlayer()
             }
 
@@ -59,15 +73,40 @@ constructor(
     }
 
     private fun kickPlayer() {
+        val requestkickPlayer = RequestEventApply(
+            playerId = state.value.idPlayer.toString(),
+            eventId = state.value.event!!.id
+        )
 
+        featRepository.setKickApply(requestkickPlayer).onEach { result ->
+            when (result) {
+                is Result.Success -> {
+                    _state.value = _state.value.copy(
+                        successPlayer = true,
+                        successTitle = "Jugador explulsado",
+                        successDescription = "El jugador ha sido expulsado con exito",
+                    )
+                }
+                is Result.Loading -> {
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
+                }
+                is Result.Error -> {
+                    _state.value = _state.value.copy(
+                        error = "Algo malo ocurrio!"
+                    )
+                    print(requestkickPlayer,result)
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 
 
     private fun invitePlayer() {
-        val uid = firebaseAuthRepository.getUserId()
 
         val requestCreateInvitation = RequestCreateInvitation(
-            userUid = uid,
+            userUid = state.value.idPlayer.toString(),
             eventId = _state.value.event!!.id,
             origin = "O"
         )
@@ -97,9 +136,8 @@ constructor(
 
 
     private fun rejectPlayer() {
-        val uid = firebaseAuthRepository.getUserId()
         val requestEventApply = RequestEventApply(
-            userUid = uid,
+            playerId = state.value.idPlayer.toString(),
             eventId = state.value.event!!.id
         )
 
@@ -127,13 +165,11 @@ constructor(
 
     }
 
-   private fun acceptPlayer() {
-        val uid = firebaseAuthRepository.getUserId()
+    private fun acceptPlayer() {
         val requestEventApply = RequestEventApply(
-            userUid = uid,
+            playerId = state.value.idPlayer.toString(),
             eventId = state.value.event!!.id
         )
-
         featRepository.setAcceptedApply(requestEventApply).onEach { result ->
             when (result) {
                 is Result.Success -> {
