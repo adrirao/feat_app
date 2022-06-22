@@ -173,7 +173,6 @@ fun ParticipantsDetail(
                     }
                 }
             }
-
         }
         if (isLoading) {
             FeatCircularProgress()

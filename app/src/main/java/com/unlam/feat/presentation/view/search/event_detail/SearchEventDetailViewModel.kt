@@ -64,7 +64,7 @@ constructor(
         val uid=firebaseRepository.getUserId()
 
         val request = RequestCreateInvitation(
-            userUid = uid,
+            playerId = uid,
             eventId = _state.value.event!!.id,
             origin = "P"
         )

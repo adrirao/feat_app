@@ -45,7 +45,8 @@ fun Home(
     onEvent: (HomeEvent) -> Unit,
     isRefreshing: Boolean,
     navigateToDetail: (Int) -> Unit,
-    refreshData: () -> Unit
+    refreshData: () -> Unit,
+    navigateToDetailApply: (Int) -> Unit
 ) {
     val pagerState = rememberPagerState()
 
@@ -113,9 +114,7 @@ fun Home(
 
                             if (state.eventOfTheWeek.isEmpty()) {
                                 Box(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 20.dp),
+                                    Modifier.fillMaxWidth().padding(horizontal = 20.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
@@ -157,11 +156,9 @@ fun Home(
                                         textState = event.state.description,
                                         sport = event.sport.description,
                                         onClickCard = {
-                                            navigateToDetail(event.id)
+                                            navigateToDetailApply(event.id)
                                         },
-                                        chatEnable = false
-
-                                    )
+                                        )
 
                                 }
                             }
@@ -175,7 +172,7 @@ fun Home(
                                     .fillMaxWidth()
                             ) {
                                 Text(
-                                    text = "Eventos confirmados y aplicados:",
+                                    text = "Eventos en los que participo:",
                                     color = Color.White,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier
@@ -194,13 +191,10 @@ fun Home(
                             )
                             if (state.eventConfirmedOrApplied.isEmpty()) {
                                 Box(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 20.dp),
+                                    Modifier.fillMaxWidth().padding(horizontal = 20.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Text(
-                                        modifier = Modifier.padding(vertical = 70.dp),
+                                    Text(modifier = Modifier.padding(vertical = 70.dp),
                                         text = "Aun no esta confirmado, ni postulado en algun evento",
                                         style = TextStyle(Color.Gray, fontSize = 18.sp)
                                     )
@@ -240,12 +234,13 @@ fun Home(
                                                 ).getAddressLine(
                                                     0
                                                 ),
-                                                textState = event.stateDesc,
+                                                textStatePlayer = event.origen,
                                                 sport = event.sportDesc,
                                                 onClickCard = {
                                                     navigateToDetail(event.id)
                                                 },
-                                            )
+
+                                                )
                                         }
                                     )
                                 }

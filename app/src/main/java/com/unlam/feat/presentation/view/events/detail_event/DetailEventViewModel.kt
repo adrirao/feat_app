@@ -106,7 +106,7 @@ constructor(
     private fun invitePlayer() {
 
         val requestCreateInvitation = RequestCreateInvitation(
-            userUid = state.value.idPlayer.toString(),
+            playerId = state.value.idPlayer.toString(),
             eventId = _state.value.event!!.id,
             origin = "O"
         )

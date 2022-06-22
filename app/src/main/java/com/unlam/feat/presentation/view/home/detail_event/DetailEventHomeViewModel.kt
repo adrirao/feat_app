@@ -31,7 +31,7 @@ constructor(
     }
 
     fun getDataDetailEvent(idEvent: Int){
-        featRepository.getDataDetailEvent(idEvent).onEach { result ->
+        featRepository.getDataSearchEvent(idEvent).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value =
@@ -41,7 +41,7 @@ constructor(
                     _state.value = DetailEventHomeState(loading = true)
                 }
                 is Result.Success -> {
-                    _state.value = DetailEventHomeState(event = result.data!!.event, players = result.data.playersApplied)
+                    _state.value = DetailEventHomeState(event = result.data!!.event, players = result.data.playersConfirmed)
                 }
             }
         }.launchIn(viewModelScope)
