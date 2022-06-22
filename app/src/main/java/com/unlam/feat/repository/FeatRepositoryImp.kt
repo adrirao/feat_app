@@ -634,9 +634,12 @@ constructor(
         try {
             emit(Result.Loading())
             val response = featProvider.setAcceptedApply(req).code()
-            if (response in 200..299) emit(Result.Success(data = "Creado con exito")) else emit(
-                Result.Error("Algo malo ocurrio.")
-            )
+            if (response in 200..299) emit(Result.Success(data = "Creado con exito")) else {
+                emit(
+                    Result.Error("Algo malo ocurrio.")
+                )
+                com.unlam.feat.common.print(req,response)
+            }
         } catch (e: Exception) {
             emit(Result.Error(message = e.localizedMessage ?: "Unknown Error"))
         }

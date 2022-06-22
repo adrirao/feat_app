@@ -235,7 +235,7 @@ private fun ConfigProfilePersonalData(
             ) {
                 FeatButtonRounded(
                     modifier = Modifier
-                        .padding(top = 10.dp)
+                        .padding(top = 5.dp)
                         .size(60.dp),
                     drawable = R.drawable.arrow_next,
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
