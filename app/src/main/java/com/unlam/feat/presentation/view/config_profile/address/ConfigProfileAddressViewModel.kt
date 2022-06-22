@@ -106,11 +106,9 @@ constructor(
             when (result) {
                 is Result.Success -> {
                     _state.value = ConfigProfileAddressState(personId = result.data?.id)
-
                 }
                 is Result.Loading -> {
                     _state.value = ConfigProfileAddressState(isLoading = true)
-
                 }
                 is Result.Error -> {
                     _state.value = ConfigProfileAddressState(

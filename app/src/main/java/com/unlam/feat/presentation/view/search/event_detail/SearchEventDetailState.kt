@@ -8,5 +8,6 @@ data class SearchEventDetailState(
     val error: String = "",
     val event: Event? = null,
     val playersConfirmed: List<Player>? = null,
-    val success: Boolean = false
+    val success: Boolean = false,
+    val idPlayer:String? = null
 )

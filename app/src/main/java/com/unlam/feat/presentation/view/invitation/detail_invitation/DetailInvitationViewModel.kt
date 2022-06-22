@@ -123,8 +123,8 @@ constructor(
                     var playerId : String = ""
 
                     players.forEach { player ->
-                        if(player.sport.id == result.data.event.sport.id){
-                            playerId = player.sport.id.toString()
+                        if(player.sport.id == result.data.event.sport.sportGeneric.id){
+                            playerId = player.id.toString()
                         }
                     }
 

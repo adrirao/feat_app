@@ -207,26 +207,26 @@ private fun ConfigProfileAdditionalInformationContent(
 
 
 
-                FeatText(
-                    modifier = Modifier.padding(top = 10.dp),
-                    text = "¿Te gustaria recibir notificaciones de Eventos?",
-                    fontSize = 18.sp,
-                    textAlign = TextAlign.Center
-                )
-                Row(
-
-                ) {
-
-                    val isChecker = remember { mutableStateOf(false) }
-                    FeatLabelledCheckbox(
-                        checked = isChecker.value,
-                        onCheckedChange = {
-                            isChecker.value = it
-                            ConfigProfileAdditionalInformationEvent.EnteredNotifications(it)
-                        },
-                        label = "Recibir notificaciones"
-                    )
-                }
+//                FeatText(
+//                    modifier = Modifier.padding(top = 10.dp),
+//                    text = "¿Te gustaria recibir notificaciones de Eventos?",
+//                    fontSize = 18.sp,
+//                    textAlign = TextAlign.Center
+//                )
+//                Row(
+//
+//                ) {
+//
+//                    val isChecker = remember { mutableStateOf(false) }
+//                    FeatLabelledCheckbox(
+//                        checked = isChecker.value,
+//                        onCheckedChange = {
+//                            isChecker.value = it
+//                            ConfigProfileAdditionalInformationEvent.EnteredNotifications(it)
+//                        },
+//                        label = "Recibir notificaciones"
+//                    )
+//                }
 
             }
             Row(
