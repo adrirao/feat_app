@@ -20,8 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.accompanist.insets.navigationBarsWithImePadding
-import com.google.accompanist.insets.statusBarsPadding
 import com.unlam.feat.R
 import com.unlam.feat.common.Screen
 import com.unlam.feat.presentation.component.FeatAlertDialog
@@ -57,7 +55,8 @@ private fun Content(viewModel: RegisterViewModel, navigateToLogin: () -> Unit) {
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -121,27 +120,28 @@ private fun Content(viewModel: RegisterViewModel, navigateToLogin: () -> Unit) {
                     viewModel.onEvent(RegisterEvent.Register)
                 }
             )
+            Text(
+                text = buildAnnotatedString {
+                    append("Ya tenes cuenta?")
+                    append(" ")
+                    val signUpText = "Inicia sesion."
+                    withStyle(
+                        style = SpanStyle(
+                            color = MaterialTheme.colors.secondary
+                        )
+                    ) {
+                        append(signUpText)
+                    }
+                },
+                style = MaterialTheme.typography.body1,
+                modifier = Modifier
+//                    .align(Alignment.BottomCenter)
+                    .clickable {
+                        navigateToLogin()
+                    }
+            )
         }
-        Text(
-            text = buildAnnotatedString {
-                append("Ya tenes cuenta?")
-                append(" ")
-                val signUpText = "Inicia sesion."
-                withStyle(
-                    style = SpanStyle(
-                        color = MaterialTheme.colors.secondary
-                    )
-                ) {
-                    append(signUpText)
-                }
-            },
-            style = MaterialTheme.typography.body1,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .clickable {
-                    navigateToLogin()
-                }
-        )
+
     }
 }
 
