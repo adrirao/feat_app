@@ -19,10 +19,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.unlam.feat.R
+import com.unlam.feat.common.Screen
+import com.unlam.feat.model.ListSportId
 import com.unlam.feat.model.Person
+import com.unlam.feat.model.Player
+import com.unlam.feat.model.SportGeneric
 import com.unlam.feat.presentation.component.*
 import com.unlam.feat.presentation.ui.theme.card
+import com.unlam.feat.presentation.ui.theme.text
 import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationEvent
 import com.unlam.feat.presentation.view.events.add_event.AddEventEvent
 import java.time.LocalDate
@@ -38,7 +45,8 @@ fun Profile(
     refreshData: () -> Unit,
     updatePersonPreferences: () -> Unit,
     navigateToAddress: () -> Unit,
-    navigateToPersonalInformation: () -> Unit
+    navigateToPersonalInformation: () -> Unit,
+    navigateToPlayerInformation: (String) -> Unit,
 ) {
 
     Column(
@@ -95,7 +103,7 @@ fun Profile(
                             Text(
                                 text = it.names,
                                 modifier = Modifier.padding(horizontal = 10.dp),
-                                color = Color.Black,
+                                color = MaterialTheme.colors.text,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Medium
                             )
@@ -115,7 +123,7 @@ fun Profile(
                             Text(
                                 text = it.lastname,
                                 modifier = Modifier.padding(horizontal = 10.dp),
-                                color = Color.Black,
+                                color = MaterialTheme.colors.text,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Medium
                             )
@@ -135,7 +143,7 @@ fun Profile(
                             Text(
                                 text = it.nickname,
                                 modifier = Modifier.padding(horizontal = 10.dp),
-                                color = Color.Black,
+                                color = MaterialTheme.colors.text,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Medium
                             )
@@ -155,7 +163,7 @@ fun Profile(
                             Text(
                                 text = it.sex,
                                 modifier = Modifier.padding(horizontal = 10.dp),
-                                color = Color.Black,
+                                color = MaterialTheme.colors.text,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Medium
                             )
@@ -175,7 +183,7 @@ fun Profile(
                             Text(
                                 text =  state.person?.birthDate.toString(),
                                 modifier = Modifier.padding(horizontal = 10.dp),
-                                color = Color.Black,
+                                color = MaterialTheme.colors.text,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Medium
                             )
@@ -381,7 +389,7 @@ fun Profile(
                             Text(
                                 text = address.street,
                                 modifier = Modifier.padding(horizontal = 10.dp),
-                                color = Color.Black,
+                                color = MaterialTheme.colors.text,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Medium
                                 //style = MaterialTheme.typography.h6
@@ -389,7 +397,7 @@ fun Profile(
                             Text(
                                 text = " " + address.number,
                                 modifier = Modifier.padding(horizontal = 10.dp),
-                                color = Color.Black,
+                                color = MaterialTheme.colors.text,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Medium
                                 //style = MaterialTheme.typography.h6
@@ -397,7 +405,7 @@ fun Profile(
                             Text(
                                 text = ", " + address.town,
                                 modifier = Modifier.padding(horizontal = 10.dp),
-                                color = Color.Black,
+                                color = MaterialTheme.colors.text,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Medium
                                 //style = MaterialTheme.typography.h6
@@ -449,23 +457,19 @@ fun Profile(
 
                         FeatSportCard(
                             sport = player.sport.description,
-                            //sportDescription = player.sport.description,
                             idSport = player.sport.id,
                             modifier = Modifier
                                 .height(100.dp)
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp, vertical = 8.dp),
-                            onClickCard = { refreshData() })
-                        /*
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                            Text(
-                                text = player.sport.description,
-                                //style = MaterialTheme.typography.h6
-                            )
-                    }
-                    */
+                            onClickCard = {
+                                val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+                                val jsonAdapter = moshi.adapter(Player::class.java).lenient()
+                                val playerJson = jsonAdapter.toJson(player)
+
+                                navigateToPlayerInformation(playerJson)
+                            })
+
                     }
                 }
 
