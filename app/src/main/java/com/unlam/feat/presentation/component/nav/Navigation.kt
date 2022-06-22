@@ -21,6 +21,7 @@ import com.unlam.feat.model.SportGeneric
 import com.unlam.feat.presentation.component.FeatCircularProgress
 import com.unlam.feat.model.ListSportId
 import com.unlam.feat.model.Player
+import com.unlam.feat.model.player_detail.PlayerDetail
 import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationScreen
 import com.unlam.feat.presentation.view.config_profile.additional_information.ConfigProfileAdditionalInformationViewModel
 import com.unlam.feat.presentation.view.config_profile.address.ConfigProfileAddressEvent
@@ -319,14 +320,14 @@ private fun NavGraphBuilder.editPersonalInformation(
 
 private fun NavGraphBuilder.playerInformation(navController: NavHostController) {
     composable(
-        Screen.ConfigSport.route + "/{player}",
+        Screen.PlayerInformation.route + "/{player}",
         arguments = listOf(navArgument("player") { type = NavType.StringType })
     ) { backStackEntry ->
-        val player: Player
+        val player: PlayerDetail
 
         val playerJson = backStackEntry.arguments?.getString("player")
         val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-        val jsonAdapter = moshi.adapter(Player::class.java).lenient()
+        val jsonAdapter = moshi.adapter(PlayerDetail::class.java).lenient()
         player = jsonAdapter.fromJson(requireNotNull(playerJson))!!
 
         PlayerInformationScreen(

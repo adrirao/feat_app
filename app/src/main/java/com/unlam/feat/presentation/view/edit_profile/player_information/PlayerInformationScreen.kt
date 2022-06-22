@@ -15,16 +15,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.unlam.feat.R
-import com.unlam.feat.model.Player
+import com.unlam.feat.model.player_detail.PlayerDetail
 import com.unlam.feat.presentation.component.*
 import com.unlam.feat.presentation.ui.theme.card
 import com.unlam.feat.presentation.ui.theme.text
 
 
-
 @Composable
 fun PlayerInformationScreen(
-    player: Player
+    player: PlayerDetail
 ) {
     Column(
         modifier = Modifier
@@ -62,7 +61,7 @@ fun PlayerInformationScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Mis datos personales",
+                                text = "Mis datos deportivos",
                                 style = MaterialTheme.typography.h5
                             )
                         }
@@ -70,103 +69,79 @@ fun PlayerInformationScreen(
                             modifier = Modifier.fillMaxWidth(),
                         ) {
                             Text(
-                                text = "Nombres",
+                                text = "Posición",
                                 modifier = Modifier.padding(horizontal = 10.dp),
                                 color = Color.Gray,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Medium
                             )
-                            player.person?.let {
                                 Text(
-                                    text = it.names,
+                                    text = player.position.description,
                                     modifier = Modifier.padding(horizontal = 10.dp),
                                     color = MaterialTheme.colors.text,
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.Medium
                                 )
-                            }
-                        }
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            Text(
-                                text = "Apellido",
-                                modifier = Modifier.padding(horizontal = 10.dp),
-                                color = Color.Gray,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-                            player.person?.let {
-                                Text(
-                                    text = it.lastname,
-                                    modifier = Modifier.padding(horizontal = 10.dp),
-                                    color = MaterialTheme.colors.text,
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Medium
-                                )
-                            }
-                        }
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            Text(
-                                text = "Apodo",
-                                modifier = Modifier.padding(horizontal = 10.dp),
-                                color = Color.Gray,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-                            player.person?.let {
-                                Text(
-                                    text = it.nickname,
-                                    modifier = Modifier.padding(horizontal = 10.dp),
-                                    color = MaterialTheme.colors.text,
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Medium
-                                )
-                            }
-                        }
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            Text(
-                                text = "Sexo",
-                                modifier = Modifier.padding(horizontal = 10.dp),
-                                color = Color.Gray,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-                            player.person?.let {
-                                Text(
-                                    text = it.sex,
-                                    modifier = Modifier.padding(horizontal = 10.dp),
-                                    color = MaterialTheme.colors.text,
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Medium
-                                )
-                            }
-                        }
 
+                        }
                         Column(
                             modifier = Modifier.fillMaxWidth(),
                         ) {
                             Text(
-                                text = "Fecha de nacimiento",
+                                text = "Nivel",
                                 modifier = Modifier.padding(horizontal = 10.dp),
                                 color = Color.Gray,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
-                                text =  player.person?.birthDate.toString(),
+                                text = player.level.description,
                                 modifier = Modifier.padding(horizontal = 10.dp),
                                 color = MaterialTheme.colors.text,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Medium
                             )
+
+                        }
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Text(
+                                text = "Valoración",
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = Color.Gray,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Text(
+                                text = player.valuation.description,
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = MaterialTheme.colors.text,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+
+                        }
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Text(
+                                text = "Habilidades",
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = Color.Gray,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Text(
+                                text = player.abilities,
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = MaterialTheme.colors.text,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+
                         }
                     }
-
                 }
             }
         }
