@@ -84,7 +84,7 @@ fun FeatCardEventDetail(
                             contentScale = ContentScale.Fit,
                             modifier = Modifier.size(70.dp)
                         )
-                    } else if (event.sport.description.contains("Basquet ")) {
+                    } else if (event.sport.description.contains("Basquet")) {
                         Image(
                             painter = painterResource(id = R.drawable.basketball),
                             contentDescription = "",
