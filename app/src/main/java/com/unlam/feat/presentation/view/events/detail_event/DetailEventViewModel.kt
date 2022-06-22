@@ -251,8 +251,9 @@ constructor(
 
 
     fun refreshData() {
+        val uId = firebaseAuthRepository.getUserId()
         val idEvent = state.value.event!!.id
-        featRepository.getDataDetailEvent(idEvent).onEach { result ->
+        featRepository.getDataDetailEvent(idEvent, uId = uId).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value =
@@ -276,7 +277,8 @@ constructor(
 
 
     fun getDataDetailEvent(idEvent: Int) {
-        featRepository.getDataDetailEvent(idEvent).onEach { result ->
+        val uId = firebaseAuthRepository.getUserId()
+        featRepository.getDataDetailEvent(idEvent,uId).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value =

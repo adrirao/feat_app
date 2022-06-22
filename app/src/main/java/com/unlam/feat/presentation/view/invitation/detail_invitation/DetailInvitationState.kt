@@ -11,5 +11,6 @@ data class DetailInvitationState(
     val playersConfirmed: List<Player>? = null,
     val success: Boolean = false,
     val successTitle: String = "",
-    val successDescription: String = ""
+    val successDescription: String = "",
+    val idPlayer: String? = null
 )

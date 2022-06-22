@@ -44,9 +44,8 @@ constructor(
 
 
   private  fun confirmInvitation() {
-        val uid = firebaseAuthRepository.getUserId()
         val requestEventApply = RequestEventApply(
-            playerId = uid,
+            playerId = _state.value.idPlayer.toString(),
             eventId = state.value.event!!.id
         )
 
@@ -76,9 +75,9 @@ constructor(
 
 
     private fun cancelInvitation() {
-        val uid = firebaseAuthRepository.getUserId()
+
         val requestEventApply = RequestEventApply(
-            playerId = uid,
+            playerId = _state.value.idPlayer.toString(),
             eventId = state.value.event!!.id
         )
 
@@ -108,7 +107,9 @@ constructor(
     }
 
      fun getDataDetailEvent(idEvent: Int) {
-        featRepository.getDataDetailEvent(idEvent).onEach { result ->
+         val uId = firebaseAuthRepository.getUserId()
+
+         featRepository.getDataDetailEvent(idEvent, uId = uId).onEach { result ->
             when (result) {
                 is Result.Error -> {
                     _state.value =
@@ -118,9 +119,20 @@ constructor(
                     _state.value = DetailInvitationState(loading = true)
                 }
                 is Result.Success -> {
+                    val players = result.data!!.players
+                    var playerId : String = ""
+
+                    players.forEach { player ->
+                        if(player.sport.id == result.data.event.sport.id){
+                            playerId = player.sport.id.toString()
+                        }
+                    }
+
                     _state.value = DetailInvitationState(
                         event = result.data!!.event,
                         playersConfirmed = result.data.playersConfirmed,
+                        idPlayer = playerId
+
                     )
                 }
             }

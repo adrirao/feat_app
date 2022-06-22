@@ -684,7 +684,7 @@ constructor(
 
     //<editor-fold desc="Multiple EndPoints">
 
-    override fun getDataDetailEvent(idEvent: Int): Flow<Result<ResponseDetailEvent>> = flow {
+    override fun getDataDetailEvent(idEvent: Int,uId: String): Flow<Result<ResponseDetailEvent>> = flow {
         try {
             emit(Result.Loading())
 
@@ -692,15 +692,17 @@ constructor(
             val playersConfirmed = featProvider.getAllPlayersConfirmedByEvent(idEvent).body()
             val playersApplied = featProvider.getAllPlayersAppliedByEvent(idEvent).body()
             val playersSuggested = featProvider.getAllPlayersSuggestedForEvent(idEvent).body() ?: emptyList()
+            val responsePlayer = featProvider.getPlayersByUser(uId).body()
 
-            if (responseEvent != null && playersSuggested != null && playersConfirmed != null && playersApplied != null) {
+            if (responsePlayer != null && responseEvent != null && playersSuggested != null && playersConfirmed != null && playersApplied != null) {
                 emit(
                     Result.Success(
                         data = ResponseDetailEvent(
                             event = responseEvent,
                             playersSuggested = playersSuggested,
                             playersApplied = playersApplied,
-                            playersConfirmed = playersConfirmed
+                            playersConfirmed = playersConfirmed,
+                            players = responsePlayer
                         )
                     )
                 )

@@ -29,7 +29,7 @@ interface FeatProvider {
     suspend fun getEventsByUser(@Path("uid") uid: String): Response<List<Event>>
 
     @GET("/events/getEventById/{id}")
-    suspend fun getEventById(@Path("id") id: Int): Response<Event>
+    suspend fun getEventById(@Path("id") id: Int): Response<Event?>
 
     @Headers("Content-type: application/json")
     @POST("/events/create")

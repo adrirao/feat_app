@@ -104,7 +104,7 @@ interface FeatRepository {
     fun createInvitation(req: RequestCreateInvitation): Flow<Result<String>> //@POST("/eventApplies/createInvitation")
     //</editor-fold desc="EventApplies">
     //</editor-fold desc="Multiple EndPoints">
-    fun getDataDetailEvent(idEvent: Int): Flow<Result<ResponseDetailEvent>>
+    fun getDataDetailEvent(idEvent: Int,uId: String): Flow<Result<ResponseDetailEvent>>
     fun getDataSportScreen(uId: String, sportGenericId: Int): Flow<Result<ResponseDataSport>>
     fun getDataAddEvent(uId:String): Flow<Result<ResponseDataAddEvent>>
     fun getDataHomeEvent(uId: String): Flow<Result<ResponseDataHomeEvent>>

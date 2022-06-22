@@ -35,6 +35,7 @@ import com.unlam.feat.presentation.component.*
 import com.unlam.feat.presentation.ui.theme.Shapes
 import com.unlam.feat.presentation.ui.theme.card
 import com.unlam.feat.presentation.ui.theme.text
+import com.unlam.feat.presentation.view.events.detail_event.DetailEventEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -141,8 +142,6 @@ fun DetailInvitationScreen(
         }
     }
 }
-
-
 
 
 
