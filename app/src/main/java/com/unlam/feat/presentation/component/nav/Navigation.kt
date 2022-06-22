@@ -272,7 +272,6 @@ private fun NavGraphBuilder.profile(navController: NavHostController) {
                 )
             },
             navigateToPlayerInformation = {
-                navController.popBackStack()
                 navController.navigate(Screen.PlayerInformation.route + "/${it}")
             },
             navigateToPreferencies = {
@@ -319,7 +318,8 @@ private fun NavGraphBuilder.editPersonalInformation(
             state,
             onValueChange = { editPersonalInformationViewModel.onEvent(it) },
             updatePerson = editPersonalInformationViewModel::updatePerson,
-            navigateToProfile = {navController.popBackStack()
+            navigateToProfile = {
+                navController.popBackStack()
                 navController.navigate(Screen.Profile.route)})
 
     }

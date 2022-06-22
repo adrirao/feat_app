@@ -94,7 +94,7 @@ fun Home(
                                     .fillMaxWidth()
                             ) {
                                 Text(
-                                    text = "Eventos de la semana:",
+                                    text = "Eventos de los proximos siete días:",
                                     color = Color.White,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier
