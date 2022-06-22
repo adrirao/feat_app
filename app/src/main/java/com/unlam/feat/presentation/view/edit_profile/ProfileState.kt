@@ -1,6 +1,7 @@
 package com.unlam.feat.presentation.view.edit_profile
 
 import com.unlam.feat.model.Address
+import com.unlam.feat.model.Availability
 import com.unlam.feat.model.Person
 import com.unlam.feat.model.Player
 
@@ -13,13 +14,6 @@ data class ProfileState (
     val person: Person? = null,
     val addresses: List<Address>? = emptyList(),
     val players: List<Player>? = emptyList(),
-
-
-    val minAge: String = "",
-    val maxAge: String = "",
-    val notifications: Boolean = false,
-    val willingDistance: String = "1"
-
-
+    val availabilities: List<Availability>? = emptyList(),
 
 )

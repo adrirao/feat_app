@@ -42,26 +42,6 @@ constructor(
 
     fun onEvent(event: ProfileEvent) {
         when (event) {
-            is ProfileEvent.EnteredMinAge -> {
-                _state.value = _state.value.copy(
-                    minAge = event.value
-                )
-            }
-            is ProfileEvent.EnteredMaxAge -> {
-                _state.value = _state.value.copy(
-                    maxAge = event.value
-                )
-            }
-            is ProfileEvent.EnteredWillingDistance -> {
-                _state.value = _state.value.copy(
-                    willingDistance = event.value
-                )
-            }
-            is ProfileEvent.EnteredNotifications -> {
-                _state.value = _state.value.copy(
-                    notifications = event.value
-                )
-            }
             is ProfileEvent.DismissDialog -> {
                 _state.value = _state.value.copy(
                     error = ""
@@ -84,46 +64,14 @@ constructor(
                 is Result.Success -> {
                     _state.value = ProfileState(
                         person = result.data!!.person,
+                        availabilities = result.data.person.availabilities,
                         players = result.data.players,
                         addresses = result.data.addresses,
-                        minAge = result.data.person.minAge.toString(),
-                        maxAge = result.data.person.maxAge.toString(),
-                        willingDistance = result.data.person.willingDistance.toString(),
-                        notifications = result.data.person.notifications.toBoolean()
                     )
                 }
             }
         }.launchIn(viewModelScope)
     }
 
-
-    fun updatePersonPreferences(){
-        var notification = 0
-        if(_state.value.notifications){
-            notification = 1
-        }
-        val request = RequestUpdatePerson(
-            id= _state.value.person!!.id,
-            minAge = _state.value.minAge.toInt(),
-            maxAge = _state.value.maxAge.toInt(),
-            willingDistance = _state.value.willingDistance.toInt(),
-            notifications =  notification,
-        )
-
-        featRepository.updatePerson(request).onEach { result ->
-            when (result) {
-                is Result.Error -> {
-                    _state.value = ProfileState(error = result.message ?: "Error Inesperado")
-                }
-                is Result.Loading -> {
-                    _state.value = ProfileState(isLoading = true)
-                }
-                is Result.Success -> {
-                    _state.value = ProfileState(isUpdatedMessage = result.data)
-                }
-            }
-        }.launchIn(viewModelScope)
-        getDetailProfile()
-    }
 
 }
