@@ -34,6 +34,7 @@ fun FeatCardUser(
     modifier: Modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 16.dp, vertical = 12.dp),
+    sportId:Int= 5,
     elevation: Dp = 6.dp,
     backgroundColor: Color = MaterialTheme.colors.card,
     corner: CornerSize = CornerSize(16.dp),
@@ -51,7 +52,15 @@ fun FeatCardUser(
     colorTextLevel: Color = MaterialTheme.colors.text,
     fontSizeTextLevel: TextUnit = 18.sp,
     fontWeightTextLevel: FontWeight = FontWeight.Medium,
-    painter: Painter = painterResource(id = R.drawable.nahuel),
+    painter: Painter = painterResource(id = when(sportId){
+        1 -> R.drawable.messi
+        2 -> R.drawable.jugador_padel
+        3 -> R.drawable.delpo
+        4 -> R.drawable.ginobili
+        5 -> R.drawable.nahuel
+        null -> R.drawable.delpo
+        else -> {R.drawable.nahuel}
+    }),
     content: @Composable (RowScope.() -> Unit)? = null
     ) {
     Card(
