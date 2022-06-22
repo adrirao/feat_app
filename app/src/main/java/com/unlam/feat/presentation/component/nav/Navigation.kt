@@ -249,13 +249,6 @@ private fun NavGraphBuilder.sportData(navController: NavHostController) {
 
 private fun NavGraphBuilder.profile(navController: NavHostController) {
     composable(Screen.Profile.route) {
-        Button(onClick = {
-            Firebase.auth.signOut()
-            navController.popBackStack(Screen.Home.route, inclusive = true)
-            navController.navigate(Screen.Login.route)
-        }) {
-
-        }
         val profileViewModel: ProfileViewModel = hiltViewModel()
         val state = profileViewModel.state.value
         val isRefreshing = profileViewModel.isRefreshing.collectAsState()
@@ -286,6 +279,11 @@ private fun NavGraphBuilder.profile(navController: NavHostController) {
                 navController.navigate(
                     Screen.EditProfilePreferences.route
                 )
+            },
+            onClick = {
+                Firebase.auth.signOut()
+                navController.popBackStack(Screen.Home.route, inclusive = true)
+                navController.navigate(Screen.Login.route)
             }
         )
     }

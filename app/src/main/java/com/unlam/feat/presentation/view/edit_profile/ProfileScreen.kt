@@ -47,7 +47,8 @@ fun Profile(
     navigateToAddress: () -> Unit,
     navigateToPersonalInformation: () -> Unit,
     navigateToPlayerInformation: (String) -> Unit,
-    navigateToPreferencies: () -> Unit
+    navigateToPreferencies: () -> Unit,
+    onClick : () -> Unit
 ) {
 
     val date = state.person?.birthDate.toString()
@@ -66,131 +67,131 @@ fun Profile(
             )
             {
 
-            Card(
-                shape = RoundedCornerShape(CornerSize(16.dp)),
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 16.dp)
-                    .fillMaxWidth(),
-                elevation = 6.dp,
-                backgroundColor = MaterialTheme.colors.card,
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                Card(
+                    shape = RoundedCornerShape(CornerSize(16.dp)),
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 12.dp, bottom = 12.dp, start = 8.dp, end = 8.dp)
-                )
-                {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Mis datos personales",
-                            style = MaterialTheme.typography.h5
-                        )
-                    }
+                        .padding(horizontal = 8.dp, vertical = 16.dp)
+                        .fillMaxWidth(),
+                    elevation = 6.dp,
+                    backgroundColor = MaterialTheme.colors.card,
+                ) {
                     Column(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Text(
-                            text = "Nombres",
-                            modifier = Modifier.padding(horizontal = 10.dp),
-                            color = MaterialTheme.colors.text,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                        state.person?.let {
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 12.dp, bottom = 12.dp, start = 8.dp, end = 8.dp)
+                    )
+                    {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Text(
-                                text = it.names,
-                                modifier = Modifier.padding(horizontal = 10.dp),
-                                color = MaterialTheme.colors.text,
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Medium
+                                text = "Mis datos personales",
+                                style = MaterialTheme.typography.h5
                             )
                         }
-                    }
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Text(
-                            text = "Apellido",
-                            modifier = Modifier.padding(horizontal = 10.dp),
-                            color = MaterialTheme.colors.text,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                        state.person?.let {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
                             Text(
-                                text = it.lastname,
+                                text = "Nombres",
                                 modifier = Modifier.padding(horizontal = 10.dp),
                                 color = MaterialTheme.colors.text,
-                                fontSize = 15.sp,
+                                fontSize = 18.sp,
                                 fontWeight = FontWeight.Medium
                             )
+                            state.person?.let {
+                                Text(
+                                    text = it.names,
+                                    modifier = Modifier.padding(horizontal = 10.dp),
+                                    color = MaterialTheme.colors.text,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
                         }
-                    }
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Text(
-                            text = "Apodo",
-                            modifier = Modifier.padding(horizontal = 10.dp),
-                            color = MaterialTheme.colors.text,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                        state.person?.let {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
                             Text(
-                                text = it.nickname,
+                                text = "Apellido",
                                 modifier = Modifier.padding(horizontal = 10.dp),
                                 color = MaterialTheme.colors.text,
-                                fontSize = 15.sp,
+                                fontSize = 18.sp,
                                 fontWeight = FontWeight.Medium
                             )
+                            state.person?.let {
+                                Text(
+                                    text = it.lastname,
+                                    modifier = Modifier.padding(horizontal = 10.dp),
+                                    color = MaterialTheme.colors.text,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
                         }
-                    }
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Text(
-                            text = "Sexo",
-                            modifier = Modifier.padding(horizontal = 10.dp),
-                            color = MaterialTheme.colors.text,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                        state.person?.let {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
                             Text(
-                                text = it.sex,
+                                text = "Apodo",
                                 modifier = Modifier.padding(horizontal = 10.dp),
                                 color = MaterialTheme.colors.text,
-                                fontSize = 15.sp,
+                                fontSize = 18.sp,
                                 fontWeight = FontWeight.Medium
                             )
+                            state.person?.let {
+                                Text(
+                                    text = it.nickname,
+                                    modifier = Modifier.padding(horizontal = 10.dp),
+                                    color = MaterialTheme.colors.text,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
                         }
-                    }
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Text(
+                                text = "Sexo",
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = MaterialTheme.colors.text,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                            state.person?.let {
+                                Text(
+                                    text = it.sex,
+                                    modifier = Modifier.padding(horizontal = 10.dp),
+                                    color = MaterialTheme.colors.text,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
+                        }
 
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Text(
-                            text = "Fecha de nacimiento",
-                            modifier = Modifier.padding(horizontal = 10.dp),
-                            color = MaterialTheme.colors.text,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Medium
-                        )
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
                             Text(
-                                text =  date,
+                                text = "Fecha de nacimiento",
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                color = MaterialTheme.colors.text,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Text(
+                                text = date,
                                 modifier = Modifier.padding(horizontal = 10.dp),
                                 color = MaterialTheme.colors.text,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Medium
                             )
-                    }
+                        }
                         FeatButtonRounded(
                             modifier = Modifier
                                 .size(45.dp)
@@ -203,10 +204,10 @@ fun Profile(
                                 navigateToPersonalInformation()
                             }
                         )
-                }
+                    }
 
-            }
-            // Availabilities
+                }
+                // Availabilities
                 Card(
                     shape = RoundedCornerShape(CornerSize(16.dp)),
                     modifier = Modifier
@@ -273,7 +274,7 @@ fun Profile(
 
                 }
 
-            // Preferencias
+                // Preferencias
                 Card(
                     shape = RoundedCornerShape(CornerSize(16.dp)),
                     modifier = Modifier
@@ -320,7 +321,7 @@ fun Profile(
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
-                                text =  state.person?.minAge.toString(),
+                                text = state.person?.minAge.toString(),
                                 modifier = Modifier.padding(horizontal = 10.dp),
                                 color = MaterialTheme.colors.text,
                                 fontSize = 15.sp,
@@ -339,7 +340,7 @@ fun Profile(
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
-                                text =  state.person?.maxAge.toString(),
+                                text = state.person?.maxAge.toString(),
                                 modifier = Modifier.padding(horizontal = 10.dp),
                                 color = MaterialTheme.colors.text,
                                 fontSize = 15.sp,
@@ -358,7 +359,7 @@ fun Profile(
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
-                                text =  state.person?.willingDistance.toString() + " Km",
+                                text = state.person?.willingDistance.toString() + " Km",
                                 modifier = Modifier.padding(horizontal = 10.dp),
                                 color = MaterialTheme.colors.text,
                                 fontSize = 15.sp,
@@ -382,166 +383,173 @@ fun Profile(
 
                 }
 
-            // Direcciones
-            Card(
-                shape = RoundedCornerShape(CornerSize(16.dp)),
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 16.dp)
-                    .fillMaxWidth(),
-                elevation = 6.dp,
-                backgroundColor = MaterialTheme.colors.card,
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                // Direcciones
+                Card(
+                    shape = RoundedCornerShape(CornerSize(16.dp)),
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 12.dp, bottom = 12.dp, start = 8.dp, end = 8.dp)
-                )
-                {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Mis direcciones",
-                            style = MaterialTheme.typography.h5
+                        .padding(horizontal = 8.dp, vertical = 16.dp)
+                        .fillMaxWidth(),
+                    elevation = 6.dp,
+                    backgroundColor = MaterialTheme.colors.card,
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 12.dp, bottom = 12.dp, start = 8.dp, end = 8.dp)
+                    )
+                    {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Mis direcciones",
+                                style = MaterialTheme.typography.h5
+                            )
+                        }
+
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            state.addresses?.forEachIndexed { index, address ->
+                                Text(
+                                    text = address.alias,
+                                    modifier = Modifier.padding(horizontal = 10.dp),
+                                    color = MaterialTheme.colors.text,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Medium
+                                    //style = MaterialTheme.typography.h6
+                                )
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                ) {
+
+                                    Text(
+                                        text = address.street,
+                                        modifier = Modifier.padding(horizontal = 10.dp),
+                                        color = MaterialTheme.colors.text,
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Medium
+                                        //style = MaterialTheme.typography.h6
+                                    )
+                                    Text(
+                                        text = " " + address.number,
+                                        modifier = Modifier.padding(horizontal = 10.dp),
+                                        color = MaterialTheme.colors.text,
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Medium
+                                        //style = MaterialTheme.typography.h6
+                                    )
+                                    Text(
+                                        text = ", " + address.town,
+                                        modifier = Modifier.padding(horizontal = 10.dp),
+                                        color = MaterialTheme.colors.text,
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Medium
+                                        //style = MaterialTheme.typography.h6
+                                    )
+                                    Text(
+                                        text = address.street,
+                                        modifier = Modifier.padding(horizontal = 10.dp),
+                                        color = MaterialTheme.colors.text,
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Medium
+                                        //style = MaterialTheme.typography.h6
+                                    )
+                                    Text(
+                                        text = " " + address.number,
+                                        //modifier = Modifier.padding(horizontal = 10.dp),
+                                        color = MaterialTheme.colors.text,
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Medium
+                                        //style = MaterialTheme.typography.h6
+                                    )
+                                    Text(
+                                        text = ", " + address.town,
+                                        //modifier = Modifier.padding(horizontal = 10.dp),
+                                        color = MaterialTheme.colors.text,
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Medium
+                                        //style = MaterialTheme.typography.h6
+                                    )
+                                }
+                            }
+                        }
+
+                        FeatButtonRounded(
+                            modifier = Modifier
+                                .size(45.dp)
+                                .fillMaxWidth()
+                                .align(Alignment.End),
+                            drawable = R.drawable.add,
+                            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                            onClick = { navigateToAddress() },
+                            colorFilter = ColorFilter.tint(Color.White)
                         )
                     }
 
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        state.addresses?.forEachIndexed { index, address ->
-                            Text(
-                                text = address.alias,
-                                modifier = Modifier.padding(horizontal = 10.dp),
-                                color = MaterialTheme.colors.text,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Medium
-                                //style = MaterialTheme.typography.h6
-                            )
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                            ) {
+                }
 
+                // Mis Deportes
+                Card(
+                    shape = RoundedCornerShape(CornerSize(16.dp)),
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp, vertical = 16.dp)
+                        .fillMaxWidth(),
+                    elevation = 6.dp,
+                    backgroundColor = MaterialTheme.colors.card,
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 12.dp, bottom = 12.dp, start = 8.dp, end = 8.dp)
+                    )
+                    {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Text(
-                                text = address.street,
-                                modifier = Modifier.padding(horizontal = 10.dp),
-                                color = MaterialTheme.colors.text,
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Medium
-                                //style = MaterialTheme.typography.h6
+                                text = "Mis intereses deportivos",
+                                style = MaterialTheme.typography.h5
                             )
-                            Text(
-                                text = " " + address.number,
-                                modifier = Modifier.padding(horizontal = 10.dp),
-                                color = MaterialTheme.colors.text,
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Medium
-                                //style = MaterialTheme.typography.h6
-                            )
-                            Text(
-                                text = ", " + address.town,
-                                modifier = Modifier.padding(horizontal = 10.dp),
-                                color = MaterialTheme.colors.text,
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Medium
-                                //style = MaterialTheme.typography.h6
-                            )
-                                Text(
-                                    text = address.street,
-                                    modifier = Modifier.padding(horizontal = 10.dp),
-                                    color = MaterialTheme.colors.text,
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Medium
-                                    //style = MaterialTheme.typography.h6
-                                )
-                                Text(
-                                    text = " " + address.number,
-                                    //modifier = Modifier.padding(horizontal = 10.dp),
-                                    color = MaterialTheme.colors.text,
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Medium
-                                    //style = MaterialTheme.typography.h6
-                                )
-                                Text(
-                                    text = ", " + address.town,
-                                    //modifier = Modifier.padding(horizontal = 10.dp),
-                                    color = MaterialTheme.colors.text,
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Medium
-                                    //style = MaterialTheme.typography.h6
-                                )
-                            }
+                        }
+                        state.players?.forEach { player ->
+
+                            FeatSportCard(
+                                sport = player.sport.description,
+                                idSport = player.sport.id,
+                                modifier = Modifier
+                                    .height(100.dp)
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                                onClickCard = {
+                                    val moshi =
+                                        Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+                                    val jsonAdapter = moshi.adapter(Player::class.java).lenient()
+                                    val playerJson = jsonAdapter.toJson(player)
+
+                                    navigateToPlayerInformation(playerJson)
+                                })
+
                         }
                     }
 
-                    FeatButtonRounded(
-                        modifier = Modifier
-                            .size(45.dp)
-                            .fillMaxWidth()
-                            .align(Alignment.End),
-                        drawable = R.drawable.add,
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                        onClick = {navigateToAddress()},
-                        colorFilter = ColorFilter.tint(Color.White)
-                    )
                 }
-
-            }
-
-            // Mis Deportes
-            Card(
-                shape = RoundedCornerShape(CornerSize(16.dp)),
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 16.dp)
-                    .fillMaxWidth(),
-                elevation = 6.dp,
-                backgroundColor = MaterialTheme.colors.card,
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 12.dp, bottom = 12.dp, start = 8.dp, end = 8.dp)
+                FeatButton(
+                    textButton = "Cerrar Sesion",
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                    onClick = { onClick() }
                 )
-                {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Mis intereses deportivos",
-                            style = MaterialTheme.typography.h5
-                        )
-                    }
-                    state.players?.forEach { player ->
-
-                        FeatSportCard(
-                            sport = player.sport.description,
-                            idSport = player.sport.id,
-                            modifier = Modifier
-                                .height(100.dp)
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
-                            onClickCard = {
-                                val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-                                val jsonAdapter = moshi.adapter(Player::class.java).lenient()
-                                val playerJson = jsonAdapter.toJson(player)
-
-                                navigateToPlayerInformation(playerJson)
-                            })
-
-                    }
-                }
-
             }
+
         }
-    }
     }
 
 }
