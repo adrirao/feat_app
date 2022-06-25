@@ -204,6 +204,7 @@ fun PlayersConfirmed(
                     textNameUser = player.person.names + " " + player.person.lastname,
                     textPosition = player.position.description,
                     textLevel = player.level.description,
+                    sportId = player.sport.sportGeneric.id,
                     content = {
                         Column(
                             modifier = Modifier.weight(.5f)
