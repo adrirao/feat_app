@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.unlam.feat.model.Event
 import com.unlam.feat.model.Player
 import com.unlam.feat.model.PlayerApplyDetail
 import com.unlam.feat.presentation.component.*
@@ -133,7 +134,8 @@ fun DetailEventScreen(
                 playersApplied!!,
                 playersConfirmed!!,
                 onEvent,
-                state.isLoading
+                state.isLoading,
+                event = event!!
             )
         }
     }
@@ -147,7 +149,8 @@ fun ParticipantsDetail(
     playerApplied: List<PlayerApplyDetail>,
     playerConfirmed: List<Player>,
     onEvent: (DetailEventEvent) -> Unit,
-    isLoading: Boolean
+    isLoading: Boolean,
+    event: Event
 ) {
     var tabIndex by remember { mutableStateOf(0) } // 1.
     val tabTitles = listOf("Confirmados", "Postulados", "Sugeridos")
@@ -179,15 +182,9 @@ fun ParticipantsDetail(
             FeatCircularProgress()
         } else {
             when (tabIndex) {
-                0 -> PlayersConfirmed(playerConfirmed) {
-                    onEvent(it)
-                }
-                1 -> PlayersApplied(playerApplied) {
-                    onEvent(it)
-                }
-                2 -> PlayersSuggested(playerSuggested) {
-                    onEvent(it)
-                }
+                0 -> PlayersConfirmed(playerConfirmed, event = event, onEvent = { onEvent(it) })
+                1 -> PlayersApplied(playerApplied, event = event, onEvent = { onEvent(it) })
+                2 -> PlayersSuggested(playerSuggested, event = event, onEvent = { onEvent(it) })
             }
         }
     }
@@ -196,7 +193,8 @@ fun ParticipantsDetail(
 @Composable
 fun PlayersConfirmed(
     players: List<Player>,
-    onEvent: (DetailEventEvent) -> Unit
+    onEvent: (DetailEventEvent) -> Unit,
+    event: Event
 ) {
     LazyColumn() {
         items(
@@ -226,13 +224,15 @@ fun PlayersConfirmed(
 @Composable
 fun PlayersApplied(
     players: List<PlayerApplyDetail>,
-    onEvent: (DetailEventEvent) -> Unit
+    onEvent: (DetailEventEvent) -> Unit,
+    event: Event,
 ) {
     LazyColumn() {
         items(
             items = players,
             itemContent = { player ->
                 FeatCardUser(
+                    sportId = event.sport.sportGeneric.id,
                     textNameUser = player.names + " " + player.lastname,
                     textPosition = player.position,
                     textLevel = player.level,
@@ -267,7 +267,6 @@ fun PlayersApplied(
                                 )
                             }
                         }
-
                     }
                 )
             }
@@ -278,7 +277,8 @@ fun PlayersApplied(
 @Composable
 fun PlayersSuggested(
     players: List<Player>,
-    onEvent: (DetailEventEvent) -> Unit
+    onEvent: (DetailEventEvent) -> Unit,
+    event: Event
 ) {
     LazyColumn() {
         items(

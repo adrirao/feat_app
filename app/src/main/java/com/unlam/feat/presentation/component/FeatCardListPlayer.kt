@@ -19,6 +19,7 @@ fun FeatCardListPLayer(
                     textNameUser = player.person.names + " " + player.person.lastname,
                     textPosition = player.position.description,
                     textLevel = player.level.description,
+                    sportId = player.sport.id,
                     content = {
                         if (content != null) {
                             content(player)
