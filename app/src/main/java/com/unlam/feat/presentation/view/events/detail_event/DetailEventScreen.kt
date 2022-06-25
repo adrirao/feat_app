@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.unlam.feat.model.Player
+import com.unlam.feat.model.PlayerApplyDetail
 import com.unlam.feat.presentation.component.*
 
 
@@ -143,7 +144,7 @@ fun DetailEventScreen(
 @Composable
 fun ParticipantsDetail(
     playerSuggested: List<Player>,
-    playerApplied: List<Player>,
+    playerApplied: List<PlayerApplyDetail>,
     playerConfirmed: List<Player>,
     onEvent: (DetailEventEvent) -> Unit,
     isLoading: Boolean
@@ -224,7 +225,7 @@ fun PlayersConfirmed(
 
 @Composable
 fun PlayersApplied(
-    players: List<Player>,
+    players: List<PlayerApplyDetail>,
     onEvent: (DetailEventEvent) -> Unit
 ) {
     LazyColumn() {
@@ -232,28 +233,41 @@ fun PlayersApplied(
             items = players,
             itemContent = { player ->
                 FeatCardUser(
-                    textNameUser = player.person.names + " " + player.person.lastname,
-                    textPosition = player.position.description,
-                    textLevel = player.level.description,
+                    textNameUser = player.names + " " + player.lastname,
+                    textPosition = player.position,
+                    textLevel = player.level,
                     content = {
-                        Column(
-                            modifier = Modifier.weight(.5f)
-                        ) {
-                            FeatButton(
-                                textButton = "Rechazar",
-                                colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
-                                onClick = { onEvent(DetailEventEvent.RejectPlayer(player.id)) }
-                            )
+                        if(player.origin == "Postulado"){
+                            Column(
+                                modifier = Modifier.weight(.5f)
+                            ) {
+                                FeatButton(
+                                    textButton = "Rechazar",
+                                    colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
+                                    onClick = { onEvent(DetailEventEvent.RejectPlayer(player.id)) }
+                                )
+                            }
+                            Column(
+                                modifier = Modifier.weight(.5f)
+                            ) {
+                                FeatButton(
+                                    textButton = "Aceptar",
+                                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+                                    onClick = { onEvent(DetailEventEvent.AcceptPlayer(player.id)) }
+                                )
+                            }
+                        }else if(player.origin == "Invitado"){
+                            Column(
+                                modifier = Modifier.weight(.5f)
+                            ) {
+                                FeatButton(
+                                    textButton = "Cancelar invitacion",
+                                    colors = ButtonDefaults.buttonColors(Color(0xFFBB3131)),
+                                    onClick = { onEvent(DetailEventEvent.RejectPlayer(player.id)) }
+                                )
+                            }
                         }
-                        Column(
-                            modifier = Modifier.weight(.5f)
-                        ) {
-                            FeatButton(
-                                textButton = "Aceptar",
-                                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
-                                onClick = { onEvent(DetailEventEvent.AcceptPlayer(player.id)) }
-                            )
-                        }
+
                     }
                 )
             }

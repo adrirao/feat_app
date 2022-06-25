@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -209,11 +210,11 @@ fun FeatCard(
                 var statePlayer = ""
                 var color: Color = Color(0xFF019C50)
                 if (textStatePlayer.isNotBlank()) {
-                    if (textStatePlayer == "Aplicado") {
-                        statePlayer = "Esperando aceptación"
+                    if (textStatePlayer == stringResource(R.string.Apply)) {
+                        statePlayer = stringResource(R.string.waitingForAcceptance)
                         color = Color(0xFFDDAA0F)
-                    } else if (textStatePlayer == "Confirmado") {
-                        statePlayer = "Titular"
+                    } else if (textStatePlayer == stringResource(R.string.Confirmed)) {
+                        statePlayer = stringResource(R.string.Headline)
                         color = Color(0xFF019C50)
                     }
                     Row(modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 0.dp)) {

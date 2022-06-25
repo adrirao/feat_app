@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -84,7 +85,7 @@ fun FeatCardUser(
                     .weight(10.0f)
             ) {
                 Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp)) {
-                    Text(
+                    FeatText(
                         modifier = Modifier
                             .padding(10.dp, 0.dp, 0.dp, 0.dp)
                             .align(Alignment.CenterVertically),
@@ -92,12 +93,19 @@ fun FeatCardUser(
                         color = colorTextNameUser,
                         fontSize = fontSizeNameUser,
                         fontWeight = fontWeightNameUser,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
                     )
                 }
                 Row(modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 0.dp)) {
-                    Text(
+                    FeatText(
+                        modifier = Modifier
+                            .padding(10.dp, 0.dp, 0.dp, 0.dp)
+                            .align(Alignment.CenterVertically),
+                        text = stringResource(R.string.Position),
+                        color = MaterialTheme.colors.primary,
+                        fontSize = fontSizeTextPosition,
+                        fontWeight = fontWeightTextPosition,
+                    )
+                    FeatText(
                         modifier = Modifier
                             .padding(10.dp, 0.dp, 0.dp, 0.dp)
                             .align(Alignment.CenterVertically),
@@ -105,12 +113,19 @@ fun FeatCardUser(
                         color = colorTextPosition,
                         fontSize = fontSizeTextPosition,
                         fontWeight = fontWeightTextPosition,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
                     )
                 }
                 Row(modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 0.dp)) {
-                    Text(
+                    FeatText(
+                        modifier = Modifier
+                            .padding(10.dp, 0.dp, 0.dp, 0.dp)
+                            .align(Alignment.CenterVertically),
+                        text = stringResource(R.string.Level),
+                        color = MaterialTheme.colors.primary,
+                        fontSize = fontSizeTextPosition,
+                        fontWeight = fontWeightTextPosition,
+                    )
+                    FeatText(
                         modifier = Modifier
                             .padding(10.dp, 0.dp, 0.dp, 0.dp)
                             .align(Alignment.CenterVertically),
@@ -118,8 +133,6 @@ fun FeatCardUser(
                         color = colorTextLevel,
                         fontSize = fontSizeTextLevel,
                         fontWeight = fontWeightTextLevel,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
                     )
                 }
             }

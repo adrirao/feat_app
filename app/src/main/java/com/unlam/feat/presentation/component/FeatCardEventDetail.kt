@@ -64,14 +64,14 @@ fun FeatCardEventDetail(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (event.sport.description.contains("Futbol")) {
+                    if (event.sport.description.contains(stringResource(R.string.Soccer))) {
                         Image(
                             painter = painterResource(id = R.drawable.soccer),
                             contentDescription = "",
                             contentScale = ContentScale.Fit,
                             modifier = Modifier.size(70.dp)
                         )
-                    } else if (event.sport.description.contains("Padel")) {
+                    } else if (event.sport.description.contains(stringResource(R.string.Paddle))) {
                         Image(
                             painter = painterResource(id = R.drawable.padel),
                             contentDescription = "",

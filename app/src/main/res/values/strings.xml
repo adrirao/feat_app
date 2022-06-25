@@ -57,4 +57,12 @@
     <string name="text_organizer">Organizador</string>
     <string name="error_api_connection">Error de conexión con el servidor.</string>
     <string name="error_description_api_connection">Se produjo un error al querer conectar con el servidor.</string>
+    <string name="Position">Posición:</string>
+    <string name="Level">Nivel:</string>
+    <string name="Apply">Aplicado</string>
+    <string name="waitingForAcceptance">Esperando aceptación</string>
+    <string name="Confirmed">Confirmado</string>
+    <string name="Headline">Titular</string>
+    <string name="Soccer">Futbol</string>
+    <string name="Paddle">Padel</string>
 </resources>
